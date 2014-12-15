@@ -1,0 +1,36 @@
+// Place all the styles related to the sessions controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+//= require ../../../vendor/assets/components/bootstrap-sass-official/assets/stylesheets/_bootstrap.scss
+
+body {
+  padding-top: 60px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: #efefef;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.error-message {
+	color: red;
+}
+
+input.ng-dirty.ng-invalid{ 
+	border-color:red;
+}
+
+.form-signin {
+	border: 1px solid rgba(0,0,0,0.1);
+	padding: 15px 35px 35px;
+	background: #fff;
+	button {
+		margin-bottom: 20px;
+	}
+}
+
+.signin {
+	margin-top: 50px;
+}
