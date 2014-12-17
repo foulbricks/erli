@@ -14,4 +14,5 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require ../../../vendor/assets/components/angular/angular
+//= require ../../../vendor/assets/components/bootstrap-sass-official/assets/javascripts/bootstrap
 //= require_tree .

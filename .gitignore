@@ -15,6 +15,5 @@
 /log/*.log
 /tmp
 
-/config/database.yml
-/config/environments/
 /vendor/assets/components
+.elasticbeanstalk/
