@@ -20,6 +20,12 @@ ActiveRecord::Schema.define(version: 20141207024817) do
     t.string   "password"
     t.string   "salt"
     t.boolean  "admin"
+    t.string   "pwcode"
+    t.string   "activation_code"
+    t.datetime "activation_code_set_at"
+    t.string   "pw_code"
+    t.string   "pw_code_set_at"
+    t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

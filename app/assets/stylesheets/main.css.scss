@@ -14,7 +14,13 @@ a {
   color: #00B7FF;
 }
 
+hr {
+	border-top: 1px solid rgb(204, 204, 204);
+}
+
 .error-message {
+	display: block;
+	margin-top: 10px;
 	color: red;
 }
 

@@ -4,25 +4,30 @@ require "digest/sha1"
 class User < ActiveRecord::Base
   attr_accessor :passwd
   
-  before_save :encript_password
+  before_save :encrypt_password
   
-  validates_presence_of :first_name, :last_name, :passwd, :email
-  validates_confirmation_of :passwd
+  validates_presence_of :first_name, :last_name, :email
+  validates_presence_of :passwd, :on => :create
+  validates_confirmation_of :passwd, :on => :create
   validates_uniqueness_of :email
   
   def self.authenticate(email, pass)
     user = find_by_email(email)
-    if user && user.password == Bcript::Engine.hash_secret(pass, user.salt)
+    if user && user.password == BCrypt::Engine.hash_secret(pass, user.salt)
       user
     else
       nil
     end
   end
   
+  def name
+    [first_name, last_name].join(" ")
+  end
+  
   def encrypt_password
     if passwd.present?
-      self.salt = Bcrypt::Engine.generate_salt
-      self.password = Bcrypt::Engine.hash_secret(self.passwd, self.salt)
+      self.salt = BCrypt::Engine.generate_salt
+      self.password = BCrypt::Engine.hash_secret(self.passwd, self.salt)
     end
   end
   

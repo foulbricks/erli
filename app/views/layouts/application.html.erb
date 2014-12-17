@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="erli">
+<html lang="en">
 <head>
 	<meta name="viewport" content="width=device-width initial-scale=1">
   	<title>Erli</title>
   	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  	<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   	<%= csrf_meta_tags %>
 </head>
 <body>
@@ -13,10 +13,25 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-xs-12 border-left">
-				<%= yield %>
+				<% if logged_in? %>
+					<div id="wrapper">
+					    <div id="sidebar-wrapper">
+					        <ul class="sidebar-nav">
+					            <li><%= link_to "Administrators", users_path %></li>
+								<li><a href="#">Apartments</a></li>
+					        </ul>
+					    </div>
+					    <div id="page-content-wrapper">
+					        <div class="container-fluid">
+								<%= yield %>
+					        </div>
+					    </div>
+					</div>
+				<% else %>
+					<%= yield %>
+				<% end %>
 			</div>
 		</div>
 	</div>
-	
 </body>
 </html>
