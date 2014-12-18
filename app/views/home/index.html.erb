@@ -1,1 +1,28 @@
-<h1>Welcome</h1>
+<h3>Welcome <%= logged_user.name %></h3>
+<div class="row calendar-box" ng-controller="CalendarController">
+	<div class="col-sm-12">
+		<!-- <div class="alert alert-info" role="alert">Oh snap! Change a few things up and try submitting again.</div> -->
+		<div class="row">
+			<div class="col-xs-6 text-left">
+				<div class="btn-group">
+					<button class="btn btn-primary" ng-click="calendarControl.prev()">Previous</button>
+					<button class="btn btn-default" ng-click="setCalendarToToday()">Today</button>
+					<button class="btn btn-primary" ng-click="calendarControl.next()">Next</button>
+				</div>
+			</div>
+			<div class="col-xs-6 text-right">
+				<div class="btn-group">
+					<button class="btn btn-warning" ng-click="setCalendarView('month')">Month</button>
+					<button class="btn btn-warning" ng-click="setCalendarView('day')">Day</button>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<h3 class="month-title text-center">{{ calendarControl.getTitle() }}</h3>
+			</div>
+		</div>
+	
+		<div calendar calendar-view="calendarView" calendar-current-day="calendarDay" calendar-control="calendarControl" calendar-auto-open="true"></div>
+	</div>
+</div>

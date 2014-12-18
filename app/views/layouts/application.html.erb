@@ -4,7 +4,9 @@
 	<meta name="viewport" content="width=device-width initial-scale=1">
   	<title>Erli</title>
   	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
 	<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+	<script src="https://cdn.jsdelivr.net/angular.bootstrap/0.12.0/ui-bootstrap-tpls.min.js"></script>
   	<%= csrf_meta_tags %>
 </head>
 <body>
@@ -17,8 +19,15 @@
 					<div id="wrapper">
 					    <div id="sidebar-wrapper">
 					        <ul class="sidebar-nav">
-					            <li><%= link_to "Administrators", users_path %></li>
-								<li><a href="#">Apartments</a></li>
+					            <li><%= link_to "Home", root_path %></li>
+								<li><a href="#">Contracts</a></li>
+								<li><a href="#">Spese di Condominio</a></li>
+								<li><a href="#">Spese Generali</a></li>
+								<li><a href="#">Fatture</a></li>
+								<li><a href="#">Situazione Insolventi</a></li>
+								<li><a href="#">Agenda</a></li>
+								<li><a href="#">Messages</a></li>
+								<li><a href="#">ADs To Be Approved</a></li>
 					        </ul>
 					    </div>
 					    <div id="page-content-wrapper">

@@ -10,4 +10,8 @@ module ApplicationHelper
     end
   end
   
+  def buildings
+    Building.all
+  end
+  
 end

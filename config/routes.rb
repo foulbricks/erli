@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   resources :sessions, path_names: {new: "login", destroy: "logout"},
                        only: [:new, :create, :destroy]
                        
+  resources :buildings
+                       
   root "home#index"
   
   # The priority is based upon order of creation: first created -> highest priority.
