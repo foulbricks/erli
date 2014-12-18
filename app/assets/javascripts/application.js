@@ -13,6 +13,8 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require moment/moment
 //= require angular/angular
+//= require angular-bootstrap/ui-bootstrap
 //= require bootstrap-sass-official/assets/javascripts/bootstrap
 //= require_tree .
