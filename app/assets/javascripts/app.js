@@ -1,6 +1,6 @@
 "use strict"
 
-angular.module("erli", ["ui.bootstrap"]).
+angular.module("erli", []).
 
 config(["$httpProvider", 
 	function(provider){
