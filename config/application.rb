@@ -21,5 +21,6 @@ module Erli
     # config.i18n.default_locale = :de
     
     config.assets.paths << Rails.root.join("vendor", "assets", "components")
+    config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/
   end
 end
