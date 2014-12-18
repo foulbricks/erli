@@ -15,5 +15,4 @@
 /log/*.log
 /tmp
 
-/vendor/assets/components
 .elasticbeanstalk/
