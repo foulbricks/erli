@@ -1,6 +1,6 @@
 "use strict"
 
-angular.module("erli", []).
+angular.module("erli", ["ui.bootstrap"]).
 
 config(["$httpProvider", 
 	function(provider){
@@ -9,7 +9,7 @@ config(["$httpProvider",
 ]).
 
 run(["moment", function(moment){
-	moment.locale("en");
+	moment.locale("it");
 }]);
 
 $(document).on("ready page:load", function(args){

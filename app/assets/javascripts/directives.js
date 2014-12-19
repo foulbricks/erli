@@ -36,7 +36,7 @@ directive("calendar", [
 				useIsoWeek: "=calendarUseIsoWeek",
 				autoOpen: "=calendarAutoOpen"
 			},
-			controller: function($scope){
+			controller: ["$scope", function($scope){
 				var self = this;
 				self.titleFunctions = {}
 				
@@ -59,8 +59,7 @@ directive("calendar", [
 					if(!self.titleFunctions[$scope.view]) return "";
 					return self.titleFunctions[$scope.view]($scope.currentDay);
 				}
-			}
-			
+			}]
 		}
 	}
 ]).

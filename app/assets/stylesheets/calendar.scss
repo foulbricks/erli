@@ -227,13 +227,14 @@
   background-color: #ad2121;
 }
 .event-info {
-  background-color: #1e90ff;
+  background-color: #1e90ff !important;
+  margin-bottom: 5px;
 }
 .event-warning {
   background-color: #e3bc08;
 }
 .event-inverse {
-  background-color: #1b1b1b;
+  background-color: #1b1b1b !important;
 }
 .event-success {
   background-color: #006400;
