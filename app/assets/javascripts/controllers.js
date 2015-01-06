@@ -49,7 +49,15 @@ controller("contractFormController", [
 controller("setupFormController", [
 	"$scope",
 	function($scope){
-
+		$scope.iva = angular.element("#setup_iva").val();
+		$scope.istat = angular.element("#setup_istat").val();
+		$scope.balance_expenses = angular.element("#setup_balance_expenses").val();
+		$scope.mav_expiration = angular.element("#setup_mav_expiration").val();
+		$scope.invoice_generation = angular.element("#setup_invoice_generation").val();
+		$scope.invoice_delivery = angular.element("#setup_invoice_delivery").val();
+		$scope.unpaid_sentence = angular.element("#setup_unpaid_sentence").val();
+		$scope.erli_mav_email = angular.element("#setup_erli_mav_email").val();
+		$scope.erli_admin_email = angular.element("#setup_erli_admin_email").val();
 	}
 ]).
 

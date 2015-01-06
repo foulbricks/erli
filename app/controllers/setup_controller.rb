@@ -1,16 +1,17 @@
 class SetupController < ApplicationController
+  before_filter :check_admin
   
   def edit
-    @setup = Setup.first || Setup.create!
+    @setup = Setup.where(:building_id => cookies[:building]).first || Setup.create!(:building_id => cookies[:building])
   end
   
   def update
-    @setup = Setup.first
+    @setup = Setup.where(:building_id => cookies[:building]).first
     
     if @setup.update(setup_params)
       redirect_to root_path
     else
-      render "setup"
+      render "edit"
     end
   end
   

@@ -4,9 +4,9 @@ class CreateSetups < ActiveRecord::Migration
       t.date :balance_expenses
       t.decimal :iva
       t.decimal :istat
-      t.date :mav_expiration
-      t.date :invoice_generation
-      t.date :invoice_delivery
+      t.integer :mav_expiration
+      t.integer :invoice_generation
+      t.integer :invoice_delivery
       t.text :unpaid_sentence
       t.string :erli_mav_email
       t.boolean :erli_mav_email_active
