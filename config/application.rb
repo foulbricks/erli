@@ -22,5 +22,6 @@ module Erli
     
     config.assets.paths << Rails.root.join("vendor", "assets", "components")
     config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/
+    config.autoload_paths += %w(#{config.root}/lib)
   end
 end

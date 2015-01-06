@@ -59,6 +59,8 @@ directive("calendar", [
 					if(!self.titleFunctions[$scope.view]) return "";
 					return self.titleFunctions[$scope.view]($scope.currentDay);
 				}
+				
+				
 			}]
 		}
 	}
@@ -84,6 +86,7 @@ directive("calendarMonth", [
 				calendarController.titleFunctions.month = function(currentDay){
 					return moment(currentDay).format("MMMM YYYY");
 				}
+				calendarController.showControls = true;
 				
 				function updateView(){
 					scope.view = calendarHelperService.getMonthView(scope.currentDay, scope.useIsoWeek);
@@ -102,8 +105,31 @@ directive("calendarMonth", [
 				scope.$watch("currentDay", updateView);
 				scope.weekDays = calendarHelperService.getWeekNames(false);
 				
+		        scope.drillDown = function(day) {
+					calendarController.changeView('day', moment(scope.currentDay).clone().date(day).toDate());
+		        };
+				
 			}
 		}
 	}
 
+]).
+
+directive("calendarDay", [
+	"$sce", "$timeout", "calendarHelperService",
+	function($sce, $timeout, calendarHelperService){
+		return {
+			templateUrl: "templates/day.html",
+			restrics: "A",
+			require: "^calendar",
+			scope: {
+				currentDay: "=calendarCurrentDay"
+			},
+			link: function postLink(scope, element, attrs, calendarController){
+				
+				calendarController.showControls = false;
+				
+			}
+		}
+	}
 ]);

@@ -1,0 +1,16 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h3>Nuovi Bollos</h3>
+		<hr />
+	</div>
+</div>
+<div class="row" ng-controller="bolloFormController">
+	<div class="col-xs-12">
+		<%= render :partial => "form" %>
+		<p class="text-right">
+			<%= link_to bollos_path, {} do %> 
+			<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>  Tornare alla lista
+			<% end %>
+		</p>
+	</div>
+</div>

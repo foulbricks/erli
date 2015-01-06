@@ -1,0 +1,39 @@
+<div class="row">
+	<div class="col-sm-12">
+		<% if flash[:notice] %>
+			<div class="alert alert-success"><%= flash[:notice] %></div>
+		<% elsif flash[:alert] %>
+			<div class="alert alert-danger"><%= flash[:alert] %></div>
+		<% end %>
+		
+		<h3>Spese</h3>
+		<p class="text-right"><%= link_to "Creare Spesa", new_expense_path %></p>
+		<% if @expenses.length > 0 %>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Nome</th>
+						<th>Tipo</th>
+						<th>Aggiungere alla fattura</th>
+						<th colspan="2">Azioni</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @expenses.each do |expense| %>
+						<tr>
+							<td><%= expense.name %></td>
+							<td><%= expense.kind %></td>
+							<td><%= expense.add_to_invoice ? "Si" : "No" %></td>
+							<td><%= link_to "Mostrare", expense_path(expense.id) %></td>
+							<td><%= link_to "Modificare", edit_expense_path(expense.id) %></td>
+							<td><%= link_to "Cancellare", expense_path(expense.id), confirm: "Sei securo?", method: :delete %></td>
+						</tr>
+					<% end %>
+					
+				</tbody>
+			</table>
+		<% else %>
+			<p>Attualmente non ci sono spese disponibili</p>
+		<% end %>
+	</div>
+</div>

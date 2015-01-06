@@ -8,8 +8,7 @@
 			<div ng-repeat="week in view track by $index">
 				<div class="cal-row-fluid cal-before-eventlist">
 					<div class="cal-cell1 cal-cell" ng-repeat="day in week track by $index">
-						<div class="cal-month-day" ng-class="{'cal-day-outmonth': !day.inMonth, 'cal-day-inmonth' : day.inMonth,
-						'cal-day-weekend': day.weekend, 'cal-day-today' : day.isToday }">
+						<div class="cal-month-day" ng-class="{'cal-day-outmonth': !day.inMonth, 'cal-day-inmonth' : day.inMonth, 'cal-day-weekend': day.weekend, 'cal-day-today' : day.isToday }" ng-click="drillDown(day.label)">
 							<span class="pull-right" data-cal-date>{{ day.label }}</span>
 							<div class="cal-day-tick" ng-show="day.isOpened">
 								<i class="glyphicon glyphicon-chevron-up"></i>

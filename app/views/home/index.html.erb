@@ -3,17 +3,18 @@
 	<div class="col-sm-12">
 		<!-- <div class="alert alert-info" role="alert">Oh snap! Change a few things up and try submitting again.</div> -->
 		<div class="row">
-			<div class="col-xs-6 text-left">
+			<div class="col-xs-6 text-left" ng-if="calendarControl.showControls">
 				<div class="btn-group">
-					<button class="btn btn-primary" ng-click="calendarControl.prev()">Previous</button>
-					<button class="btn btn-default" ng-click="setCalendarToToday()">Today</button>
-					<button class="btn btn-primary" ng-click="calendarControl.next()">Next</button>
+					<button class="btn btn-primary" ng-click="calendarControl.prev()">Precedente</button>
+					<button class="btn btn-default" ng-click="setCalendarToToday()">Oggi</button>
+					<button class="btn btn-primary" ng-click="calendarControl.next()">Successivo</button>
 				</div>
 			</div>
 			<div class="col-xs-6 text-right">
 				<div class="btn-group">
-					<button class="btn btn-warning" ng-click="setCalendarView('month')">Month</button>
-					<button class="btn btn-warning" ng-click="setCalendarView('day')">Day</button>
+					<button class="btn btn-warning" ng-click="setCalendarView('month')">Mese</button>
+					<button class="btn btn-warning" ng-click="setCalendarView('day')">Giorno</button>
+					<button class="btn btn-warning" ng-click="setCalendarView('agenda')">Agenda</button>
 				</div>
 			</div>
 		</div>

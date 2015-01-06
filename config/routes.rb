@@ -9,9 +9,25 @@ Rails.application.routes.draw do
   resources :sessions, path_names: {new: "login", destroy: "logout"},
                        only: [:new, :create, :destroy]
                        
-  resources :buildings
+  resources :buildings do
+    collection do
+      post "set_workspace"
+    end
+  end
+  
+  resources :bollos
+  
+  resources :expenses
+  
+  resources :contracts
+  
+  resources :setup, path_names: {edit: "setup"}, only: [:edit, :update]
                        
   root "home#index"
+  
+  get "/auth/:provider/callback" => "google_sessions#create"
+  get "test" => "google_sessions#new"
+  
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

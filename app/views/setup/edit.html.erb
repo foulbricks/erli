@@ -1,0 +1,51 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h3>Modificare Configurazione</h3>
+		<hr />
+	</div>
+</div>
+
+<div class="row" ng-controller="setupFormController">
+	<div class="col-xs-12">
+		<% if @setup.errors.any? %>
+			<div class="alert alert-danger">
+				<strong>Il formulario non è valido.</strong><br />
+				<ul>
+					<% for message in @setup.errors.full_messages %>
+						<li><%= message %></li>
+					<% end %>
+				</ul>
+			</div>
+		<% end %>
+
+		<%= form_for @setup, html: {:novalidate => "novalidate", name: "setupForm", class: "form-horizontal" } do |f| %>
+		
+			<div class="form-group" ng-class="{'has-error':setupForm['setup[erli_admin_email]'].$dirty && setupForm['setup[erli_admin_email]'].$invalid }">
+				<%= f.label :erli_admin_email, "Email di Amministrazione", :class => "col-sm-3 control-label" %>
+				<div class="col-sm-9">
+					<%= f.email_field :erli_admin_email, :class => "form-control", :placeholder => "Email di Amministrazione", :"ng-model" => "erli_admin_email", :"ng-required" => true %>
+					<span class="error-message" ng-show="setupForm['setup[erli_admin_email]'].$dirty && setupForm['setup[erli_admin_email]'].$invalid }">Email di Amministazione è richiesto.</span>
+				</div>
+			</div>
+			
+			<div class="form-group" ng-class="{'has-error':setupForm['setup[erli_mav_email]'].$dirty && setupForm['setup[erli_mav_email]'].$invalid }">
+				<%= f.label :erli_mav_email, "Email di MAV", :class => "col-sm-3 control-label" %>
+				<div class="col-sm-9">
+					<%= f.email_field :erli_mav_email, :class => "form-control", :placeholder => "Email di MAV", :"ng-model" => "erli_mav_email", :"ng-required" => true %>
+					<span class="error-message" ng-show="setupForm['setup[erli_mav_email]'].$dirty && setupForm['setup[erli_mav_email]'].$invalid }">Email di MAV è richiesto.</span>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<%= f.label :erli_mav_email_active, "Email di MAV abilitato", :class => "col-sm-3 control-label" %>
+				<div class="col-sm-9">
+					<p style="margin-top: 5px;"><%= f.check_box :erli_mav_email_active %></p>
+				</div>
+			</div>
+	
+			<div class="col-sm-9 col-sm-offset-3">
+				<%= f.submit :class => "btn btn-lg btn-primary", :"ng-disabled" => "newExpenseForm.$invalid"%>
+			</div>
+		<% end %>
+	</div>
+</div>

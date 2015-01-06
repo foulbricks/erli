@@ -1,0 +1,31 @@
+<% if @contract.errors.any? %>
+	<div class="alert alert-danger">
+		<strong>Form is invalid.</strong><br />
+		<ul>
+			<% for message in @contract.errors.full_messages %>
+				<li><%= message %></li>
+			<% end %>
+		</ul>
+	</div>
+<% end %>
+
+<%= form_for @contract, html: {:novalidate => "novalidate", name: "contractForm", class: "form-horizontal" } do |f| %>
+	<div class="form-group" ng-class="{'has-error':contractForm['contract[name]'].$dirty && contractForm['contract[name]'].$invalid }">
+		<%= f.label :name, "Tipo di contratto", :class => "col-sm-3 control-label" %>
+		<div class="col-sm-9">
+			<%= f.text_field :name, :class => "form-control", :placeholder => "Tipo di contratto", :"ng-model" => "name", :"ng-required" => true %>
+			<span class="error-message" ng-show="contractForm['contract[name]'].$dirty && contractForm['contract[name]'].$invalid">Tipo di contratto è richiesto.</span>
+		</div>
+	</div>
+	<div class="form-group" ng-class="{'has-error':contractForm['contract[istat]'].$dirty && contractForm['contract[istat]'].$invalid }">
+		<%= f.label :istat, "Percentuale di ISTAT", :class => "control-label col-sm-3" %>
+		<div class="col-sm-9">
+			<%= f.text_field :istat, :class => "form-control", :placeholder => "ISTAT", :"ng-model" => "istat", :"ng-required" => true %>
+			<span class="error-message" ng-show="contractForm['contract[istat]'].$dirty && contractForm['contract[istat]'].$invalid">ISTAT è richiesto.</span>
+		</div>
+	</div>
+	
+	<div class="col-sm-9 col-sm-offset-3">
+		<%= f.submit :class => "btn btn-lg btn-primary", :"ng-disabled" => "contractForm.$invalid"%>
+	</div>
+<% end %>

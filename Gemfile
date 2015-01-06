@@ -29,7 +29,11 @@ gem 'spring',        group: :development
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
-gem 'multi_json', '1.7.8' 
+gem 'multi_json', '1.7.8'
+gem 'omniauth', '~> 1.2.2'
+gem 'omniauth-google-oauth2'
+gem 'google-api-client', :require => 'google/api_client'
+gem 'will_paginate', '~> 3.0.6'
 
 # Use unicorn as the app server
 # gem 'unicorn'

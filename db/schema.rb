@@ -11,12 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141218033740) do
+ActiveRecord::Schema.define(version: 20150106052152) do
 
   create_table "apartments", force: true do |t|
     t.string   "name"
-    t.string   "status"
     t.integer  "building_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "asset_expenses", force: true do |t|
+    t.integer  "asset_id"
+    t.string   "asset_type"
+    t.integer  "expense_id"
+    t.decimal  "amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "bollos", force: true do |t|
+    t.string   "identifier"
+    t.decimal  "price"
+    t.integer  "invoice_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -24,6 +40,59 @@ ActiveRecord::Schema.define(version: 20141218033740) do
   create_table "buildings", force: true do |t|
     t.string   "name"
     t.text     "address"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "contracts", force: true do |t|
+    t.string   "name"
+    t.decimal  "istat"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "expenses", force: true do |t|
+    t.string   "name"
+    t.string   "kind"
+    t.boolean  "add_to_invoice"
+    t.boolean  "add_to_conguaglio"
+    t.integer  "building_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "google_tokens", force: true do |t|
+    t.string   "access_token"
+    t.string   "refresh_token"
+    t.datetime "expires_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "invoices", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "repartition_tables", force: true do |t|
+    t.integer  "building_id"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "setups", force: true do |t|
+    t.date     "balance_expenses"
+    t.decimal  "iva"
+    t.decimal  "istat"
+    t.date     "mav_expiration"
+    t.date     "invoice_generation"
+    t.date     "invoice_delivery"
+    t.text     "unpaid_sentence"
+    t.string   "erli_mav_email"
+    t.boolean  "erli_mav_email_active"
+    t.string   "erli_admin_email"
+    t.integer  "building_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

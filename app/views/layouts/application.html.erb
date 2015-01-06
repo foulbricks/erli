@@ -10,10 +10,10 @@
 <body>
 	<%= render :partial => "layouts/nav" %>
 	
-	<div class="container-fluid">
+	<div class="<%= cookies[:building].present? ? "container-fluid" : "container" %>">
 		<div class="row">
 			<div class="col-xs-12 border-left">
-				<% if logged_in? %>
+				<% if logged_in? && cookies[:building].present? %>
 					<div id="wrapper">
 					    <div id="sidebar-wrapper">
 					        <ul class="sidebar-nav">

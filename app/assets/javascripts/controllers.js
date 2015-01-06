@@ -23,6 +23,36 @@ controller("buildingFormController", [
 	}
 ]).
 
+controller("expenseFormController", [
+	"$scope",
+	function($scope){
+		$scope.name = angular.element("#expense_name").val();
+	}
+]).
+
+controller("bolloFormController", [
+	"$scope",
+	function($scope){
+		$scope.identifier = angular.element("#bollo_identifier").val();
+		$scope.price = angular.element("#bollo_price").val();
+	}
+]).
+
+controller("contractFormController", [
+	"$scope",
+	function($scope){
+		$scope.name = angular.element("#contract_name").val();
+		$scope.istat = angular.element("#contract_istat").val();
+	}
+]).
+
+controller("setupFormController", [
+	"$scope",
+	function($scope){
+
+	}
+]).
+
 controller("CalendarController", [
 	"$scope", "moment",
 	function($scope, moment){

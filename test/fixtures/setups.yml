@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  balance_expenses: 2015-01-05
+  iva: 9.99
+  istat: 9.99
+  mav_expiration: 2015-01-05
+  invoice_generation: 2015-01-05
+  invoice_delivery: 2015-01-05
+  unpaid_sentence: MyText
+  erli_mav_email: MyString
+  erli_mav_email_active: false
+  erli_admin_email: MyString
+
+two:
+  balance_expenses: 2015-01-05
+  iva: 9.99
+  istat: 9.99
+  mav_expiration: 2015-01-05
+  invoice_generation: 2015-01-05
+  invoice_delivery: 2015-01-05
+  unpaid_sentence: MyText
+  erli_mav_email: MyString
+  erli_mav_email_active: false
+  erli_admin_email: MyString
