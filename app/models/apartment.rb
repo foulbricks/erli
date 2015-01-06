@@ -1,6 +1,8 @@
 class Apartment < ActiveRecord::Base
-  
-  validates_presence_of :name, :status
   belongs_to :building
+  has_many :apartment_repartition_tables
   
+  validates :name, :building_id, presence: true
+  validates :name, uniqueness: true
+
 end

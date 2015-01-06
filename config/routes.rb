@@ -16,9 +16,9 @@ Rails.application.routes.draw do
   end
   
   resources :bollos
-  
+  resources :apartments
   resources :expenses
-  
+  resources :repartition_tables
   resources :contracts
   
   resources :setup, path_names: {edit: "setup"}, only: [:edit, :update]

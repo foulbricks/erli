@@ -1,0 +1,38 @@
+<div class="row">
+	<div class="col-sm-12">
+		<% if flash[:notice] %>
+			<div class="alert alert-success"><%= flash[:notice] %></div>
+		<% elsif flash[:alert] %>
+			<div class="alert alert-danger"><%= flash[:alert] %></div>
+		<% end %>
+		
+		<h3>Tabelle di Ripartizione</h3>
+		<p class="text-right"><%= link_to "Creare tavolo di repartizione", new_repartition_table_path %></p>
+		<% if @tables.length > 0 %>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Nome</th>
+						<th>Aggiornato</th>
+						<th>Creato</th>
+						<th colspan="2">Azioni</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @tables.each do |table| %>
+						<tr>
+							<td><%= table.name %></td>
+							<td><%= table.updated_at.strftime("%d-%m-%Y") %></td>
+							<td><%= table.created_at.strftime("%d-%m-%Y") %></td>
+							<td><%= link_to "Modificare", edit_repartition_table_path(table.id) %></td>
+							<td><%= link_to "Cancellare", repartition_table_path(table.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
+						</tr>
+					<% end %>
+					
+				</tbody>
+			</table>
+		<% else %>
+			<p>Attualmente non ci sono tabelle di ripartizione disponibili</p>
+		<% end %>
+	</div>
+</div>

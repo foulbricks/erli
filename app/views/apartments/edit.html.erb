@@ -1,0 +1,16 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h3>Modificare appartamento: <%= @apartment.name %></h3>
+		<hr />
+	</div>
+</div>
+<div class="row" ng-controller="apartmentFormController">
+	<div class="col-xs-12">
+		<%= render :partial => "form" %>
+		<p class="text-right">
+			<%= link_to apartments_path, {} do %> 
+			<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>  Tornare alla lista
+			<% end %>
+		</p>
+	</div>
+</div>

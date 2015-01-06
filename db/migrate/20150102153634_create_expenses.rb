@@ -6,6 +6,7 @@ class CreateExpenses < ActiveRecord::Migration
       t.boolean   :add_to_invoice
       t.boolean   :add_to_conguaglio
       t.integer   :building_id
+      t.integer   :repartition_table_id
       
       t.timestamps
     end

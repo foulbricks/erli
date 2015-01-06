@@ -53,6 +53,24 @@ controller("setupFormController", [
 	}
 ]).
 
+controller("apartmentFormController", [
+	"$scope",
+	function($scope){
+		$scope.name = angular.element("#apartment_name").val();
+	}
+]).
+
+controller("tableFormController", [
+	"$scope",
+	function($scope){
+		$scope.name = angular.element("#repartition_table_name").val();
+		var ps = angular.element("input[type=text][id^=repartition_table_apartment_repartition_tables_attributes]");
+		for(var i = 0; i < ps.length; i++){
+			$scope[angular.element(ps[i]).attr("ng-model")] = angular.element(ps[i]).val();
+		}
+	}
+]).
+
 controller("CalendarController", [
 	"$scope", "moment",
 	function($scope, moment){

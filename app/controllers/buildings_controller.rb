@@ -12,7 +12,7 @@ class BuildingsController < ApplicationController
     @building = Building.new(building_params)
     
     if @building.save
-      flash[:notice] = "Building successfully saved."
+      flash[:notice] = "Edificio salvato con successo"
       redirect_to buildings_path
     else
       render "new"
@@ -27,7 +27,7 @@ class BuildingsController < ApplicationController
     @building = Building.find(params[:id])
     
     if @building.update(building_params)
-      flash[:notice] = "Building successfully updated."
+      flash[:notice] = "Edificio modificato con successo."
       redirect_to buildings_path
     else
       render "edit"
@@ -38,13 +38,13 @@ class BuildingsController < ApplicationController
     @building = Building.find(params[:id])
     @building.destroy
     
-    flash[:notice] = "Building successfully destroyed"
+    flash[:notice] = "Edificio cancellato con successo."
     redirect_to buildings_path
   end
   
   def set_workspace
     cookies[:building] = params[:building]
-    redirect_to :back
+    redirect_to root_path
   end
   
   private

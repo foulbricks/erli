@@ -7,28 +7,30 @@
 		<% end %>
 		
 		<h3>Buildings</h3>
-		<p class="text-right"><%= link_to "Create Building", new_building_path %></p>
+		<p class="text-right"><%= link_to "Creare Edificio", new_building_path %></p>
 		<% if @buildings.length > 0 %>
 			<table class="table table-striped">
 				<thead>
 					<tr>
-						<th>Name</th>
-						<th colspan="2">Actions</th>
+						<th>Nome</th>
+						<th>Creato</th>
+						<th colspan="2">Azioni</th>
 					</tr>
 				</thead>
 				<tbody>
 					<% @buildings.each do |building| %>
 						<tr>
 							<td><%= building.name %></td>
-							<td><%= link_to "Edit", edit_building_path(building.id) %></td>
-							<td><%= link_to "Delete", building_path(building.id), confirm: "Are you sure?", method: :delete %></td>
+							<td><%= building.created_at.strftime("%d-%m-%Y") %></td>
+							<td><%= link_to "Modificare", edit_building_path(building.id) %></td>
+							<td><%= link_to "Cancellare", building_path(building.id), :"data-confirm" => "Sei sicuro?", method: :delete %></td>
 						</tr>
 					<% end %>
 					
 				</tbody>
 			</table>
 		<% else %>
-			<p>Currently there are no buildings available</p>
+			<p>Attualmente non ci sono edifici disponibili</p>
 		<% end %>
 	</div>
 </div>
