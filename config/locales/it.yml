@@ -1,4 +1,14 @@
 it:
+  activerecord:
+    models:
+      building: "Edificio"
+      contract: "Contratto"
+    attributes:
+      building:
+        name: "Nome"
+        address: "Indirizzo"
+      contract:
+        name: "Nome"
   date:
     abbr_day_names:
     - dom

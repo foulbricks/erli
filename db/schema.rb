@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150106184512) do
+ActiveRecord::Schema.define(version: 20150107163213) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "apartment_repartition_tables", force: true do |t|
     t.integer  "apartment_id"
@@ -26,7 +29,6 @@ ActiveRecord::Schema.define(version: 20150106184512) do
 
   create_table "apartments", force: true do |t|
     t.string   "name"
-    t.integer  "rooms"
     t.integer  "building_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -41,10 +43,18 @@ ActiveRecord::Schema.define(version: 20150106184512) do
     t.datetime "updated_at"
   end
 
+  create_table "bollo_ranges", force: true do |t|
+    t.integer  "from"
+    t.integer  "to"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "bollos", force: true do |t|
     t.string   "identifier"
     t.decimal  "price"
     t.integer  "invoice_id"
+    t.integer  "bollo_range_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

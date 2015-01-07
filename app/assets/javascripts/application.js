@@ -18,9 +18,3 @@
 //= require bootstrap-sass-official/assets/javascripts/bootstrap
 //= require angular-bootstrap/ui-bootstrap-tpls
 //= require_tree .
-
-$(function(){
-	$(".default-building").on("change", function(){
-		$(this).submit();
-	});
-});

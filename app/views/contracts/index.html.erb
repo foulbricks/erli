@@ -6,8 +6,8 @@
 			<div class="alert alert-danger"><%= flash[:alert] %></div>
 		<% end %>
 		
-		<h3>Tipo di Contrati</h3>
-		<p class="text-right"><%= link_to "Creare Tipo di Contrati", new_contract_path %></p>
+		<h3>Tipi di Contratto</h3>
+		<p class="text-right"><%= link_to "Creare Tipo di Contratto", new_contract_path %></p>
 		<% if @contracts.length > 0 %>
 			<table class="table table-striped">
 				<thead>
@@ -21,16 +21,16 @@
 					<% @contracts.each do |contract| %>
 						<tr>
 							<td><%= contract.name %></td>
-							<td><%= contract.istat %></td>
+							<td><%= number_to_percentage(contract.istat) %></td>
 							<td><%= link_to "Modificare", edit_contract_path(contract.id) %></td>
-							<td><%= link_to "Cancellare", contract_path(contract.id), confirm: "Sei securo?", method: :delete %></td>
+							<td><%= link_to "Cancellare", contract_path(contract.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
 						</tr>
 					<% end %>
 					
 				</tbody>
 			</table>
 		<% else %>
-			<p>Attualmente non ci sono tipo di contratti disponibili</p>
+			<p>Attualmente non ci sono tipi di contratto disponibili</p>
 		<% end %>
 	</div>
 </div>

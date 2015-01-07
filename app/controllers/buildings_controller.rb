@@ -43,8 +43,12 @@ class BuildingsController < ApplicationController
   end
   
   def set_workspace
-    cookies[:building] = params[:building]
-    redirect_to root_path
+    cookies[:building] = {value: params[:building], expires: Time.now + 3600}
+    if request.referer.present?
+      redirect_to :back
+    else
+      redirect_to root_path
+    end
   end
   
   private

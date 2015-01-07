@@ -4,6 +4,7 @@ class CreateBollos < ActiveRecord::Migration
       t.string  :identifier
       t.decimal :price
       t.integer :invoice_id
+      t.integer :bollo_range_id
       
       t.timestamps
     end

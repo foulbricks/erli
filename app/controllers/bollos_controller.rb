@@ -1,11 +1,11 @@
 class BollosController < ApplicationController
   
   def index
-    @bollos = Bollo.paginate(:page => params[:page], :per_page => 30).order(:identifier)
+    @bollos = BolloRange.order(:created_at).all
   end
   
   def new
-    @bollo = Bollo.new
+    @bollo = BolloRange.new
   end
   
   def create
