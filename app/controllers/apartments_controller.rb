@@ -2,7 +2,7 @@ class ApartmentsController < ApplicationController
   before_filter :check_admin
   
   def index
-    @apartments = Apartment.where(:building_id => cookies[:building]).all
+    @apartments = Apartment.where(:building_id => cookies[:building]).order(:name).all
   end
   
   def new
@@ -45,6 +45,6 @@ class ApartmentsController < ApplicationController
   
   private
   def apartment_params
-    params.require(:apartment).permit(:name, :building_id)
+    params.require(:apartment).permit(:name, :building_id, :rooms)
   end
 end

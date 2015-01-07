@@ -58,6 +58,13 @@ controller("setupFormController", [
 		$scope.unpaid_sentence = angular.element("#setup_unpaid_sentence").val();
 		$scope.erli_mav_email = angular.element("#setup_erli_mav_email").val();
 		$scope.erli_admin_email = angular.element("#setup_erli_admin_email").val();
+		
+	    $scope.open = function($event) {
+	      $event.preventDefault();
+	      $event.stopPropagation();
+
+	      $scope.opened = true;
+	    };
 	}
 ]).
 

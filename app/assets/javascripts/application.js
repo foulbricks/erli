@@ -16,7 +16,7 @@
 //= require moment/moment
 //= require angular/angular
 //= require bootstrap-sass-official/assets/javascripts/bootstrap
-//= require angular-bootstrap/ui-bootstrap
+//= require angular-bootstrap/ui-bootstrap-tpls
 //= require_tree .
 
 $(function(){

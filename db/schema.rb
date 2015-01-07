@@ -13,9 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20150106184512) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "apartment_repartition_tables", force: true do |t|
     t.integer  "apartment_id"
     t.integer  "repartition_table_id"
@@ -29,6 +26,7 @@ ActiveRecord::Schema.define(version: 20150106184512) do
 
   create_table "apartments", force: true do |t|
     t.string   "name"
+    t.integer  "rooms"
     t.integer  "building_id"
     t.datetime "created_at"
     t.datetime "updated_at"

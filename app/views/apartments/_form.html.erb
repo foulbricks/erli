@@ -18,6 +18,13 @@
 		</div>
 	</div>
 	
+	<div class="form-group">
+		<%= f.label :rooms, "Numero di Camere", :class => "col-sm-3 control-label" %>
+		<div class="col-sm-9">
+			<%= f.select :rooms, options_for_select([1, 2, 3, 4, 5], @apartment.rooms), :class => "form-control"%>
+		</div>
+	</div>
+	
 	<div class="col-sm-9 col-sm-offset-3">
 		<%= f.hidden_field :building_id, :value => cookies[:building] %>
 		<%= f.submit :class => "btn btn-lg btn-primary", :"ng-disabled" => "apartmentForm.$invalid"%>

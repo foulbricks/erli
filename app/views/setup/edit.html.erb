@@ -24,7 +24,7 @@
 				<%= f.label :erli_admin_email, "Email di Amministrazione", :class => "col-sm-3 control-label" %>
 				<div class="col-sm-9">
 					<%= f.email_field :erli_admin_email, :class => "form-control", :placeholder => "Email di Amministrazione", :"ng-model" => "erli_admin_email", :"ng-required" => true %>
-					<span class="error-message" ng-show="setupForm['setup[erli_admin_email]'].$dirty && setupForm['setup[erli_admin_email]'].$invalid">Email di Amministazione è richiesto.</span>
+					<span class="error-message" ng-show="setupForm['setup[erli_admin_email]'].$dirty && setupForm['setup[erli_admin_email]'].$invalid">Email non è valido..</span>
 				</div>
 			</div>
 			
@@ -32,7 +32,7 @@
 				<%= f.label :erli_mav_email, "Email di MAV", :class => "col-sm-3 control-label" %>
 				<div class="col-sm-9">
 					<%= f.email_field :erli_mav_email, :class => "form-control", :placeholder => "Email di MAV", :"ng-model" => "erli_mav_email", :"ng-required" => true %>
-					<span class="error-message" ng-show="setupForm['setup[erli_mav_email]'].$dirty && setupForm['setup[erli_mav_email]'].$invalid">Email di MAV è richiesto.</span>
+					<span class="error-message" ng-show="setupForm['setup[erli_mav_email]'].$dirty && setupForm['setup[erli_mav_email]'].$invalid">Email di MAV non è valido..</span>
 				</div>
 			</div>
 			
@@ -43,34 +43,15 @@
 				</div>
 			</div>
 			
-			<div class="form-group" ng-class="{'has-error':setupForm['setup[iva]'].$dirty && setupForm['setup[iva]'].$invalid }">
-				<%= f.label :iva, "Percentuale di IVA", :class => "col-sm-3 control-label" %>
-				<div class="col-sm-9">
-					<%= f.text_field :iva, :class => "form-control", :placeholder => "Percentuale di IVA", :"ng-model" => "iva", :"ng-required" => true %>
-					<span class="error-message" ng-show="setupForm['setup[iva]'].$dirty && setupForm['setup[iva]'].$invalid">Percentuale di IVA è richiesto.</span>
-				</div>
-			</div>
-			
-			<div class="form-group" ng-class="{'has-error':setupForm['setup[istat]'].$dirty && setupForm['setup[istat]'].$invalid }">
-				<%= f.label :istat, "Percentuale di ISTAT", :class => "col-sm-3 control-label" %>
-				<div class="col-sm-9">
-					<%= f.text_field :istat, :class => "form-control", :placeholder => "Percentuale di ISTAT", :"ng-model" => "istat", :"ng-required" => true %>
-					<span class="error-message" ng-show="setupForm['setup[istat]'].$dirty && setupForm['setup[istat]'].$invalid">Percentuale di ISTAT è richiesto.</span>
-				</div>
-			</div>
-			
-			<div class="form-group" ng-class="{'has-error':setupForm['setup[unpaid_sentence]'].$dirty && setupForm['setup[unpaid_sentence]'].$invalid }">
-				<%= f.label :unpaid_sentence, "Frase non pagato", :class => "col-sm-3 control-label" %>
-				<div class="col-sm-9">
-					<%= f.text_area :unpaid_sentence, :placeholder => "Frase non pagato", :class => "form-control", :"ng-model" => "unpaid_sentence", :"ng-required" => true %>
-					<span class="error-message" ng-show="setupForm['setup[unpaid_sentence]'].$dirty && setupForm['setup[unpaid_sentence]'].$invalid">Frase non pagato è richiesta.</span>
-				</div>
-			</div>
-			
 			<div class="form-group" ng-class="{'has-error':setupForm['setup[balance_expenses]'].$dirty && setupForm['setup[balance_expenses]'].$invalid }">
 				<%= f.label :balance_expenses, "Data di bilanciare le spese", :class => "col-sm-3 control-label" %>
 				<div class="col-sm-9">
-					<%= f.text_field :balance_expenses, :class => "form-control", :placeholder => "Data di bilanciare le spese", :"ng-model" => "balance_expenses", :"ng-required" => true %>
+					<div class="input-group">
+						<%= f.text_field :balance_expenses, :class => "form-control", :"datepicker-popup" => "yyyy-MM-dd", :placeholder => "Data di bilanciare le spese", :"ng-model" => "balance_expenses", :"ng-required" => true, :"is-open" => "opened" %>
+		                <span class="input-group-btn">
+		                  <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+		                </span>
+					</div>
 					<span class="error-message" ng-show="setupForm['setup[balance_expenses]'].$dirty && setupForm['setup[balance_expenses]'].$invalid">Data di bilanciare le spese è richiesta.</span>
 				</div>
 			</div>
@@ -98,6 +79,32 @@
 					<span class="error-message" ng-show="setupForm['setup[invoice_delivery]'].$dirty && setupForm['setup[invoice_delivery]'].$invalid">Giorno di consegna della fattura è richiesta.</span>
 				</div>
 			</div>
+			
+			<div class="form-group" ng-class="{'has-error':setupForm['setup[iva]'].$dirty && setupForm['setup[iva]'].$invalid }">
+				<%= f.label :iva, "Percentuale di IVA", :class => "col-sm-3 control-label" %>
+				<div class="col-sm-9">
+					<%= f.text_field :iva, :class => "form-control", :placeholder => "Percentuale di IVA", :"ng-model" => "iva", :"ng-required" => true %>
+					<span class="error-message" ng-show="setupForm['setup[iva]'].$dirty && setupForm['setup[iva]'].$invalid">Percentuale di IVA è richiesto.</span>
+				</div>
+			</div>
+			
+			<div class="form-group" ng-class="{'has-error':setupForm['setup[istat]'].$dirty && setupForm['setup[istat]'].$invalid }">
+				<%= f.label :istat, "Percentuale di ISTAT", :class => "col-sm-3 control-label" %>
+				<div class="col-sm-9">
+					<%= f.text_field :istat, :class => "form-control", :placeholder => "Percentuale di ISTAT", :"ng-model" => "istat", :"ng-required" => true %>
+					<span class="error-message" ng-show="setupForm['setup[istat]'].$dirty && setupForm['setup[istat]'].$invalid">Percentuale di ISTAT è richiesto.</span>
+				</div>
+			</div>
+			
+			<div class="form-group" ng-class="{'has-error':setupForm['setup[unpaid_sentence]'].$dirty && setupForm['setup[unpaid_sentence]'].$invalid }">
+				<%= f.label :unpaid_sentence, "Frase non pagato", :class => "col-sm-3 control-label" %>
+				<div class="col-sm-9">
+					<%= f.text_area :unpaid_sentence, :placeholder => "Frase non pagato", :class => "form-control", :"ng-model" => "unpaid_sentence", :"ng-required" => true %>
+					<span class="error-message" ng-show="setupForm['setup[unpaid_sentence]'].$dirty && setupForm['setup[unpaid_sentence]'].$invalid">Frase non pagato è richiesta.</span>
+				</div>
+			</div>
+			
+
 	
 			<div class="col-sm-9 col-sm-offset-3">
 				<%= f.submit :class => "btn btn-lg btn-primary", :"ng-disabled" => "setupForm.$invalid"%>

@@ -1,6 +1,7 @@
 class RepartitionTable < ActiveRecord::Base
   belongs_to :building
-  has_many :expenses
+  
+  has_many :expenses, dependent: :destroy
   has_many :apartment_repartition_tables, dependent: :destroy
   
   accepts_nested_attributes_for :apartment_repartition_tables
