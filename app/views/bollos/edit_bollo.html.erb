@@ -1,0 +1,48 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h3>Bollo <%= @bollo.identifier %></h3>
+		<hr />
+	</div>
+</div>
+<div class="row" ng-controller="bolloFormController">
+	<div class="col-xs-12">
+		
+		<% if @bollo.errors.any? %>
+			<div class="alert alert-danger">
+				<strong>La forma non è valida.</strong><br />
+				<ul>
+					<% for message in @bollo.errors.full_messages %>
+						<li><%= message %></li>
+					<% end %>
+				</ul>
+			</div>
+		<% end %>
+
+		<%= form_tag(update_bollo_bollo_range_path(@bollo.id), :novalidate => "novalidate", name: "newBolloForm", class: "form-horizontal") do %>
+			<div class="form-group" ng-class="{'has-error':newBolloForm['bollo[identifier]'].$dirty && newBolloForm['bollo[identifier]'].$invalid }">
+				<%= label_tag "bollo[identifier]", "Numero", :class => "col-sm-3 control-label" %>
+				<div class="col-sm-9">
+					<%= text_field_tag "bollo[identifier]", nil, :class => "form-control", :placeholder => "Numero", :"ng-model" => "identifier", :"ng-required" => true, :value => @bollo.identifier %>
+					<span class="error-message" ng-show="newBolloForm['bollo[identifier]'].$dirty && newBolloForm['bollo[identifier]'].$invalid">Numero è richiesto.</span>
+				</div>
+			</div>
+			<div class="form-group" ng-class="{'has-error':newBolloForm['bollo[price]'].$dirty && newBolloForm['bollo[price]'].$invalid }">
+				<%= label_tag "bollo[price]", "Prezzo", :class => "col-sm-3 control-label" %>
+				<div class="col-sm-9">
+					<%= text_field_tag "bollo[price]", nil, :class => "form-control", :placeholder => "Prezzo", :"ng-model" => "price", :"ng-required" => true, :value => @bollo.price %>
+					<span class="error-message" ng-show="newBolloForm['bollo[price]'].$dirty && newBolloForm['bollo[price]'].$invalid">Prezzo è richiesto.</span>
+				</div>
+			</div>
+			<div class="col-sm-9 col-sm-offset-3">
+				<%= submit_tag "Modificare Bollo", :class => "btn btn-lg btn-primary", :"ng-disabled" => "newBolloForm.$invalid"%>
+			</div>
+
+		<% end %>
+		
+		<p class="text-right">
+			<%= link_to bollo_ranges_path, {} do %> 
+			<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>  Tornare alla lista
+			<% end %>
+		</p>
+	</div>
+</div>

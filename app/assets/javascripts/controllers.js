@@ -38,6 +38,15 @@ controller("bolloFormController", [
 	}
 ]).
 
+controller("bollosFormController", [
+	"$scope",
+	function($scope){
+		$scope.from = angular.element("#bollo_range_from").val();
+		$scope.to = angular.element("#bollo_range_to").val();
+		$scope.price = angular.element("#bollo_range_price").val();
+	}
+]).
+
 controller("contractFormController", [
 	"$scope",
 	function($scope){

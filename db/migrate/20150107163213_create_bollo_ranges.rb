@@ -3,6 +3,7 @@ class CreateBolloRanges < ActiveRecord::Migration
     create_table :bollo_ranges do |t|
       t.integer :from
       t.integer :to
+      t.decimal :price
 
       t.timestamps
     end

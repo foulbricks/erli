@@ -9,6 +9,13 @@ it:
         address: "Indirizzo"
       contract:
         name: "Nome"
+      bollo_range:
+        from: "Da numero"
+        to: "A numero"
+        price: "Prezzo"
+      bollo:
+        identifier: "Identificazione"
+        price: "Prezzo"
   date:
     abbr_day_names:
     - dom

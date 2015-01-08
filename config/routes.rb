@@ -15,7 +15,14 @@ Rails.application.routes.draw do
     end
   end
   
-  resources :bollos
+  resources :bollo_ranges, :path => "bollos", :controller => "bollos" do
+    member do
+      get "edit_bollo"
+      post "update_bollo"
+      delete "destroy_bollo"
+    end
+  end
+  
   resources :apartments
   resources :expenses
   resources :repartition_tables

@@ -46,6 +46,11 @@
 				$(this).submit();
 			});
 		});
+		$(".table-collapsed .child-table").hide();
+		$(".table-collapsed a.toggle-table").on("click", function(e){
+			e.preventDefault();
+			$(this).parent().parent().next().toggle("slow");
+		});	
 	</script>
 </body>
 </html>
