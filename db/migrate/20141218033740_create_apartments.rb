@@ -4,6 +4,8 @@ class CreateApartments < ActiveRecord::Migration
       t.string :name
       t.integer :rooms
       t.integer :building_id
+      t.integer :dimension
+      t.integer :floor
 
       t.timestamps
     end

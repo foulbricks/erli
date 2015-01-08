@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-xs-12">
-		<h3>Modificare Configurazione</h3>
+		<h3><%= Building.find(cookies[:building]).name %> Configurazione Generale</h3>
 		<hr />
 	</div>
 </div>
@@ -21,61 +21,48 @@
 		<%= form_for @setup, html: {:novalidate => "novalidate", name: "setupForm", class: "form-horizontal" } do |f| %>
 		
 			<div class="form-group" ng-class="{'has-error':setupForm['setup[erli_admin_email]'].$dirty && setupForm['setup[erli_admin_email]'].$invalid }">
-				<%= f.label :erli_admin_email, "Email di Amministrazione", :class => "col-sm-3 control-label" %>
+				<%= f.label :erli_admin_email, "Email Amministrazione", :class => "col-sm-3 control-label" %>
 				<div class="col-sm-9">
-					<%= f.email_field :erli_admin_email, :class => "form-control", :placeholder => "Email di Amministrazione", :"ng-model" => "erli_admin_email", :"ng-required" => true %>
+					<%= f.email_field :erli_admin_email, :class => "form-control", :placeholder => "Email Amministrazione", :"ng-model" => "erli_admin_email", :"ng-required" => true %>
 					<span class="error-message" ng-show="setupForm['setup[erli_admin_email]'].$dirty && setupForm['setup[erli_admin_email]'].$invalid">Email non è valido..</span>
 				</div>
 			</div>
 			
 			<div class="form-group" ng-class="{'has-error':setupForm['setup[erli_mav_email]'].$dirty && setupForm['setup[erli_mav_email]'].$invalid }">
-				<%= f.label :erli_mav_email, "Email di MAV", :class => "col-sm-3 control-label" %>
+				<%= f.label :erli_mav_email, "Email MAV", :class => "col-sm-3 control-label" %>
 				<div class="col-sm-9">
-					<%= f.email_field :erli_mav_email, :class => "form-control", :placeholder => "Email di MAV", :"ng-model" => "erli_mav_email", :"ng-required" => true %>
+					<%= f.email_field :erli_mav_email, :class => "form-control", :placeholder => "Email MAV", :"ng-model" => "erli_mav_email", :"ng-required" => true %>
 					<span class="error-message" ng-show="setupForm['setup[erli_mav_email]'].$dirty && setupForm['setup[erli_mav_email]'].$invalid">Email di MAV non è valido..</span>
 				</div>
 			</div>
 			
 			<div class="form-group">
-				<%= f.label :erli_mav_email_active, "Email di MAV abilitato", :class => "col-sm-3 control-label" %>
+				<%= f.label :erli_mav_email_active, "Email MAV abilitato", :class => "col-sm-3 control-label" %>
 				<div class="col-sm-9">
 					<p style="margin-top: 5px;"><%= f.check_box :erli_mav_email_active %></p>
 				</div>
 			</div>
 			
-			<div class="form-group" ng-class="{'has-error':setupForm['setup[balance_expenses]'].$dirty && setupForm['setup[balance_expenses]'].$invalid }">
-				<%= f.label :balance_expenses, "Data di bilanciare le spese", :class => "col-sm-3 control-label" %>
-				<div class="col-sm-9">
-					<div class="input-group">
-						<%= f.text_field :balance_expenses, :class => "form-control", :"datepicker-popup" => "yyyy-MM-dd", :placeholder => "Data di bilanciare le spese", :"ng-model" => "balance_expenses", :"ng-required" => true, :"is-open" => "opened" %>
-		                <span class="input-group-btn">
-		                  <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-		                </span>
-					</div>
-					<span class="error-message" ng-show="setupForm['setup[balance_expenses]'].$dirty && setupForm['setup[balance_expenses]'].$invalid">Data di bilanciare le spese è richiesta.</span>
-				</div>
-			</div>
-			
 			<div class="form-group" ng-class="{'has-error':setupForm['setup[mav_expiration]'].$dirty && setupForm['setup[mav_expiration]'].$invalid }">
 				<%= f.label :mav_expiration, "Giorno di scadenza del MAV", :class => "col-sm-3 control-label" %>
-				<div class="col-sm-9">
-					<%= f.text_field :mav_expiration, :class => "form-control", :placeholder => "Giorno di scadenza del MAV", :"ng-model" => "mav_expiration", :"ng-required" => true %>
+				<div class="col-sm-3">
+					<%= f.select :mav_expiration, options_for_select((1..28)), {}, {:class => "form-control"} %>
 					<span class="error-message" ng-show="setupForm['setup[mav_expiration]'].$dirty && setupForm['setup[mav_expiration]'].$invalid">Giorno di scadenza del MAV è richiesta.</span>
 				</div>
 			</div>
 			
 			<div class="form-group" ng-class="{'has-error':setupForm['setup[invoice_generation]'].$dirty && setupForm['setup[invoice_generation]'].$invalid }">
 				<%= f.label :invoice_generation, "Giorno di generazione della fattura", :class => "col-sm-3 control-label" %>
-				<div class="col-sm-9">
-					<%= f.text_field :invoice_generation, :class => "form-control", :placeholder => "Giorno di generazione della fattura", :"ng-model" => "invoice_generation", :"ng-required" => true %>
+				<div class="col-sm-3">
+					<%= f.select :invoice_generation, options_for_select((1..28)), {}, {:class => "form-control"} %>
 					<span class="error-message" ng-show="setupForm['setup[invoice_generation]'].$dirty && setupForm['setup[invoice_generation]'].$invalid">Giorno di generazione della fattura è richiesta.</span>
 				</div>
 			</div>
 			
 			<div class="form-group" ng-class="{'has-error':setupForm['setup[invoice_delivery]'].$dirty && setupForm['setup[invoice_delivery]'].$invalid }">
 				<%= f.label :invoice_delivery, "Giorno di consegna della fattura", :class => "col-sm-3 control-label" %>
-				<div class="col-sm-9">
-					<%= f.text_field :invoice_delivery, :class => "form-control", :placeholder => "Giorno di consegna della fattura", :"ng-model" => "invoice_delivery", :"ng-required" => true %>
+				<div class="col-sm-3">
+					<%= f.select :invoice_delivery, options_for_select((1..28)), {}, {:class => "form-control"} %>
 					<span class="error-message" ng-show="setupForm['setup[invoice_delivery]'].$dirty && setupForm['setup[invoice_delivery]'].$invalid">Giorno di consegna della fattura è richiesta.</span>
 				</div>
 			</div>
@@ -104,10 +91,8 @@
 				</div>
 			</div>
 			
-
-	
 			<div class="col-sm-9 col-sm-offset-3">
-				<%= f.submit :class => "btn btn-lg btn-primary", :"ng-disabled" => "setupForm.$invalid"%>
+				<%= f.submit "Salva", :class => "btn btn-lg btn-primary", :"ng-disabled" => "setupForm.$invalid"%>
 			</div>
 		<% end %>
 	</div>

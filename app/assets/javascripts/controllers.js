@@ -67,13 +67,6 @@ controller("setupFormController", [
 		$scope.unpaid_sentence = angular.element("#setup_unpaid_sentence").val();
 		$scope.erli_mav_email = angular.element("#setup_erli_mav_email").val();
 		$scope.erli_admin_email = angular.element("#setup_erli_admin_email").val();
-		
-	    $scope.open = function($event) {
-	      $event.preventDefault();
-	      $event.stopPropagation();
-
-	      $scope.opened = true;
-	    };
 	}
 ]).
 
@@ -92,6 +85,19 @@ controller("tableFormController", [
 		for(var i = 0; i < ps.length; i++){
 			$scope[angular.element(ps[i]).attr("ng-model")] = angular.element(ps[i]).val();
 		}
+	}
+]).
+
+controller("dateFormController", [
+	"$scope",
+	function($scope){
+		$scope.date = angular.element("#balance_date_value").val();
+	    $scope.open = function($event) {
+	      $event.preventDefault();
+	      $event.stopPropagation();
+
+	      $scope.opened = true;
+	    };
 	}
 ]).
 

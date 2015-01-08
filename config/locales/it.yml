@@ -3,6 +3,9 @@ it:
     models:
       building: "Edificio"
       contract: "Contratto"
+      apartment: "Appartamento"
+      setup: "Configurazione"
+      balance_date: "Data Conguaglio"
     attributes:
       building:
         name: "Nome"
@@ -16,6 +19,17 @@ it:
       bollo:
         identifier: "Identificazione"
         price: "Prezzo"
+      apartment:
+        nome: "Name"
+        rooms: "Camere"
+        floor: "Piano"
+        dimension: "Dimensione"
+      setup:
+        erli_admin_email: "Email Amministrazione"
+        erli_mav_email: "Email MAV"
+        unpaid_sentence: "Frase non pagato"
+      balance_date:
+        value: "Data"
   date:
     abbr_day_names:
     - dom

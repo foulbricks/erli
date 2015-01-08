@@ -1,0 +1,34 @@
+<div class="row">
+	<div class="col-sm-12">
+		<% if flash[:notice] %>
+			<div class="alert alert-success"><%= flash[:notice] %></div>
+		<% elsif flash[:alert] %>
+			<div class="alert alert-danger"><%= flash[:alert] %></div>
+		<% end %>
+		
+		<h3><%= Building.find(cookies[:building]).name %> Date Conguaglio</h3>
+		<p class="text-right"><%= link_to "Creare Data Conguaglio", new_balance_date_path %></p>
+		<% if @dates.length > 0 %>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Data</th>
+						<th colspan="2">Azioni</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @dates.each do |date| %>
+						<tr>
+							<td><%= date.value.strftime("%d-%m-%Y") %></td>
+							<td><%= link_to "Modificare", edit_balance_date_path(date.id) %></td>
+							<td><%= link_to "Cancellare", balance_date_path(date.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
+						</tr>
+					<% end %>
+					
+				</tbody>
+			</table>
+		<% else %>
+			<p>Attualmente non ci sono date conguaglio disponibili</p>
+		<% end %>
+	</div>
+</div>

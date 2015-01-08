@@ -1,0 +1,30 @@
+<% if @date.errors.any? %>
+	<div class="alert alert-danger">
+		<strong>Il formulario non è valido.</strong><br />
+		<ul>
+			<% for message in @date.errors.full_messages %>
+				<li><%= message %></li>
+			<% end %>
+		</ul>
+	</div>
+<% end %>
+
+<%= form_for @date, html: {:novalidate => "novalidate", name: "dateForm", class: "form-horizontal" } do |f| %>
+	<div class="form-group" ng-class="{'has-error':dateForm['balance_date[value]'].$dirty && dateForm['balance_date[value]'].$invalid }">
+		<%= f.label :value, "Data", :class => "col-sm-3 control-label" %>
+		<div class="col-sm-4">
+			<div class="input-group">
+				<%= f.text_field :value, :class => "form-control", :"datepicker-popup" => "dd-MM-yyyy", :placeholder => "Data di balanciare le spese", :"ng-model" => "date", :"ng-required" => true, :"is-open" => "opened" %>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+			</div>
+			<span class="error-message" ng-show="dateForm['balance_date[value]'].$dirty && setupForm['balance_date[value]'].$invalid">Data di bilanciare le spese è richiesta.</span>
+		</div>
+	</div>
+	
+	<div class="col-sm-9 col-sm-offset-3">
+		<%= f.hidden_field :building_id, :value => cookies[:building] %>
+		<%= f.submit :class => "btn btn-lg btn-primary", :"ng-disabled" => "dateForm.$invalid"%>
+	</div>
+<% end %>

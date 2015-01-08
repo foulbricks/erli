@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   resources :expenses
   resources :repartition_tables
   resources :contracts
+  resources :balance_dates
   
   resources :setup, path_names: {edit: "setup"}, only: [:edit, :update]
                        
