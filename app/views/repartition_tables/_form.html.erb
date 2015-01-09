@@ -20,7 +20,13 @@
 	<div class="form-group">
 		<label class="col-sm-8 col-sm-offset-4 text-left">Percentuale di appartamenti</label>
 	</div>
+	<% floor = nil %>
 	<%= f.fields_for :apartment_repartition_tables do |rt| %>
+		<% if floor != rt.object.floor %>
+			<div class="form-group">
+				<label class="col-sm-8 col-sm-offset-4 text-left">Piano <%= floor = rt.object.floor %></label>
+			</div>
+		<% end %>
 		<div class="form-group" ng-class="{'has-error':tableForm['repartition_table[apartment_repartition_tables_attributes][<%= rt.index %>][percentage]'].$dirty && tableForm['repartition_table[apartment_repartition_tables_attributes][<%= rt.index %>][percentage]'].$invalid }">
 			<%= rt.label :percentage, "Appartamento " + rt.object.apartment.name, :class => "col-sm-3 col-sm-offset-4 control-label" %>
 			<div class="col-sm-3">
@@ -28,6 +34,8 @@
 				<span class="error-message" ng-show="tableForm['repartition_table[apartment_repartition_tables_attributes][<%= rt.index %>][percentage]'].$dirty && tableForm['repartition_table[apartment_repartition_tables_attributes][<%= rt.index %>][percentage]'].$invalid">Percentuale è richiesto.</span>
 			</div>
 			<%= rt.hidden_field :apartment_id, :value => rt.object.apartment.id %>
+			<%= rt.hidden_field :floor, :value => rt.object.apartment.floor %>
+			<%= rt.hidden_field :name, :value => rt.object.apartment.name %>
 		</div>
 	<% end %>
 	

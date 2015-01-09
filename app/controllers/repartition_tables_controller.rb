@@ -47,6 +47,6 @@ class RepartitionTablesController < ApplicationController
   
   def repartition_table_params
     params.require(:repartition_table).permit(:name, :building_id, 
-                  :apartment_repartition_tables_attributes => [:id, :apartment_id, :percentage])
+                  :apartment_repartition_tables_attributes => [:id, :apartment_id, :percentage, :floor, :name])
   end
 end
