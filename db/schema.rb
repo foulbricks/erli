@@ -13,12 +13,13 @@
 
 ActiveRecord::Schema.define(version: 20150112053410) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "apartment_repartition_tables", force: true do |t|
     t.integer  "apartment_id"
     t.integer  "repartition_table_id"
     t.decimal  "percentage"
-    t.integer  "floor"
-    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -161,6 +162,7 @@ ActiveRecord::Schema.define(version: 20150112053410) do
     t.string   "codice_fiscale"
     t.string   "codice_salt"
     t.boolean  "secondary"
+    t.integer  "lease_id"
   end
 
 end

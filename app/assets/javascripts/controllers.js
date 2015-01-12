@@ -104,6 +104,7 @@ controller("dateFormController", [
 controller("leaseTableController", [
 	"$scope", "$modal",
 	function($scope, $modal){
+		
 		$scope.openForm = function($event, apartment){
   	      $event.preventDefault();
   	      $event.stopPropagation();
@@ -119,6 +120,12 @@ controller("leaseTableController", [
 controller("leaseFormController", [
 	"$scope",
 	function($scope){
+		$scope.open = function($event, n) {
+	      $event.preventDefault();
+	      $event.stopPropagation();
+
+	      $scope["opened" + n] = true;
+	    };
 	}
 ]).
 

@@ -14,7 +14,8 @@
 						<th></th>
 						<th>Numero</th>
 						<th>Stato</th>
-						<th>Occupazione (%)</th>
+						<th>Occupazione</th>
+						<th></th>
 						<th></th>
 						<th></th>
 					</tr>
@@ -22,18 +23,36 @@
 				<tbody>
 					<% @apartments.each do |apartment| %>
 						<tr class="<%= lease_row_class(apartment.status) %>">
-							<td><a href="#" class="toggle-table"><small class="glyphicon glyphicon-file" aria-hidden="true"></small></a></td>
+							<td>
+								<a href="#"><small class="glyphicon glyphicon-file" aria-hidden="true" tooltip="Scaricare file di locazione"></small></a></td>
 							<td><%= apartment.name %></td>
 							<td><%= apartment.status %></td>
-							<td><%= apartment.percentage %></td>
-							<td><%= link_to "Mostrare", "#" %></td>
-							<td><% if apartment.status == "Occupato" %>
-									<%= link_to "Chiudere", "#" %>
-								<% else %>
+							<td><%= number_to_percentage(apartment.percentage) %></td>
+							<td><% unless apartment.status == "Disponibile" %>
+									<%= link_to("Mostrare", "#", :class => "toggle-table") %>
+								<% end %>
+							</td>
+							<td>
+								<% unless apartment.status == "Occupato" %>
 									<%= link_to "Registrati Locazione", "#", :"ng-click" => "openForm($event, #{apartment.id})"  %>
 								<% end %>
 							</td>
+							<td>
+								<a href="#"><i class="fa fa-history" tooltip="Storia locazione"></i>
+							</td>
 						</tr>
+						<% if apartment.leases.size > 0 %>
+							<tr class="child-table">
+								<td colspan="7" style="background-color: #fff;">
+									<% apartment.leases.each do |lease| %>
+										<% primary_user = lease.users.where("secondary = false").first %>
+										<p>Nome: <%= primary_user.name %></p>
+										<p>Email: <%= primary_user.email %></p>
+										<hr />
+									<% end %>
+								</td>
+							</tr>
+						<% end %>
 					<% end %>
 				</tbody>
 			</table>

@@ -13,6 +13,8 @@ class CreateLeases < ActiveRecord::Migration
       t.date        :registration_date
       t.integer     :registration_number
       t.string      :registration_agency
+      t.boolean     :active,    :default => true
+      t.date        :inactive_date
 
       t.timestamps
     end
