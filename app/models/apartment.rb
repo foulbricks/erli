@@ -1,6 +1,7 @@
 class Apartment < ActiveRecord::Base
   belongs_to :building
   has_many :apartment_repartition_tables, :dependent => :destroy
+  has_many :leases, :dependent => :destroy
   
   after_create do |a|
     RepartitionTable.all.each do |r|
@@ -13,4 +14,17 @@ class Apartment < ActiveRecord::Base
   validates :dimension, :rooms, :floor, :numericality => {:only_integer => true}
   validates :name, uniqueness: true
 
+  def status
+    if percentage > 99
+      "Occupato"
+    elsif percentage < 1
+      "Disponibile"
+    else
+      "Camera disponibile"
+    end
+  end
+  
+  def percentage
+    leases.map(&:percentage).sum
+  end
 end

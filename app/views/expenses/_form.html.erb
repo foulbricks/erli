@@ -24,10 +24,19 @@
 			<%= f.select :kind, options_for_select(["Edificio", "Appartamento"]), {}, {:class => "form-control", :"ng-model" => "kind" } %>
 		</div>
 	</div>
+
+	<% if @dates.present? %>
+	   	<div class="form-group" ng-if="kind == 'Edificio'">
+	   		<%= f.label :balance_date_id, "Data Conguaglio", :class => "col-sm-3 control-label" %>
+	   		<div class="col-sm-4">
+	   			<%= f.select :balance_date_id, options_from_collection_for_select(@dates, "id", "value_it_locale", @expense.balance_date_id), {:prompt => "Seleziona"}, {:class => "form-control"} %> 
+	   		</div>
+	   	</div>
+	<% end %>
 	
 	<% if @tables.present? %>
 	   	<div class="form-group" ng-if="kind == 'Edificio'">
-	   		<%= f.label :repartition_table_id, "Repartition Table", :class => "col-sm-3 control-label" %>
+	   		<%= f.label :repartition_table_id, "Tavolo di Ripartizione", :class => "col-sm-3 control-label" %>
 	   		<div class="col-sm-4">
 	   			<%= f.select :repartition_table_id, options_from_collection_for_select(@tables, "id", "name", @expense.repartition_table_id), {}, {:class => "form-control"} %>
 	   		</div>

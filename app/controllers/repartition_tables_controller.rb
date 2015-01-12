@@ -1,5 +1,5 @@
 class RepartitionTablesController < ApplicationController
-  before_filter :check_admin
+  before_filter :check_admin, :check_building_cookie
   
   def index
     @tables = RepartitionTable.where(:building_id => cookies[:building]).all

@@ -1,5 +1,5 @@
 class SetupController < ApplicationController
-  before_filter :check_admin
+  before_filter :check_admin, :check_building_cookie
   
   def edit
     @setup = Setup.where(:building_id => cookies[:building]).first || Setup.create!(:building_id => cookies[:building])

@@ -6,6 +6,9 @@ it:
       apartment: "Appartamento"
       setup: "Configurazione"
       balance_date: "Data Conguaglio"
+      expense: "Spesa"
+      repartition_table: "Tavolo di Ripartizione"
+      lease: "Locazione"
     attributes:
       building:
         name: "Nome"
@@ -30,6 +33,20 @@ it:
         unpaid_sentence: "Frase non pagato"
       balance_date:
         value: "Data"
+      user:
+        first_name: "Nome"
+        last_name: "Cognome"
+      lease:
+        percentage: "Percentuale di Locazione"
+        invoice_address: "Indirizzo di fatturazione"
+        amount: "Canone di Locazione"
+        payment_frequency: "Frequenza di pagamento"
+        start_date: "Data di inizio"
+        end_date: "Data di fine"
+        deposit: "Cauzione"
+        registration_date: "Data di registrazione"
+        registration_number: "Numero di registrazione"
+        registration_agency: "Agenzia di registrazione"
   date:
     abbr_day_names:
     - dom

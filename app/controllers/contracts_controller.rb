@@ -1,4 +1,5 @@
 class ContractsController < ApplicationController
+  before_filter :check_admin, :clear_building
   
   def index
     @contracts = Contract.all

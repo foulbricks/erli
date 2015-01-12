@@ -1,5 +1,5 @@
 class ApartmentsController < ApplicationController
-  before_filter :check_admin
+  before_filter :check_admin, :check_building_cookie
   
   def index
     @apartments = Apartment.where(:building_id => cookies[:building]).order(:name).all

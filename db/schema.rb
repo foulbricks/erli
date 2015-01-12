@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150108172802) do
+ActiveRecord::Schema.define(version: 20150112053410) do
 
   create_table "apartment_repartition_tables", force: true do |t|
     t.integer  "apartment_id"
@@ -92,12 +92,30 @@ ActiveRecord::Schema.define(version: 20150108172802) do
     t.integer  "repartition_table_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "balance_date_id"
   end
 
   create_table "google_tokens", force: true do |t|
     t.string   "access_token"
     t.string   "refresh_token"
     t.datetime "expires_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "leases", force: true do |t|
+    t.decimal  "percentage",          default: 0.0, null: false
+    t.integer  "contract_id"
+    t.integer  "apartment_id"
+    t.string   "invoice_address"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.decimal  "amount"
+    t.integer  "payment_frequency"
+    t.decimal  "deposit"
+    t.date     "registration_date"
+    t.integer  "registration_number"
+    t.string   "registration_agency"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -140,6 +158,9 @@ ActiveRecord::Schema.define(version: 20150108172802) do
     t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "codice_fiscale"
+    t.string   "codice_salt"
+    t.boolean  "secondary"
   end
 
 end

@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  before_filter :authorize
+  before_filter :check_admin
   
   def index
     

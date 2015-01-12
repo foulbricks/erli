@@ -1,4 +1,5 @@
 class BollosController < ApplicationController
+  before_filter :check_admin, :clear_building
   
   def index
     @ranges = BolloRange.order("created_at DESC").all

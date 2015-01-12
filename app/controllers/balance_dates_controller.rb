@@ -1,5 +1,5 @@
 class BalanceDatesController < ApplicationController
-  before_filter :check_admin
+  before_filter :check_admin, :check_building_cookie
   
   def index
     @dates = BalanceDate.where("building_id = ?", cookies[:building]).order("value DESC").all

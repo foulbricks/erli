@@ -1,12 +1,13 @@
 class ExpensesController < ApplicationController
+  before_filter :check_admin, :check_building_cookie
+  before_action :find_tables_and_dates, :only => [:new, :create, :edit, :update]
   
   def index
-    @expenses = Expense.all
+    @expenses = Expense.where(:building_id => cookies[:building]).all
   end
   
   def new
     @expense = Expense.new
-    @tables = RepartitionTable.where(:building_id => cookies[:building]).all
   end
   
   def create
@@ -53,7 +54,12 @@ class ExpensesController < ApplicationController
   private
   
   def expenses_params
-    params.require(:expense).permit(:name, :kind, :add_to_invoice, :repartition_table_id, :building_id)
+    params.require(:expense).permit(:name, :kind, :add_to_invoice, :repartition_table_id, :building_id, :balance_date_id)
+  end
+  
+  def find_tables_and_dates
+    @tables = RepartitionTable.where(:building_id => cookies[:building]).all
+    @dates = BalanceDate.where(:building_id => cookies[:building]).all
   end
   
 end

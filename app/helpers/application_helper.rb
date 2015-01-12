@@ -14,4 +14,13 @@ module ApplicationHelper
     Building.all
   end
   
+  def lease_row_class(status)
+    if status == "Occupato"
+      "danger"
+    elsif status == "Disponibile"
+      "success"
+    else
+      "partial"
+    end
+  end
 end

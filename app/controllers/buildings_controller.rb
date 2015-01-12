@@ -1,4 +1,6 @@
 class BuildingsController < ApplicationController
+  before_filter :check_admin
+  before_filter :clear_building, :except => :set_workspace
   
   def index
     @buildings = Building.all
@@ -44,7 +46,7 @@ class BuildingsController < ApplicationController
   
   def set_workspace
     cookies[:building] = {value: params[:building], expires: Time.now + 3600}
-    if request.referer.present?
+    if request.referer.present? && controller_name != "buildings"
       redirect_to :back
     else
       redirect_to root_path

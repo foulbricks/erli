@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :check_admin
+  before_filter :check_admin, :clear_building
   
   def index
     @users = User.where(["admin = ?", true]).order("email DESC").all

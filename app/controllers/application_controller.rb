@@ -26,4 +26,14 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def check_building_cookie
+    if cookies[:building].blank?
+      redirect_to root_path
+    end
+  end
+  
+  def clear_building
+    cookies[:building] = nil
+  end
+  
 end

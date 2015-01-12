@@ -101,6 +101,27 @@ controller("dateFormController", [
 	}
 ]).
 
+controller("leaseTableController", [
+	"$scope", "$modal",
+	function($scope, $modal){
+		$scope.openForm = function($event, apartment){
+  	      $event.preventDefault();
+  	      $event.stopPropagation();
+			
+			$modal.open({
+				templateUrl: "leases/new?apartment_id=" + apartment,
+				controller: "leaseFormController"
+			});
+		}
+	}
+]).
+
+controller("leaseFormController", [
+	"$scope",
+	function($scope){
+	}
+]).
+
 controller("CalendarController", [
 	"$scope", "moment",
 	function($scope, moment){

@@ -3,4 +3,8 @@ class BalanceDate < ActiveRecord::Base
   belongs_to :building
   
   validates :value, :building_id, :presence => true
+  
+  def value_it_locale
+    value.strftime("%d-%m-%Y")
+  end
 end
