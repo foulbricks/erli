@@ -34,6 +34,7 @@ gem 'omniauth', '~> 1.2.2'
 gem 'omniauth-google-oauth2'
 gem 'google-api-client', :require => 'google/api_client'
 gem 'will_paginate', '~> 3.0.6'
+gem "carrierwave", "~> 0.10.0"
 
 # Use unicorn as the app server
 # gem 'unicorn'

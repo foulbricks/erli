@@ -11,15 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150112053410) do
-
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+ActiveRecord::Schema.define(version: 20150113023913) do
 
   create_table "apartment_repartition_tables", force: true do |t|
     t.integer  "apartment_id"
     t.integer  "repartition_table_id"
     t.decimal  "percentage"
+    t.integer  "floor"
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -104,8 +103,15 @@ ActiveRecord::Schema.define(version: 20150112053410) do
     t.datetime "updated_at"
   end
 
+  create_table "lease_attachments", force: true do |t|
+    t.integer  "lease_id"
+    t.string   "document"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "leases", force: true do |t|
-    t.decimal  "percentage",          default: 0.0, null: false
+    t.decimal  "percentage",          default: 0.0,  null: false
     t.integer  "contract_id"
     t.integer  "apartment_id"
     t.string   "invoice_address"
@@ -117,6 +123,8 @@ ActiveRecord::Schema.define(version: 20150112053410) do
     t.date     "registration_date"
     t.integer  "registration_number"
     t.string   "registration_agency"
+    t.boolean  "active",              default: true
+    t.date     "inactive_date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -160,9 +168,9 @@ ActiveRecord::Schema.define(version: 20150112053410) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "codice_fiscale"
-    t.string   "codice_salt"
-    t.boolean  "secondary"
+    t.boolean  "secondary",              default: false
     t.integer  "lease_id"
+    t.integer  "building_id"
   end
 
 end

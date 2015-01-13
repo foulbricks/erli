@@ -16,10 +16,11 @@ class LeasesController < ApplicationController
     @lease  = Lease.new(lease_params)
     user = @lease.users.first
     user.passwd, user.passwd_confirmation = user.make_temporary_password
+    user.building_id = @lease.apartment.building_id
     
     if @lease.save
       flash[:notice] = "Locazione salvata con successo"
-      redirect_to leases_path
+      render :json => {:success => true }
     else
       respond_to do |format|
         format.json { render :json => {:errors => @lease.errors.full_messages} }
@@ -29,11 +30,23 @@ class LeasesController < ApplicationController
   end
   
   def edit
-    
+    @lease = Lease.find(params[:id])
+    @contracts = Contract.all
+    @apartment = @lease.apartment
   end
   
   def update
+    @lease = Lease.find(params[:id])
     
+    if @lease.update(lease_params)
+      flash[:notice] = "Locazione modificata con successo"
+      render :json => { :success => true }
+    else
+      respond_to do |format|
+        format.json { render :json => {:errors => @lease.errors.full_messages} }
+        format.html { render "edit" }
+      end
+    end
   end
   
   def destroy
@@ -45,7 +58,7 @@ class LeasesController < ApplicationController
     params.require(:lease)
     .permit(:percentage, :contract_id, :apartment_id, :invoice_address, :start_date, :end_date, :amount,
             :payment_frequency, :deposit, :registration_date, :registration_number, :registration_agency,
-            :users_attributes => [:first_name, :last_name, :email, :codice])
+            :users_attributes => [:first_name, :last_name, :email, :codice_fiscale])
   end
   
 end

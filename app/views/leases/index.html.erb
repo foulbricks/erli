@@ -11,7 +11,6 @@
 			<table class="table table-collapsed">
 				<thead>
 					<tr>
-						<th></th>
 						<th>Numero</th>
 						<th>Stato</th>
 						<th>Occupazione</th>
@@ -23,8 +22,6 @@
 				<tbody>
 					<% @apartments.each do |apartment| %>
 						<tr class="<%= lease_row_class(apartment.status) %>">
-							<td>
-								<a href="#"><small class="glyphicon glyphicon-file" aria-hidden="true" tooltip="Scaricare file di locazione"></small></a></td>
 							<td><%= apartment.name %></td>
 							<td><%= apartment.status %></td>
 							<td><%= number_to_percentage(apartment.percentage) %></td>
@@ -41,14 +38,44 @@
 								<a href="#"><i class="fa fa-history" tooltip="Storia locazione"></i>
 							</td>
 						</tr>
-						<% if apartment.leases.size > 0 %>
+						<% if (s = apartment.leases.size) > 0 %>
 							<tr class="child-table">
 								<td colspan="7" style="background-color: #fff;">
-									<% apartment.leases.each do |lease| %>
-										<% primary_user = lease.users.where("secondary = false").first %>
-										<p>Nome: <%= primary_user.name %></p>
-										<p>Email: <%= primary_user.email %></p>
-										<hr />
+									<% apartment.leases.each_with_index do |lease, i| %>
+											<div class="col-sm-4">
+												<% primary_user = lease.users.where("secondary = false").first %>
+												<p><strong>Nome:</strong> <%= primary_user.name %></p>
+												<p><strong>Email:</strong> <%= primary_user.email %></p>
+												<p><strong>Codice Fiscale:</strong> <%= primary_user.codice_fiscale %></p>
+												<p><strong>Data di Inizio:</strong> <%= lease.start_date.strftime("%d-%m-%Y") %></p>
+												<p><strong>Data di Fine:</strong> <%= lease.end_date.strftime("%d-%m-%Y") %></p>
+											</div>
+											<div class="col-sm-4">
+												<p><strong>Percentuale:</strong> <%= number_to_percentage(lease.percentage) %></p>
+												<p><strong>Tipo di contratto:</strong> <%= lease.contract.name %></p>
+												<p><strong>Indirizzo di fatturazione:</strong><br /> <%= lease.invoice_address %></p>
+												<p><strong>Canone di Locazione:</strong> <%= lease.amount %></p>
+												<p><strong>Cauzione:</strong> <%= lease.deposit %></p>
+												<p><strong>Frequenza di pagamento:</strong> <%= lease.payment_frequency %> Mese</p>
+											</div>
+											<div class="col-sm-4">
+												<p><%= link_to "Scaricare locazione", "#" %></p>
+												<p><%= link_to "Aggiungere documente", "#" %></p>
+												<p><%= link_to "Chiudere locazione", "#" %></p>
+												<% if lease.registration_date.blank? %>
+													<p><%= link_to "Registrare", "#" %></p>
+													<p><%= link_to "Modificare locazione", "#" %></p>
+												<% else %>
+													<p><strong>Data di registrazione:</strong> <%= lease.registration_date.strftime("%d-%m-%Y") %>
+												<% end %>
+												<% if lease.registration_number.present? %>
+													<p><strong>Numero di registrazione:</strong> <%= lease.registration_number %>
+												<% end %>
+												<% if lease.registration_agency.present? %>
+													<p><strong>Agenzia di registrazione:</strong> <%= lease.registration_agency %>
+												<% end %>
+											</div>
+										<% unless i + 1 >= s %><div class="col-sm-12"><hr /></div><% end %>
 									<% end %>
 								</td>
 							</tr>

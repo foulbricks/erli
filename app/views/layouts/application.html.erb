@@ -50,7 +50,29 @@
 		$(".table-collapsed a.toggle-table").on("click", function(e){
 			e.preventDefault();
 			$(this).parent().parent().next().toggle("slow");
-		});	
+		});
+		
+		$(document).on("submit", "form[name=leaseForm]", function(e){
+			e.preventDefault();
+			var form = $("form[name=leaseForm]");
+			$.ajax({
+				type: form.attr("method"),
+				url: form.attr("action"),
+				data: form.serialize(),
+				success: function(data) {
+					if(data.errors){
+						var errorsList = $(".leaseFormErrors").html("");
+						data.errors.forEach(function(err){
+							errorsList.append("<li>" + err + "</li>");
+						});
+					}
+					else {
+						$(".leaseFormErrors").html("");
+						window.location = window.location.href.replace("#", "");
+					}
+				}
+			})
+		})
 	</script>
 </body>
 </html>

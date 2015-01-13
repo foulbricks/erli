@@ -2,11 +2,12 @@ require "bcrypt"
 require "digest/sha1"
 
 class User < ActiveRecord::Base
-  attr_accessor :passwd, :codice
+  attr_accessor :passwd#, :codice
   
   before_save :encrypt_password
   
   belongs_to :lease
+  belongs_to :building
   
   validates_presence_of :first_name, :last_name, :email
   validates_presence_of :passwd, :on => :create
@@ -33,12 +34,12 @@ class User < ActiveRecord::Base
     end
   end
   
-  def encrypt_codice_fiscale
-    if codice.present?
-      self.codice_salt = BCrypt::Engine.generate_salt
-      self.codice_fiscale = BCrypt::Engine.hash_secret(self.codice, self.codice_salt)
-    end
-  end
+  # def encrypt_codice_fiscale
+  #   if codice.present?
+  #     self.codice_salt = BCrypt::Engine.generate_salt
+  #     self.codice_fiscale = BCrypt::Engine.hash_secret(self.codice, self.codice_salt)
+  #   end
+  # end
   
   def activate!
     unless within_activation_time?
