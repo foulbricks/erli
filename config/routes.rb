@@ -28,7 +28,13 @@ Rails.application.routes.draw do
   resources :repartition_tables
   resources :contracts
   resources :balance_dates
-  resources :leases
+  
+  resources :leases do
+    member do
+      get "registration"
+      get "download_attachment"
+    end
+  end
   
   resources :setup, path_names: {edit: "setup"}, only: [:edit, :update]
                        

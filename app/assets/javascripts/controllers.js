@@ -104,27 +104,68 @@ controller("dateFormController", [
 controller("leaseTableController", [
 	"$scope", "$modal",
 	function($scope, $modal){
-		
+		var modalInstance;
 		$scope.openForm = function($event, apartment){
   	      $event.preventDefault();
   	      $event.stopPropagation();
 			
-			$modal.open({
+			modalInstance = $modal.open({
 				templateUrl: "leases/new?apartment_id=" + apartment,
-				controller: "leaseFormController"
+				controller: "leaseFormController",
+				scope: $scope
 			});
+		}
+
+		$scope.openRegistrationForm = function($event, lease_id){
+  	      $event.preventDefault();
+  	      $event.stopPropagation();
+			
+			modalInstance = $modal.open({
+				templateUrl: "/leases/" + lease_id + "/registration",
+				controller: "registrationFormController",
+				scope: $scope
+			});
+		}
+		
+		$scope.openUpdateForm = function($event, lease_id){
+  	      $event.preventDefault();
+  	      $event.stopPropagation();
+			
+			modalInstance = $modal.open({
+				templateUrl: "/leases/" + lease_id + "/edit",
+				controller: "leaseFormController",
+				scope: $scope
+			});
+		}
+		
+		$scope.closeForm = function($event){
+  	        $event.preventDefault();
+  	        $event.stopPropagation();
+			modalInstance.close();
 		}
 	}
 ]).
 
 controller("leaseFormController", [
-	"$scope",
-	function($scope){
+	"$scope", "$modal",
+	function($scope, $modal){
 		$scope.open = function($event, n) {
 	      $event.preventDefault();
 	      $event.stopPropagation();
 
 	      $scope["opened" + n] = true;
+	    };
+	}
+]).
+
+controller("registrationFormController", [
+	"$scope",
+	function($scope){
+	    $scope.open = function($event) {
+	      $event.preventDefault();
+	      $event.stopPropagation();
+
+	      $scope.opened = true;
 	    };
 	}
 ]).

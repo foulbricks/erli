@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(version: 20150113023913) do
   create_table "lease_attachments", force: true do |t|
     t.integer  "lease_id"
     t.string   "document"
+    t.boolean  "lease_document"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

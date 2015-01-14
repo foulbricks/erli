@@ -6,6 +6,6 @@ class DocumentUploader < CarrierWave::Uploader::Base
   end
   
   def extension_while_list
-    %w(pdf doc htm html docx)
+    %w(pdf doc htm html docx txt)
   end
 end
