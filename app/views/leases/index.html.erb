@@ -59,9 +59,8 @@
 												<p><strong>Frequenza di pagamento:</strong> <%= lease.payment_frequency %> Mese</p>
 											</div>
 											<div class="col-sm-4">
-												<p><%= link_to "Scaricare locazione", "#" %></p>
-												<p><%= link_to "Aggiungere documente", "#" %></p>
 												<p><%= link_to "Chiudere locazione", "#" %></p>
+												<p><%= link_to "Aggiungere documente", "#", :"ng-click" => "openAttachmentForm($event, #{lease.id})" %></p>
 												<% if lease.registration_date.blank? %>
 													<p><%= link_to "Registrare", "#", :"ng-click" => "openRegistrationForm($event, #{lease.id})" %></p>
 													<p><%= link_to "Modificare locazione", "#", :"ng-click" => "openUpdateForm($event, #{lease.id})" %></p>
@@ -75,11 +74,13 @@
 													<p><strong>Agenzia di registrazione:</strong> <%= lease.registration_agency %>
 												<% end %>
 												<% if lease.lease_attachments.size > 0 %>
-													<p><strong>File:</strong><br /><br />
+													<p class="col-sm-3"><strong>File:</strong></p>
+													<ul class="col-sm-9">
 														<% lease.lease_attachments.each do |f| %>
-															<%= link_to f.document.file.filename, download_attachment_lease_path(f.id) %>
+															<% name = f.lease_document? ? "Documente di Locazione" : f.document.file.filename %>
+															<li><%= link_to name, download_attachment_lease_path(f.id) %></li>
 														<% end %>
-													</p>
+													</ul>
 												<% end %>
 											</div>
 										<% unless i + 1 >= s %><div class="col-sm-12"><hr /></div><% end %>

@@ -3,11 +3,11 @@ class Lease < ActiveRecord::Base
   
   belongs_to :apartment
   belongs_to :contract
-  has_many :users
-  has_many :lease_attachments
+  has_many :users, :dependent => :destroy
+  has_many :lease_attachments, :dependent => :destroy
   
   accepts_nested_attributes_for :users
-  accepts_nested_attributes_for :lease_attachments
+  accepts_nested_attributes_for :lease_attachments, reject_if: proc { |attributes| attributes['document'].blank? }
   
   validates :percentage, :contract_id, :apartment_id, :invoice_address, :start_date,
             :end_date, :amount, :payment_frequency, :deposit, :presence => true

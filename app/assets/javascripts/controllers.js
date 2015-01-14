@@ -138,6 +138,17 @@ controller("leaseTableController", [
 			});
 		}
 		
+		$scope.openAttachmentForm = function($event, lease_id){
+  	      $event.preventDefault();
+  	      $event.stopPropagation();
+			
+			modalInstance = $modal.open({
+				templateUrl: "/leases/" + lease_id + "/lease_attachment",
+				controller: "leaseAttachmentFormController",
+				scope: $scope
+			});
+		}
+		
 		$scope.closeForm = function($event){
   	        $event.preventDefault();
   	        $event.stopPropagation();
@@ -159,6 +170,18 @@ controller("leaseFormController", [
 ]).
 
 controller("registrationFormController", [
+	"$scope",
+	function($scope){
+	    $scope.open = function($event) {
+	      $event.preventDefault();
+	      $event.stopPropagation();
+
+	      $scope.opened = true;
+	    };
+	}
+]).
+
+controller("leaseAttachmentFormController", [
 	"$scope",
 	function($scope){
 	    $scope.open = function($event) {

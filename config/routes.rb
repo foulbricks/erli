@@ -33,6 +33,7 @@ Rails.application.routes.draw do
     member do
       get "registration"
       get "download_attachment"
+      get "lease_attachment"
     end
   end
   

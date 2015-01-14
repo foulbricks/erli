@@ -1,0 +1,33 @@
+<div>
+	<div class="modal-header">
+		<h3>Nuovo Documente, Locazione <%= @lease.users.first.name %></h3>
+	</div>
+
+	<div class="modal-body">
+		<%= form_for @lease, html: {:novalidate => "novalidate", name: "attachmentForm", class: "form-horizontal", :multipart => true } do |f| %>
+	
+			<%= f.fields_for :lease_attachments, @lease.lease_attachments.build do |la| %>
+				<div class="form-group">
+					<%= la.label :document, "Documente", :class => "col-sm-3 control-label" %>	
+					<div class="col-sm-9">
+						<p><%= la.file_field :document, :placeholder => "Documente" %><br/>
+							<strong>E questo il documento di locazione?</strong><br />
+							<label class="control-label">Si</label> <%= la.check_box :lease_document %>
+						</p>
+					</div>
+				</div>
+			<% end %>
+	
+			<div class="form-group">
+				<div class="col-sm-9 col-sm-offset-3">
+					<%= f.submit "Salva", :class => "btn btn-lg btn-primary" %>
+				</div>
+			</div>
+		<% end %>
+	</div>
+	<div class="modal-footer">
+		<ul class="danger attachmentFormErrors">
+		</ul>
+		<a href="#" ng-click="closeForm($event)">chiudere</a>
+	</div>
+</div>

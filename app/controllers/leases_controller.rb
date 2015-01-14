@@ -7,6 +7,7 @@ class LeasesController < ApplicationController
   
   def new
     @lease = Lease.new(:apartment_id => params[:apartment_id])
+    @user = @lease.users.build
     @contracts = Contract.all
     @apartment = Apartment.find(params[:apartment_id])
     render :layout => false
@@ -32,6 +33,7 @@ class LeasesController < ApplicationController
   def edit
     @lease = Lease.find(params[:id])
     @contracts = Contract.all
+    @user = @lease.users.where("secondary = false").first
     @apartment = @lease.apartment
     render :layout => false
   end
@@ -46,7 +48,10 @@ class LeasesController < ApplicationController
         format.html { redirect_to leases_path }
       else
         format.json { render :json => {:errors => @lease.errors.full_messages} }
-        format.html { render "edit" }
+        format.html {
+          flash[:alert] = "Errore durante l'aggiornamento di locazione " + @lease.errors.full_messages.join(", ")
+          redirect_to leases_path 
+        }
       end
     end
   end
@@ -55,6 +60,11 @@ class LeasesController < ApplicationController
     @lease = Lease.find(params[:id])
     @contracts = Contract.all
     @apartment = @lease.apartment
+    render :layout => false
+  end
+  
+  def lease_attachment
+    @lease = Lease.find(params[:id])
     render :layout => false
   end
   
@@ -68,12 +78,19 @@ class LeasesController < ApplicationController
     )
   end
   
+  def close_lease
+    @lease = Lease.find(params[:id])
+    @lease.update_columns(:active => false, :inactive_date => Date.today)
+    @lease.users.each {|u| u.destroy }
+    redirect_to leases_path
+  end
+  
   private
   def lease_params
     params.require(:lease)
     .permit(:percentage, :contract_id, :apartment_id, :invoice_address, :start_date, :end_date, :amount,
             :payment_frequency, :deposit, :registration_date, :registration_number, :registration_agency,
-            :users_attributes => [:first_name, :last_name, :email, :codice_fiscale],
+            :users_attributes => [:id, :first_name, :last_name, :email, :codice_fiscale],
             :lease_attachments_attributes => [:document, :lease_document])
   end
   
