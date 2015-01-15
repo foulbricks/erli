@@ -78,11 +78,24 @@ class LeasesController < ApplicationController
     )
   end
   
-  def close_lease
+  def close
     @lease = Lease.find(params[:id])
     @lease.update_columns(:active => false, :inactive_date => Date.today)
     @lease.users.each {|u| u.destroy }
+    flash[:notice] = "Locazione chiuso con successo"
     redirect_to leases_path
+  end
+  
+  def history
+    @apartment = Apartment.find(params[:id])
+    if request.post?
+      @leases = []
+      leases = @apartment.inactive_leases.each do |lease|
+        @leases << lease if /#{params[:search]}/ =~ lease.searchable_attributes
+      end
+    else
+      @leases = @apartment.inactive_leases
+    end
   end
   
   private
@@ -90,6 +103,7 @@ class LeasesController < ApplicationController
     params.require(:lease)
     .permit(:percentage, :contract_id, :apartment_id, :invoice_address, :start_date, :end_date, :amount,
             :payment_frequency, :deposit, :registration_date, :registration_number, :registration_agency,
+            :cap, :localita, :provincia,
             :users_attributes => [:id, :first_name, :last_name, :email, :codice_fiscale],
             :lease_attachments_attributes => [:document, :lease_document])
   end

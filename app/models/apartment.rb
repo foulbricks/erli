@@ -24,7 +24,15 @@ class Apartment < ActiveRecord::Base
     end
   end
   
+  def active_leases
+    self.leases.where(:active => true).all
+  end
+  
+  def inactive_leases
+    self.leases.where(:active => false).all
+  end
+  
   def percentage
-    leases.map(&:percentage).sum
+    active_leases.map(&:percentage).sum
   end
 end

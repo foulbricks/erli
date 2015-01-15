@@ -34,6 +34,9 @@ Rails.application.routes.draw do
       get "registration"
       get "download_attachment"
       get "lease_attachment"
+      get "close"
+      get "history"
+      post "history"
     end
   end
   

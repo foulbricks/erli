@@ -1,5 +1,4 @@
 class BolloRange < ActiveRecord::Base
-  attr_localized :price
   
   has_many :bollos
   

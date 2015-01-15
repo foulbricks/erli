@@ -106,26 +106,34 @@ ActiveRecord::Schema.define(version: 20150113023913) do
   create_table "lease_attachments", force: true do |t|
     t.integer  "lease_id"
     t.string   "document"
-    t.boolean  "lease_document"
+    t.boolean  "lease_document", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "leases", force: true do |t|
-    t.decimal  "percentage",          default: 0.0,  null: false
+    t.decimal  "percentage",          precision: 15, scale: 2, default: 0.0,   null: false
     t.integer  "contract_id"
     t.integer  "apartment_id"
     t.string   "invoice_address"
+    t.string   "cap"
+    t.string   "localita"
+    t.string   "provincia"
+    t.boolean  "partita_iva",                                  default: false
     t.date     "start_date"
     t.date     "end_date"
-    t.decimal  "amount"
+    t.decimal  "amount",              precision: 15, scale: 2
     t.integer  "payment_frequency"
-    t.decimal  "deposit"
+    t.decimal  "deposit",             precision: 15, scale: 2
     t.date     "registration_date"
     t.integer  "registration_number"
     t.string   "registration_agency"
-    t.boolean  "active",              default: true
+    t.boolean  "active",                                       default: true
     t.date     "inactive_date"
+    t.string   "name"
+    t.string   "codice_fiscale"
+    t.string   "email"
+    t.boolean  "resolved",                                     default: true
     t.datetime "created_at"
     t.datetime "updated_at"
   end

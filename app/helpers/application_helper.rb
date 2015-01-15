@@ -20,7 +20,7 @@ module ApplicationHelper
     elsif status == "Disponibile"
       "success"
     else
-      "partial"
+      "info"
     end
   end
 end

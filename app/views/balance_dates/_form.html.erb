@@ -14,7 +14,7 @@
 		<%= f.label :value, "Data", :class => "col-sm-3 control-label" %>
 		<div class="col-sm-4">
 			<div class="input-group">
-				<%= f.text_field :value, :class => "form-control", :"datepicker-popup" => "dd-MM-yyyy", :placeholder => "Data di balanciare le spese", :"ng-model" => "date", :"ng-required" => true, :"is-open" => "opened" %>
+				<%= f.text_field :value, :class => "form-control", :"datepicker-popup" => "dd/MM/yyyy", :placeholder => "Data di balanciare le spese", :"ng-model" => "date", :"ng-required" => true, :"is-open" => "opened" %>
                 <span class="input-group-btn">
                   <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>

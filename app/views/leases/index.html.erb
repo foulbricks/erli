@@ -11,10 +11,10 @@
 			<table class="table table-collapsed">
 				<thead>
 					<tr>
+						<th></th>
 						<th>Numero</th>
 						<th>Stato</th>
 						<th>Occupazione</th>
-						<th></th>
 						<th></th>
 						<th></th>
 					</tr>
@@ -22,49 +22,50 @@
 				<tbody>
 					<% @apartments.each do |apartment| %>
 						<tr class="<%= lease_row_class(apartment.status) %>">
+							<td><% unless apartment.status == "Disponibile" %>
+									<a href="#" class="toggle-table"><small class="glyphicon glyphicon-plus" aria-hidden="true"></small>
+								<% end %>
+							</td>
 							<td><%= apartment.name %></td>
 							<td><%= apartment.status %></td>
 							<td><%= number_to_percentage(apartment.percentage) %></td>
-							<td><% unless apartment.status == "Disponibile" %>
-									<%= link_to("Mostrare", "#", :class => "toggle-table") %>
-								<% end %>
-							</td>
 							<td>
 								<% unless apartment.status == "Occupato" %>
 									<%= link_to "Registrati Locazione", "#", :"ng-click" => "openForm($event, #{apartment.id})"  %>
 								<% end %>
 							</td>
 							<td>
-								<a href="#"><i class="fa fa-history" tooltip="Storia locazione"></i>
+								<%= link_to history_lease_path(apartment.id), {} do %> 
+									<i class="fa fa-history" tooltip="Storia locazione"></i>
+								<% end %>
 							</td>
 						</tr>
-						<% if (s = apartment.leases.size) > 0 %>
+						<% if (s = apartment.active_leases.size) > 0 %>
 							<tr class="child-table">
 								<td colspan="7" style="background-color: #fff;">
-									<% apartment.leases.each_with_index do |lease, i| %>
+									<% apartment.active_leases.each_with_index do |lease, i| %>
 											<div class="col-sm-4">
-												<% primary_user = lease.users.where("secondary = false").first %>
-												<p><strong>Nome:</strong> <%= primary_user.name %></p>
-												<p><strong>Email:</strong> <%= primary_user.email %></p>
-												<p><strong>Codice Fiscale:</strong> <%= primary_user.codice_fiscale %></p>
+												<p><strong>Nome:</strong> <%= lease.name %></p>
+												<p><strong>Email:</strong> <%= lease.email %></p>
+												<p><strong>Codice Fiscale:</strong> <%= lease.codice_fiscale %></p>
 												<p><strong>Data di Inizio:</strong> <%= lease.start_date.strftime("%d-%m-%Y") %></p>
 												<p><strong>Data di Fine:</strong> <%= lease.end_date.strftime("%d-%m-%Y") %></p>
 											</div>
 											<div class="col-sm-4">
 												<p><strong>Percentuale:</strong> <%= number_to_percentage(lease.percentage) %></p>
 												<p><strong>Tipo di contratto:</strong> <%= lease.contract.name %></p>
-												<p><strong>Indirizzo di fatturazione:</strong><br /> <%= lease.invoice_address %></p>
-												<p><strong>Canone di Locazione:</strong> <%= lease.amount %></p>
-												<p><strong>Cauzione:</strong> <%= lease.deposit %></p>
+												<p><strong>Indirizzo di fatturazione:</strong><br /> <%= lease.address %></p>
+												<p><strong>Canone di Locazione:</strong> <%= number_to_currency(lease.amount) %></p>
+												<p><strong>Cauzione:</strong> <%= number_to_currency(lease.deposit) %></p>
 												<p><strong>Frequenza di pagamento:</strong> <%= lease.payment_frequency %> Mese</p>
 											</div>
 											<div class="col-sm-4">
-												<p><%= link_to "Chiudere locazione", "#" %></p>
 												<p><%= link_to "Aggiungere documente", "#", :"ng-click" => "openAttachmentForm($event, #{lease.id})" %></p>
 												<% if lease.registration_date.blank? %>
 													<p><%= link_to "Registrare", "#", :"ng-click" => "openRegistrationForm($event, #{lease.id})" %></p>
 													<p><%= link_to "Modificare locazione", "#", :"ng-click" => "openUpdateForm($event, #{lease.id})" %></p>
 												<% else %>
+													<p><%= link_to "Chiudere locazione", close_lease_path(lease.id) %></p>
 													<p><strong>Data di registrazione:</strong> <%= lease.registration_date.strftime("%d-%m-%Y") %>
 												<% end %>
 												<% if lease.registration_number.present? %>

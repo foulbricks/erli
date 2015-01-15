@@ -1,6 +1,5 @@
 class Bollo < ActiveRecord::Base
-  attr_localized :price
-  
+
   belongs_to :invoice
   belongs_to :bollo_range
   

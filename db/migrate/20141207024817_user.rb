@@ -6,13 +6,13 @@ class User < ActiveRecord::Migration
       t.string  :email
       t.string  :password
       t.string  :salt
-      t.boolean :admin
+      t.boolean :admin, :default => false
       t.string  :pwcode
       t.string  :activation_code
       t.datetime :activation_code_set_at
       t.string  :pw_code
       t.string  :pw_code_set_at
-      t.boolean :active
+      t.boolean :active, :default => false
       
       t.timestamps
     end

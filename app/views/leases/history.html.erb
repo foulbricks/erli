@@ -1,0 +1,88 @@
+<div class="row">
+	<div class="col-sm-12">
+		<p class="text-right">
+			<%= link_to leases_path, {} do %> 
+			<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>  Tornare alla Locazioni
+			<% end %>
+		</p>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-12">
+		<% if flash[:notice] %>
+			<div class="alert alert-success"><%= flash[:notice] %></div>
+		<% elsif flash[:alert] %>
+			<div class="alert alert-danger"><%= flash[:alert] %></div>
+		<% end %>
+		
+		<h3>Storia di Locazione per Appartamento <%= @apartment.id %></h3>
+		<div style="margin:20px;" class="text-right">
+			<%= form_tag history_lease_path(@apartment.id), :method => "post", :class => "form-inline" do %>
+			  <div class="form-group">
+			    <label for="search" class="sr-only">Cercare</label>
+			    <input type="text" class="form-control" id="search" name="search" placeholder="Cercare" />
+			  </div>
+			  <button type="submit" class="btn btn-default">Cercare</button>
+			<% end %>
+		</div>
+		
+		<% if @leases.length > 0 %>
+			<table class="table table-collapsed">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Nome</th>
+						<th>Email</th>
+						<th>Data di Inizio</th>
+						<th>Data di Fine</th>
+						<th>Data di Chiuso</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @leases.each do |lease| %>
+						<tr class="<%= lease.resolved? ? "success" : "danger" %>">
+							<td><a href="#" class="toggle-table"><small class="glyphicon glyphicon-plus" aria-hidden="true"></small></a></td>
+							<td><%= lease.name %></td>
+							<td><%= lease.email %></td>
+							<td><%= lease.start_date.strftime("%d-%m-%Y") %></td>
+							<td><%= lease.end_date.strftime("%d-%m-%Y") %></td>
+							<td><%= lease.inactive_date.strftime("%d-%m-%Y") %></td>
+						</tr>
+						<tr class="child-table">
+							<td colspan="6" style="background-color: #fff;">
+								<div class="col-sm-4">
+									<p><strong>Codice Fiscale:</strong> <%= lease.codice_fiscale %></p>
+									<p><strong>Data di registrazione:</strong> <%= lease.registration_date.strftime("%d-%m-%Y") %></p>
+									<p><strong>Numero di registrazione:</strong> <%= lease.registration_number %></p>
+									<p><strong>Agenzia di registrazione:</strong> <%= lease.registration_agency %></p>
+									<p><strong>Canone di Locazione:</strong> <%= number_to_currency(lease.amount) %></p>
+									<p><strong>Cauzione:</strong> <%= number_to_currency(lease.deposit) %></p>
+								</div>
+								<div class="col-sm-4">
+									<p><strong>Percentuale:</strong> <%= number_to_percentage(lease.percentage) %></p>
+									<p><strong>Tipo di contratto:</strong> <%= lease.contract.name %></p>
+									<p><strong>Indirizzo di fatturazione:</strong><br /> <%= lease.address %></p>
+									<p><strong>Frequenza di pagamento:</strong> <%= lease.payment_frequency %> Mese</p>
+								</div>
+								<div class="col-sm-4">
+									<p><strong>Documenti</strong></p>
+									<% if lease.lease_attachments.size > 0 %>
+										<ul>
+											<% lease.lease_attachments.each do |f| %>
+												<% name = f.lease_document? ? "Documente di Locazione" : f.document.file.filename %>
+												<li><%= link_to name, download_attachment_lease_path(f.id) %></li>
+											<% end %>
+										</ul>
+									<% end %>
+								</div>
+							</td>
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
+		<% else %>
+			<p>Non ci sono storia disponibili</p>
+		<% end %>
+	</div>
+</div>

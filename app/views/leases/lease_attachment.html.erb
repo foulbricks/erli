@@ -10,9 +10,8 @@
 				<div class="form-group">
 					<%= la.label :document, "Documente", :class => "col-sm-3 control-label" %>	
 					<div class="col-sm-9">
-						<p><%= la.file_field :document, :placeholder => "Documente" %><br/>
-							<strong>E questo il documento di locazione?</strong><br />
-							<label class="control-label">Si</label> <%= la.check_box :lease_document %>
+						<p><%= la.file_field :document, :placeholder => "Documente" %>
+						   <%= la.check_box :lease_document %> <label class="control-label">Documento di locazione?</label> 
 						</p>
 					</div>
 				</div>

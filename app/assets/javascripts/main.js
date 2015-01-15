@@ -7,11 +7,14 @@ $(".table-collapsed .child-table").hide();
 $(".table-collapsed a.toggle-table").on("click", function(e){
 	e.preventDefault();
 	var $this = $(this);
-	if($this.text() == "Mostrare"){
-		$this.text("Chiudere");
+	var $small = $this.find("small");
+	if($small.hasClass("glyphicon-plus")){
+		$small.removeClass("glyphicon-plus");
+		$small.addClass("glyphicon-minus");
 	}
-	else if ($this.text() == "Chiudere"){
-		$this.text("Mostrare")
+	else if ($small.hasClass("glyphicon-minus")){
+		$small.removeClass("glyphicon-minus");
+		$small.addClass("glyphicon-plus");
 	}
 	$this.parent().parent().next().toggle("slow");
 });

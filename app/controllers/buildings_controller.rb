@@ -45,7 +45,7 @@ class BuildingsController < ApplicationController
   end
   
   def set_workspace
-    cookies[:building] = {value: params[:building], expires: Time.now + 3600}
+    cookies[:building] = {value: params[:building], expires: Time.now + (5 * 3600)}
     if request.referer.present? && controller_name != "buildings"
       redirect_to :back
     else

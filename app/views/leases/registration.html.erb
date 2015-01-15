@@ -9,7 +9,7 @@
 				<%= f.label :registration_date, :class => "col-sm-3 control-label" %>
 				<div class="col-sm-4">
 					<div class="input-group">
-						<%= f.text_field :registration_date, :class => "form-control", :"datepicker-popup" => "dd-MM-yyyy", :placeholder => "Data di registrazione", :"ng-model" => "registration_date", :"ng-required" => true, :"is-open" => "opened" %>
+						<%= f.text_field :registration_date, :class => "form-control", :"datepicker-popup" => "dd/MM/yyyy", :placeholder => "Data di registrazione", :"ng-model" => "registration_date", :"ng-required" => true, :"is-open" => "opened" %>
 		                <span class="input-group-btn">
 		                  <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
 		                </span>
@@ -39,8 +39,7 @@
 					<%= la.label :document, "Documente", :class => "col-sm-3 control-label" %>	
 					<div class="col-sm-9">
 						<p><%= la.file_field :document, :placeholder => "Documente" %><br/>
-							<strong>E questo il documento di locazione?</strong><br />
-							<label class="control-label">Si</label> <%= la.check_box :lease_document %>
+							<%= la.check_box :lease_document %> <label class="control-label">Documento di locazione?</label> 
 						</p>
 						<p><a href="#" class="extra-file">Un altro file</a></p>
 					</div>

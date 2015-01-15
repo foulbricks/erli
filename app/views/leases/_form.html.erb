@@ -31,7 +31,7 @@
 		</div>
 	<% end %>
 	
-	<div class="form-group" ng-class="{'has-error':leaseForm['lease[percentage]'].$dirty && leaseForm['lease[percentage]'].$invalid }" ng-init="percentage='<%= @lease.percentage %>'">
+	<div class="form-group" ng-class="{'has-error':leaseForm['lease[percentage]'].$dirty && leaseForm['lease[percentage]'].$invalid }" ng-init="percentage='<%= number_with_delimiter(@lease.percentage) %>'">
 		<%= f.label :percentage, :class => "col-sm-3 control-label" %>	
 		<div class="col-sm-9">
 			<%= f.text_field :percentage, :class => "form-control", :placeholder => "Percentuale", :"ng-model" => "percentage", :"ng-required" => true %>
@@ -39,11 +39,61 @@
 		</div>
 	</div>
 	
+	<div class="form-group" ng-class="{'has-error':leaseForm['lease[start_date]'].$dirty && leaseForm['lease[start_date]'].$invalid }" ng-init="start_date='<%= @lease.start_date.strftime("%d-%m-%Y") if @lease.start_date.present? %>'">
+		<%= f.label :start_date, :class => "col-sm-3 control-label" %>
+		<div class="col-sm-4">
+			<div class="input-group">
+				<%= f.text_field :start_date, :class => "form-control", :"datepicker-popup" => "dd/MM/yyyy", :placeholder => "Data di inizio", :"ng-model" => "start_date", :"ng-required" => true, :"is-open" => "opened1" %>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="open($event, 1)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+			</div>
+			<span class="error-message" ng-show="leaseForm['lease[start_date]'].$dirty && leaseForm['lease[start_date]'].$invalid">Data di inizio è richiesta.</span>
+		</div>
+	</div>
+	
+	<div class="form-group" ng-class="{'has-error':leaseForm['lease[end_date]'].$dirty && leaseForm['lease[end_date]'].$invalid }" ng-init="end_date='<%= @lease.end_date.strftime("%d-%m-%Y") if @lease.end_date.present? %>'">
+		<%= f.label :end_date, :class => "col-sm-3 control-label" %>
+		<div class="col-sm-4">
+			<div class="input-group">
+				<%= f.text_field :end_date, :class => "form-control", :"datepicker-popup" => "dd/MM/yyyy", :placeholder => "Data di fine", :"ng-model" => "end_date", :"ng-required" => true, :"is-open" => "opened2" %>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="open($event, 2)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+			</div>
+			<span class="error-message" ng-show="leaseForm['lease[end_date]'].$dirty && leaseForm['lease[end_date]'].$invalid">Data di fine è richiesta.</span>
+		</div>
+	</div>
+	
 	<div class="form-group" ng-class="{'has-error':leaseForm['lease[invoice_address]'].$dirty && leaseForm['lease[invoice_address]'].$invalid }" ng-init="invoice_address='<%= @lease.invoice_address %>'">
 		<%= f.label :invoice_address, :class => "col-sm-3 control-label" %>	
 		<div class="col-sm-9">
-			<%= f.text_area :invoice_address, :class => "form-control", :placeholder => "Indirizzo di fatturazione", :"ng-model" => "invoice_address", :"ng-required" => true %>
+			<%= f.text_field :invoice_address, :class => "form-control", :placeholder => "Indirizzo di fatturazione", :"ng-model" => "invoice_address", :"ng-required" => true %>
 			<span class="error-message" ng-show="leaseForm['lease[invoice_address]'].$dirty && leaseForm['lease[invoice_address]'].$invalid">Indirizzo di fatturazione è richiesto.</span>
+		</div>
+	</div>
+	
+	<div class="form-group" ng-class="{'has-error':leaseForm['lease[cap]'].$dirty && leaseForm['lease[cap]'].$invalid }" ng-init="cap='<%= @lease.cap %>'">
+		<%= f.label :cap, :class => "col-sm-3 control-label" %>	
+		<div class="col-sm-9">
+			<%= f.text_field :cap, :class => "form-control", :placeholder => "CAP", :"ng-model" => "cap", :"ng-required" => true %>
+			<span class="error-message" ng-show="leaseForm['lease[cap]'].$dirty && leaseForm['lease[cap]'].$invalid">CAP è richiesto.</span>
+		</div>
+	</div>
+	
+	<div class="form-group" ng-class="{'has-error':leaseForm['lease[localita]'].$dirty && leaseForm['lease[localita]'].$invalid }" ng-init="localita='<%= @lease.localita %>'">
+		<%= f.label :localita, :class => "col-sm-3 control-label" %>	
+		<div class="col-sm-9">
+			<%= f.text_field :localita, :class => "form-control", :placeholder => "Localita", :"ng-model" => "localita", :"ng-required" => true %>
+			<span class="error-message" ng-show="leaseForm['lease[localita]'].$dirty && leaseForm['lease[localita]'].$invalid">Localita è richiesta.</span>
+		</div>
+	</div>
+	
+	<div class="form-group" ng-class="{'has-error':leaseForm['lease[provincia]'].$dirty && leaseForm['lease[provincia]'].$invalid }" ng-init="provincia='<%= @lease.provincia %>'">
+		<%= f.label :provincia, :class => "col-sm-3 control-label" %>	
+		<div class="col-sm-9">
+			<%= f.text_field :provincia, :class => "form-control", :placeholder => "Provincia", :"ng-model" => "provincia", :"ng-required" => true %>
+			<span class="error-message" ng-show="leaseForm['lease[provincia]'].$dirty && leaseForm['lease[provincia]'].$invalid">Provincia è richiesta.</span>
 		</div>
 	</div>
 	
@@ -56,7 +106,7 @@
 	   	</div>
 	<% end %>
 	
-	<div class="form-group" ng-class="{'has-error':leaseForm['lease[amount]'].$dirty && leaseForm['lease[amount]'].$invalid }" ng-init="amount='<%= @lease.amount %>'">
+	<div class="form-group" ng-class="{'has-error':leaseForm['lease[amount]'].$dirty && leaseForm['lease[amount]'].$invalid }" ng-init="amount='<%= number_with_delimiter(@lease.amount) %>'">
 		<%= f.label :amount, :class => "col-sm-3 control-label" %>	
 		<div class="col-sm-9">
 			<%= f.text_field :amount, :class => "form-control", :placeholder => "Quantita", :"ng-model" => "amount", :"ng-required" => true %>
@@ -71,33 +121,7 @@
    		</div>
    	</div>
 	
-	<div class="form-group" ng-class="{'has-error':leaseForm['lease[start_date]'].$dirty && leaseForm['lease[start_date]'].$invalid }" ng-init="start_date='<%= @lease.start_date.strftime("%d-%m-%Y") if @lease.start_date.present? %>'">
-		<%= f.label :start_date, :class => "col-sm-3 control-label" %>
-		<div class="col-sm-4">
-			<div class="input-group">
-				<%= f.text_field :start_date, :class => "form-control", :"datepicker-popup" => "dd-MM-yyyy", :placeholder => "Data di inizio", :"ng-model" => "start_date", :"ng-required" => true, :"is-open" => "opened1" %>
-                <span class="input-group-btn">
-                  <button type="button" class="btn btn-default" ng-click="open($event, 1)"><i class="glyphicon glyphicon-calendar"></i></button>
-                </span>
-			</div>
-			<span class="error-message" ng-show="leaseForm['lease[start_date]'].$dirty && leaseForm['lease[start_date]'].$invalid">Data di inizio è richiesta.</span>
-		</div>
-	</div>
-	
-	<div class="form-group" ng-class="{'has-error':leaseForm['lease[end_date]'].$dirty && leaseForm['lease[end_date]'].$invalid }" ng-init="end_date='<%= @lease.end_date.strftime("%d-%m-%Y") if @lease.end_date.present? %>'">
-		<%= f.label :end_date, :class => "col-sm-3 control-label" %>
-		<div class="col-sm-4">
-			<div class="input-group">
-				<%= f.text_field :end_date, :class => "form-control", :"datepicker-popup" => "dd-MM-yyyy", :placeholder => "Data di fine", :"ng-model" => "end_date", :"ng-required" => true, :"is-open" => "opened2" %>
-                <span class="input-group-btn">
-                  <button type="button" class="btn btn-default" ng-click="open($event, 2)"><i class="glyphicon glyphicon-calendar"></i></button>
-                </span>
-			</div>
-			<span class="error-message" ng-show="leaseForm['lease[end_date]'].$dirty && leaseForm['lease[end_date]'].$invalid">Data di fine è richiesta.</span>
-		</div>
-	</div>
-	
-	<div class="form-group" ng-class="{'has-error':leaseForm['lease[deposit]'].$dirty && leaseForm['lease[deposit]'].$invalid }" ng-init="deposit='<%= @lease.deposit %>'">
+	<div class="form-group" ng-class="{'has-error':leaseForm['lease[deposit]'].$dirty && leaseForm['lease[deposit]'].$invalid }" ng-init="deposit='<%= number_with_delimiter(@lease.deposit) %>'">
 		<%= f.label :deposit, :class => "col-sm-3 control-label" %>	
 		<div class="col-sm-9">
 			<%= f.text_field :deposit, :class => "form-control", :placeholder => "Cauzione", :"ng-model" => "deposit", :"ng-required" => true %>
