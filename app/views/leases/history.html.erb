@@ -16,7 +16,7 @@
 			<div class="alert alert-danger"><%= flash[:alert] %></div>
 		<% end %>
 		
-		<h3>Storia di Locazione per Appartamento <%= @apartment.id %></h3>
+		<h3>Storia di Locazione per Appartamento <%= @apartment.name %></h3>
 		<div style="margin:20px;" class="text-right">
 			<%= form_tag history_lease_path(@apartment.id), :method => "post", :class => "form-inline" do %>
 			  <div class="form-group">

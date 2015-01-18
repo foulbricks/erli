@@ -4,6 +4,7 @@ class Lease < ActiveRecord::Base
   belongs_to :contract
   has_many :users, :dependent => :destroy
   has_many :lease_attachments, :dependent => :destroy
+  has_many :asset_expenses, as: :asset, :dependent => :destroy
   
   accepts_nested_attributes_for :users
   accepts_nested_attributes_for :lease_attachments, reject_if: proc { |attributes| attributes['document'].blank? }

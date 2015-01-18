@@ -45,15 +45,21 @@ class LeasesController < ApplicationController
       if @lease.update(lease_params)
         flash[:notice] = "Locazione modificata con successo"
         format.json { render :json => { :success => true } }
-        format.html { redirect_to leases_path }
+        format.html { render :text => "" }
       else
         format.json { render :json => {:errors => @lease.errors.full_messages} }
         format.html {
-          flash[:alert] = "Errore durante l'aggiornamento di locazione " + @lease.errors.full_messages.join(", ")
-          redirect_to leases_path 
+          render :text => @lease.errors.full_messages
         }
       end
     end
+  end
+  
+  def destroy
+    @lease = Lease.find(params[:id])
+    @lease.destroy
+    flash[:notice] = "Locazione cancellata con successo"
+    redirect_to leases_path
   end
   
   def registration
@@ -76,6 +82,13 @@ class LeasesController < ApplicationController
       :disposition => "attachment",
       :url_based_filename => true
     )
+  end
+  
+  def delete_attachment
+    @file = LeaseAttachment.find(params[:id])
+    @file.destroy
+    flash[:notice] = "Documente cancellato con successo"
+    redirect_to leases_path
   end
   
   def close

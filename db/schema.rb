@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150113023913) do
+ActiveRecord::Schema.define(version: 20150117065556) do
 
   create_table "apartment_repartition_tables", force: true do |t|
     t.integer  "apartment_id"
@@ -43,6 +43,8 @@ ActiveRecord::Schema.define(version: 20150113023913) do
     t.decimal  "amount"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "start_date"
+    t.date     "end_date"
   end
 
   create_table "balance_dates", force: true do |t|

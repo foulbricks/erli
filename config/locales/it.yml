@@ -54,6 +54,8 @@ it:
         last_name: "Cognome"
         email: "Email"
         codice_fiscale: "Codice fiscale"
+      asset_expense:
+        amount: "Quantita"
   date:
     abbr_day_names:
     - dom

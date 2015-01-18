@@ -1,61 +1,81 @@
-<div ng-controller="registrationFormController">
-	<div class="modal-header">
-		<h3>Nuova Registrazione per Appartamento <%= @apartment.name %>, Locazione <%= @lease.users.first.name %></h3>
-	</div>
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+		<div class="modal-content" ng-controller="registrationFormController">
+			<div class="modal-header">
+				<h4>Nuova Registrazione per Appartamento <%= @apartment.name %>, Locazione <%= @lease.users.first.name %></h4>
+			</div>
 
-	<div class="modal-body">
-		<%= form_for @lease, html: {:novalidate => "novalidate", name: "registrationForm", class: "form-horizontal", :multipart => true } do |f| %>
-			<div class="form-group" ng-class="{'has-error':registrationForm['lease[registration_date]'].$dirty && registrationForm['lease[registration_date]'].$invalid }">
-				<%= f.label :registration_date, :class => "col-sm-3 control-label" %>
-				<div class="col-sm-4">
-					<div class="input-group">
-						<%= f.text_field :registration_date, :class => "form-control", :"datepicker-popup" => "dd/MM/yyyy", :placeholder => "Data di registrazione", :"ng-model" => "registration_date", :"ng-required" => true, :"is-open" => "opened" %>
-		                <span class="input-group-btn">
-		                  <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-		                </span>
+			<div class="modal-body">
+				<%= form_for @lease, html: {:novalidate => "novalidate", name: "registrationForm", class: "form-horizontal", :target => "iframe", :multipart => true } do |f| %>
+					<div class="form-group" ng-class="{'has-error':registrationForm['lease[registration_date]'].$dirty && registrationForm['lease[registration_date]'].$invalid }">
+						<%= f.label :registration_date, :class => "col-sm-3 control-label" %>
+						<div class="col-sm-4">
+							<div class="input-group">
+								<%= f.text_field :registration_date, :class => "form-control", :placeholder => "Data di registrazione", :"ng-model" => "registration_date", :"ng-required" => true, :"bs-datepicker" => "dd/MM/yyyy", :"data-date-format" => "dd-MM-yyyy", :"data-autoclose" => "1", :"date-type" => "string" %>
+				                <span class="input-group-btn">
+				                  <label for="lease_registration_date" class="btn btn-default"><i class="glyphicon glyphicon-calendar"></i></label>
+				                </span>
+							</div>
+							<span class="error-message" ng-show="registrationForm['lease[registration_date]'].$dirty && registrationForm['lease[registration_date]'].$invalid">Data di registrazione è richiesta.</span>
+						</div>
 					</div>
-					<span class="error-message" ng-show="registrationForm['lease[registration_date]'].$dirty && registrationForm['lease[registration_date]'].$invalid">Data di registrazione è richiesta.</span>
-				</div>
-			</div>
-	
-			<div class="form-group" ng-class="{'has-error':registrationForm['lease[registration_number]'].$dirty && registrationForm['lease[registration_number]'].$invalid }">
-				<%= f.label :registration_number, :class => "col-sm-3 control-label" %>	
-				<div class="col-sm-9">
-					<%= f.text_field :registration_number, :class => "form-control", :placeholder => "Numero di registrazione", :"ng-model" => "registration_number", :"ng-required" => true %>
-					<span class="error-message" ng-show="registrationForm['lease[registration_number]'].$dirty && registrationForm['lease[registration_number]'].$invalid">Numero di registrazione è richiesto.</span>
-				</div>
-			</div>
-	
-			<div class="form-group" ng-class="{'has-error':registrationForm['lease[registration_agency]'].$dirty && registrationForm['lease[registration_agency]'].$invalid }">
-				<%= f.label :registration_agency, :class => "col-sm-3 control-label" %>	
-				<div class="col-sm-9">
-					<%= f.text_field :registration_agency, :class => "form-control", :placeholder => "Agenzia di registrazione", :"ng-model" => "registration_agency", :"ng-required" => true %>
-					<span class="error-message" ng-show="registrationForm['lease[registration_agency]'].$dirty && registrationForm['lease[registration_agency]'].$invalid">Agenzia di registrazione è richiesta.</span>
-				</div>
-			</div>
-	
-			<%= f.fields_for :lease_attachments, @lease.lease_attachments.build do |la| %>
-				<div class="form-group">
-					<%= la.label :document, "Documente", :class => "col-sm-3 control-label" %>	
-					<div class="col-sm-9">
-						<p><%= la.file_field :document, :placeholder => "Documente" %><br/>
-							<%= la.check_box :lease_document %> <label class="control-label">Documento di locazione?</label> 
-						</p>
-						<p><a href="#" class="extra-file">Un altro file</a></p>
+
+					<div class="form-group" ng-class="{'has-error':registrationForm['lease[registration_number]'].$dirty && registrationForm['lease[registration_number]'].$invalid }">
+						<%= f.label :registration_number, :class => "col-sm-3 control-label" %>	
+						<div class="col-sm-9">
+							<%= f.text_field :registration_number, :class => "form-control", :placeholder => "Numero di registrazione", :"ng-model" => "registration_number", :"ng-required" => true %>
+							<span class="error-message" ng-show="registrationForm['lease[registration_number]'].$dirty && registrationForm['lease[registration_number]'].$invalid">Numero di registrazione è richiesto.</span>
+						</div>
 					</div>
-				</div>
-			<% end %>
-	
-			<div class="form-group">
-				<div class="col-sm-9 col-sm-offset-3">
-					<%= f.submit "Registrato", :class => "btn btn-lg btn-primary", :"ng-disabled" => "registrationForm.$invalid"%>
-				</div>
+
+					<div class="form-group" ng-class="{'has-error':registrationForm['lease[registration_agency]'].$dirty && registrationForm['lease[registration_agency]'].$invalid }">
+						<%= f.label :registration_agency, :class => "col-sm-3 control-label" %>	
+						<div class="col-sm-9">
+							<%= f.text_field :registration_agency, :class => "form-control", :placeholder => "Agenzia di registrazione", :"ng-model" => "registration_agency", :"ng-required" => true %>
+							<span class="error-message" ng-show="registrationForm['lease[registration_agency]'].$dirty && registrationForm['lease[registration_agency]'].$invalid">Agenzia di registrazione è richiesta.</span>
+						</div>
+					</div>
+
+					<%= f.fields_for :lease_attachments, @lease.lease_attachments.build do |la| %>
+						<div class="form-group">
+							<%= la.label :document, "Documente", :class => "col-sm-3 control-label" %>	
+							<div class="col-sm-9">
+								<p><%= la.file_field :document, :placeholder => "Documente" %><br/>
+									<%= la.check_box :lease_document %> <label class="control-label">Documento di locazione?</label> 
+								</p>
+								<p><a href="#" class="extra-file">Un altro file</a></p>
+							</div>
+						</div>
+					<% end %>
+
+					<div class="form-group">
+						<div class="col-sm-9 col-sm-offset-3">
+							<%= f.submit "Registrato", :class => "btn btn-primary", :"ng-disabled" => "registrationForm.$invalid"%>
+							<button type="button" class="btn btn-default" ng-click="$hide()">Chiudere</button>
+						</div>
+					</div>
+				<% end %>
 			</div>
-		<% end %>
-	</div>
-	<div class="modal-footer">
-		<ul class="danger registrationFormErrors">
-		</ul>
-		<a href="#" ng-click="closeForm($event)">chiudere</a>
+			<div class="modal-footer">
+				<iframe name="iframe" id="iframe" style="display:none" ></iframe>
+				<script type="text/javascript">
+				$("#iframe").on("load", function(e){
+					var errors = $(this).contents().find("body").text();
+					if(errors){
+						var errs = JSON.parse(errors);
+						var errorsList = $(".leaseFormErrors").html("");
+						errs.forEach(function(err){
+							errorsList.append("<li>" + err + "</li>");
+						});
+					}
+					else {
+						window.location = "/leases";
+					}
+				});
+				</script>
+				<ul class="danger leaseFormErrors">
+				</ul>
+			</div>
+		</div>
 	</div>
 </div>

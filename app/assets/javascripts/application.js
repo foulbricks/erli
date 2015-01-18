@@ -15,8 +15,10 @@
 //= require turbolinks
 //= require moment/moment
 //= require angular/angular
+//= require angular-animate/angular-animate
 //= require bootstrap-sass-official/assets/javascripts/bootstrap
-//= require angular-bootstrap/ui-bootstrap-tpls
+//= require angular-strap/dist/angular-strap
+//= require angular-strap/dist/angular-strap.tpl
 //= require app
 //= require services
 //= require controllers

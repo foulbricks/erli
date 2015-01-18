@@ -10,6 +10,7 @@ Rails.application.routes.draw do
                        only: [:new, :create, :destroy]
                        
   resources :buildings do
+    resources :building_expenses
     collection do
       post "set_workspace"
     end
@@ -23,13 +24,18 @@ Rails.application.routes.draw do
     end
   end
   
-  resources :apartments
+  resources :apartments do
+    resources :apartment_expenses, :except => [:index]
+  end
+  
   resources :expenses
   resources :repartition_tables
   resources :contracts
   resources :balance_dates
   
   resources :leases do
+    resources :invoices
+    resources :users
     member do
       get "registration"
       get "download_attachment"
@@ -37,12 +43,14 @@ Rails.application.routes.draw do
       get "close"
       get "history"
       post "history"
+      get "delete_attachment"
     end
   end
   
   resources :setup, path_names: {edit: "setup"}, only: [:edit, :update]
                        
   root "home#index"
+  get "apartment_expenses" => "apartment_expenses#index", as: :apartment_expenses
   
   get "/auth/:provider/callback" => "google_sessions#create"
   get "test" => "google_sessions#new"

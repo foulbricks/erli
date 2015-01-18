@@ -1,0 +1,29 @@
+<% if lease.lease_attachments.size > 0 %>
+	<div class="row">
+		<div class="col-sm-12">
+			<% lease.lease_attachments.in_groups_of(6) do |g| %>
+				<div class="row" style="margin:10px;">
+					<% g.compact.each do |f| %>
+						<% name = f.lease_document? ? "Documente di Locazione" : f.document.file.filename %>
+						<div class="col-sm-2 text-center">
+							<a href="#" data-content="Hi" data-placement="top" title="<%= name %>" data-animation="am-flip-x" data-auto-close="1" data-template="lease<%= f.id %>" bs-popover><span class="glyphicon glyphicon-file" style="font-size:24px;"></span></a><br />
+		
+							<span style="font-size:10px"><%= name %></span>
+							<script type="text/ng-template" id="lease<%= f.id %>">
+								<div class="popover" style="width:250px">
+									<div class="arrow"></div>
+									<div class="popover-content">
+										<div class="text-center">
+											<a class="btn btn-success" href="<%= download_attachment_lease_path(f.id) %>">Scaricare</a>
+											<a class="btn btn-danger" href="<%= delete_attachment_lease_path(f.id) %>">Cancellare</a>
+										</div>
+									</div>
+								</div>	
+							</script>
+						</div>
+					<% end %>
+				</div>
+			<% end %>
+		</div>
+	</div>
+<% end %>

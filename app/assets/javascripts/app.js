@@ -1,6 +1,6 @@
 "use strict"
 
-angular.module("erli", ["ui.bootstrap"]).
+angular.module("erli", ["mgcrea.ngStrap", "ngAnimate"]).
 
 config(["$httpProvider", 
 	function(provider){

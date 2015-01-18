@@ -1,11 +1,16 @@
-<div class="modal-header">
-	<h4>Nuova Locazione per Appartamento <%= @apartment.name %></h4>
-</div>
-<div class="modal-body" ng-controller="leaseFormController">
-	<%= render :partial => "form" %>
-</div>
-<div class="modal-footer">
-	<ul class="danger leaseFormErrors">
-	</ul>
-	<a href="#" ng-click="closeForm($event)">chiudere</a>
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4>Nuova Locazione per Appartamento <%= @apartment.name %></h4>
+			</div>
+			<div class="modal-body" ng-controller="leaseFormController">
+				<%= render :partial => "form" %>
+			</div>
+			<div class="modal-footer">
+				<ul class="danger leaseFormErrors">
+				</ul>
+			</div>
+		</div>
+	</div>
 </div>

@@ -14,9 +14,9 @@
 		<%= f.label :value, "Data", :class => "col-sm-3 control-label" %>
 		<div class="col-sm-4">
 			<div class="input-group">
-				<%= f.text_field :value, :class => "form-control", :"datepicker-popup" => "dd/MM/yyyy", :placeholder => "Data di balanciare le spese", :"ng-model" => "date", :"ng-required" => true, :"is-open" => "opened" %>
+				<%= f.text_field :value, :class => "form-control", :"bs-datepicker" => "dd/MM/yyyy", :"data-date-format" => "dd-MM-yyyy", :"data-autoclose" => "1", :placeholder => "Data di balanciare le spese", :"ng-model" => "date", :"ng-required" => true, :"date-type" => "string" %>
                 <span class="input-group-btn">
-                  <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                  <label for="balance_date_value" class="btn btn-default"><i class="glyphicon glyphicon-calendar"></i></label>
                 </span>
 			</div>
 			<span class="error-message" ng-show="dateForm['balance_date[value]'].$dirty && dateForm['balance_date[value]'].$invalid">Data di bilanciare le spese è richiesta.</span>

@@ -1,0 +1,13 @@
+<div class="popover">
+	<div class="arrow"></div>
+	<div class="popover-title">
+		<h5>Spesa <%= @expense.expense.name %> per appartamento <%= @apartment.name %>
+	</div>
+	<div class="popover-content">
+		<% if @expenses.size > 0 %>
+			<%= render :partial => "form" %>
+		<% else %>
+			<p>Attualmente non ci sono spese di appartamento disponibili. Per favore creare una.</p>
+		<% end %>
+	</div>
+</div>
