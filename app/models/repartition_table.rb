@@ -7,7 +7,7 @@ class RepartitionTable < ActiveRecord::Base
   accepts_nested_attributes_for :apartment_repartition_tables
   
   validates :name, :building_id, :presence => true
-  validates :name, :uniqueness => true
+  validates :name, :uniqueness => {scope: :building_id}
   validates_associated :apartment_repartition_tables
   
   def self.build(building_id)

@@ -13,7 +13,7 @@ class Apartment < ActiveRecord::Base
   
   validates :name, :building_id, :rooms, :floor, presence: true
   validates :dimension, :rooms, :floor, :numericality => {:only_integer => true}
-  validates :name, uniqueness: true
+  validates :name, uniqueness: {:scope => :building_id}
 
   def status
     if percentage > 99

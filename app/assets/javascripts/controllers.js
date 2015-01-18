@@ -98,7 +98,13 @@ controller("dateFormController", [
 controller("leaseTableController", [
 	"$scope", "$modal",
 	function($scope, $modal){
-		
+		$scope.openModal = function(event, url){
+			event.preventDefault();
+			$modal({
+				scope: $scope,
+				template: url
+			});
+		}
 	}
 ]).
 

@@ -19,13 +19,14 @@ class LeasesController < ApplicationController
     user.passwd, user.passwd_confirmation = user.make_temporary_password
     user.building_id = @lease.apartment.building_id
     
-    if @lease.save
-      flash[:notice] = "Locazione salvata con successo"
-      render :json => {:success => true }
-    else
-      respond_to do |format|
+    respond_to do |format|
+      if @lease.save
+        flash[:notice] = "Locazione salvata con successo"
+        format.json { render :json => {:success => true } }
+        format.html { render :text => "" }
+      else
         format.json { render :json => {:errors => @lease.errors.full_messages} }
-        format.html { render "new" }
+        format.html { render :text => @lease.errors.full_messages }
       end
     end
   end

@@ -31,7 +31,8 @@
 							<td><%= number_to_percentage(apartment.percentage) %></td>
 							<td>
 								<% unless apartment.status == "Occupato" %>
-									<%= link_to "Registrati Locazione", "#", :"data-animation" => "am-fade-and-slide-top", :"data-template" => new_lease_path + "?apartment_id=" + apartment.id.to_s, :"bs-modal" => "modal"  %>
+									<% path = new_lease_path + '?apartment_id=' + apartment.id.to_s %>
+									<%= link_to "Registrati Locazione", "#", :"ng-click" => "openModal($event,'#{path}')"  %>
 								<% end %>
 							</td>
 							<td>
@@ -61,10 +62,10 @@
 												<p><strong>Frequenza di pagamento:</strong> <%= lease.payment_frequency %> Mese</p>
 											</div>
 											<div class="col-sm-4">
-												<p><%= link_to "Aggiungere documente", "javascript:;", :"data-animation" => "am-fade-and-slide-top", :"data-template" => lease_attachment_lease_path(lease.id), :"bs-modal" => "modal" %></p>
+												<p><%= link_to "Aggiungere documente", "javascript:;", :"ng-click" => "openModal($event,'#{lease_attachment_lease_path(lease.id)}')" %></p>
 												<% if lease.registration_date.blank? %>
-													<p><%= link_to "Registrare", "#", :"data-animation" => "am-fade-and-slide-top", :"data-template" => registration_lease_path(lease.id), :"bs-modal" => "modal" %></p>
-													<p><%= link_to "Modificare locazione", "#", :"data-animation" => "am-fade-and-slide-top", :"data-template" => edit_lease_path(lease.id), :"bs-modal" => "modal" %> </p>
+													<p><%= link_to "Registrare", "#", :"ng-click" => "openModal($event,'#{registration_lease_path(lease.id)}')" %></p>
+													<p><%= link_to "Modificare locazione", "#", :"ng-click" => "openModal($event,'#{edit_lease_path(lease.id)}')" %> </p>
 													<p><%= link_to "Cancellare", lease_path(lease.id), :"data-confirm" => "Sei securo?", method: :delete %></p>
 												<% else %>
 													<p><%= link_to "Chiudere locazione", close_lease_path(lease.id) %></p>

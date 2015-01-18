@@ -1,4 +1,4 @@
-<%= form_for @lease, html: {:novalidate => "novalidate", name: "leaseForm", class: "form-horizontal" } do |f| %>
+<%= form_for @lease, html: {:novalidate => "novalidate", name: "leaseForm", class: "form-horizontal", :target => "iframe" } do |f| %>
 							
 	<%= f.fields_for :users, @user do |u| %>
 		<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][0][first_name]'].$dirty && leaseForm['lease[users_attributes][0][first_name]'].$invalid }" ng-init="first_name='<%= @user.first_name %>'">
@@ -138,3 +138,19 @@
 	</div>
 	
 <% end %>
+<iframe name="iframe" id="iframe" style="display:none" ></iframe>
+<script type="text/javascript">
+$("#iframe").on("load", function(e){
+	var errors = $(this).contents().find("body").text();
+	if(errors){
+		var errs = JSON.parse(errors);
+		var errorsList = $(".leaseFormErrors").html("");
+		errs.forEach(function(err){
+			errorsList.append("<li>" + err + "</li>");
+		});
+	}
+	else {
+		window.location = "/leases";
+	}
+});
+</script>

@@ -4,7 +4,7 @@ class Expense < ActiveRecord::Base
   
   before_save :add_to_invoice_for_apartment
   
-  validates :name, :presence => true, :uniqueness => true
+  validates :name, :presence => true, :uniqueness => {:scope => :building_id}
   validates :kind, :building_id, :presence => true
   validates :repartition_table_id, :presence => true, :if => "kind == 'Edificio'"
   
