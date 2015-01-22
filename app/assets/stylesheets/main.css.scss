@@ -51,6 +51,11 @@ input.ng-dirty.ng-invalid{
 	text-align: left;
 }
 
+.summary {
+	font-size:12px;
+	strong { color: #216795;}
+}
+
 .modal-backdrop.am-fade {
   opacity: .5;
   transition: opacity .15s linear;

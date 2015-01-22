@@ -112,6 +112,11 @@ controller("leaseFormController", [
 	"$scope", "$modal",
 	function($scope){
 		$scope.end_date = angular.element("#lease_end_date").val();
+		$scope.userCount = 1;
+		$scope.incrementUserCount = function($event){
+			$event.preventDefault();
+			$scope.userCount = $scope.userCount + 1;
+		}
 	}
 ]).
 

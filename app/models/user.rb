@@ -2,17 +2,21 @@ require "bcrypt"
 require "digest/sha1"
 
 class User < ActiveRecord::Base
-  attr_accessor :passwd#, :codice
+  attr_accessor :passwd
   
   before_save :encrypt_password
   
   belongs_to :lease
   belongs_to :building
+  has_many :friends, class_name: "User", foreign_key: "tenant_id", :dependent => :destroy
+  belongs_to :tenant, class_name: "User"
   
-  validates_presence_of :first_name, :last_name, :email
+  validates_presence_of :first_name, :email
+  validates_presence_of :last_name, :if => "lease_id.blank?"
   validates_presence_of :passwd, :on => :create
   validates_confirmation_of :passwd, :on => :create
-  validates_uniqueness_of :email
+  validates_uniqueness_of :email, :message => "%{value} e gia in uso"
+  validates :percentage, :numericality => {:minimum => 0, :maximum => 100}, :allow_nil => true
   
   def self.authenticate(email, pass)
     user = find_by_email(email)
@@ -33,13 +37,6 @@ class User < ActiveRecord::Base
       self.password = BCrypt::Engine.hash_secret(self.passwd, self.salt)
     end
   end
-  
-  # def encrypt_codice_fiscale
-  #   if codice.present?
-  #     self.codice_salt = BCrypt::Engine.generate_salt
-  #     self.codice_fiscale = BCrypt::Engine.hash_secret(self.codice, self.codice_salt)
-  #   end
-  # end
   
   def activate!
     unless within_activation_time?

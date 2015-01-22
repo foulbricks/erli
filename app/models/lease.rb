@@ -5,26 +5,33 @@ class Lease < ActiveRecord::Base
   has_many :users, :dependent => :destroy
   has_many :lease_attachments, :dependent => :destroy
   has_many :asset_expenses, as: :asset, :dependent => :destroy
+  has_many :cached_tenants, :dependent => :destroy
   
-  accepts_nested_attributes_for :users
+  accepts_nested_attributes_for :users, reject_if: proc { |attributes| attributes['first_name'].blank? || attributes['email'].blank? }
   accepts_nested_attributes_for :lease_attachments, reject_if: proc { |attributes| attributes['document'].blank? }
+  accepts_nested_attributes_for :asset_expenses, reject_if: proc {|attrs| attrs['amount'].blank? }
   
-  validates :percentage, :contract_id, :apartment_id, :invoice_address, :start_date,
+  validates :contract_id, :apartment_id, :invoice_address, :start_date,
             :end_date, :amount, :payment_frequency, :deposit, :presence => true
             
-  validates :percentage, :numericality => {:minimum => 0, :maximum => 100}
   validates :contract_id, :apartment_id, :payment_frequency, :numericality => {:only_integer => true}
   validates :registration_number, :numericality => {:only_integer => true}, :allow_blank => true
   validates :deposit, :amount, :numericality => true
   validate :percentage_maximum
   
-  before_save do |l|
-    u = l.new_record? ? l.users.first : l.users.where(:secondary => false).first
-    if u
-      l.name = u.name
-      l.email = u.email
-      l.codice_fiscale = u.codice_fiscale
+  after_save do |l|
+    tenant = l.users.select {|u| !u.secondary }.first
+    l.users.all.each {|u| u.update_column(:tenant_id, tenant.id) if u.secondary }
+  end
+  
+  alias :original_users_attributes= :users_attributes=
+  def users_attributes=(attrs)
+    attrs.each do |k, v|
+      p = User.new.make_temporary_password
+      v.merge!("passwd" => p, "passwd_confirmation" => p)
     end
+    puts attrs
+    self.original_users_attributes = attrs
   end
   
   def address
@@ -35,18 +42,39 @@ class Lease < ActiveRecord::Base
     [contract.name, address, cap, localita, provincia, start_date.strftime("%d-%m-%Y"),
      end_date.strftime("%d-%m-%Y"), registration_date.strftime("%d-%m-%Y"), amount.to_s,
      payment_frequency.to_s + " Mesi", deposit.to_s, registration_number.to_s, registration_agency,
-     payment_frequency.to_s + " Mese", name, codice_fiscale, email].join(" ")
+     payment_frequency.to_s + " Mese"].join(" ")
+  end
+  
+  def build_expenses(building_id)
+    expenses = Expense.where("building_id = ? and kind = ? and balance_date_id IS NOT NULL and add_to_invoice = ?",
+                             building_id, "Edificio", true).all
+    if new_record?
+      expenses.each {|e| asset_expenses.build(:expense_id => e.id, :amount => 0) }
+    else
+      expenses.each do |e| 
+        unless asset_expenses.where("expense = ?", e.id).count > 0
+          asset_expenses.build(:expense_id => e.id, :amount => 0)
+        end
+      end
+    end
+  end
+  
+  def percentage
+    users.map(&:percentage).sum
+  end
+  
+  def cache_users
+    users.where(:secondary => false).each do |u|
+      CachedTenant.create(:name => u.name, :codice_fiscale => u.codice_fiscale, :partita_iva => u.partita_iva,
+        :percentage => u.percentage, :email => u.email, :lease_id => u.lease_id)
+    end
   end
   
   private
   
   def percentage_maximum
-    if apartment_id
-      ids = Apartment.find(apartment_id).active_leases.map(&:id)
-      ids.delete(self.id) 
-      if Lease.where("id IN (?)", ids).all.map(&:percentage).sum + percentage > 100
-        errors.add(:percentage, "per il appartamento e superiore a 100")
-      end
+    if percentage > 100
+      errors.add(:base, "La percentuale del contratto di locazione e superiore a 100")
     end
   end
 end

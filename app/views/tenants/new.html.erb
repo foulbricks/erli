@@ -1,0 +1,33 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+		<div class="modal-content" ng-controller="leaseFormController">
+			<div class="modal-header">
+				<h4>Nuovo Utente</h4>
+			</div>
+			
+			<div class="modal-body">
+				<%= render :partial => "form" %>
+			</div>
+			<div class="modal-footer">
+				<iframe name="iframe" id="iframe" style="display:none" ></iframe>
+				<script type="text/javascript">
+				$("#iframe").on("load", function(e){
+					var errors = $(this).contents().find("body").text();
+					if(errors){
+						var errs = JSON.parse(errors);
+						var errorsList = $(".leaseFormErrors").html("");
+						errs.forEach(function(err){
+							errorsList.append("<li>" + err + "</li>");
+						});
+					}
+					else {
+						window.location = "/leases";
+					}
+				});
+				</script>
+				<ul class="danger leaseFormErrors">
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

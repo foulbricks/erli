@@ -22,7 +22,7 @@
 				<tbody>
 					<% @apartments.each do |apartment| %>
 						<tr class="<%= lease_row_class(apartment.status) %>">
-							<td><% unless apartment.status == "Disponibile" %>
+							<td><% unless apartment.active_leases.size < 1 %>
 									<a href="#" class="toggle-table"><small class="glyphicon glyphicon-plus" aria-hidden="true"></small>
 								<% end %>
 							</td>
@@ -30,9 +30,11 @@
 							<td><%= apartment.status %></td>
 							<td><%= number_to_percentage(apartment.percentage) %></td>
 							<td>
-								<% unless apartment.status == "Occupato" %>
+								<% if apartment.active_leases.size < 1 %>
 									<% path = new_lease_path + '?apartment_id=' + apartment.id.to_s %>
 									<%= link_to "Registrati Locazione", "#", :"ng-click" => "openModal($event,'#{path}')"  %>
+								<% elsif apartment.active_leases.first.registration_date.blank? %>
+									<%= link_to "Aggiungere Inquilino", "#", :"ng-click" => "openModal($event,'#{tenant_lease_path(apartment.active_leases.first.id)}')" %>
 								<% end %>
 							</td>
 							<td>
@@ -43,42 +45,47 @@
 						</tr>
 						<% if (s = apartment.active_leases.size) > 0 %>
 							<tr class="child-table">
-								<td colspan="7" style="background-color: #fff;">
+								<td colspan="6" style="background-color: #fff;">
 									<% apartment.active_leases.each_with_index do |lease, i| %>
-										<div class="row">
+										<div class="row summary">
 											<div class="col-sm-4">
-												<p><strong>Nome:</strong> <%= lease.name %></p>
-												<p><strong>Email:</strong> <%= lease.email %></p>
-												<p><strong>Codice Fiscale:</strong> <%= lease.codice_fiscale %></p>
 												<p><strong>Data di Inizio:</strong> <%= lease.start_date.strftime("%d-%m-%Y") %></p>
 												<p><strong>Data di Fine:</strong> <%= lease.end_date.strftime("%d-%m-%Y") %></p>
-											</div>
-											<div class="col-sm-4">
 												<p><strong>Percentuale:</strong> <%= number_to_percentage(lease.percentage) %></p>
 												<p><strong>Tipo di contratto:</strong> <%= lease.contract.name %></p>
 												<p><strong>Indirizzo di fatturazione:</strong><br /> <%= lease.address %></p>
+											</div>
+											<div class="col-sm-4">
 												<p><strong>Canone di Locazione:</strong> <%= number_to_currency(lease.amount) %></p>
 												<p><strong>Cauzione:</strong> <%= number_to_currency(lease.deposit) %></p>
 												<p><strong>Frequenza di pagamento:</strong> <%= lease.payment_frequency %> Mese</p>
-											</div>
-											<div class="col-sm-4">
-												<p><%= link_to "Aggiungere documente", "javascript:;", :"ng-click" => "openModal($event,'#{lease_attachment_lease_path(lease.id)}')" %></p>
-												<% if lease.registration_date.blank? %>
-													<p><%= link_to "Registrare", "#", :"ng-click" => "openModal($event,'#{registration_lease_path(lease.id)}')" %></p>
-													<p><%= link_to "Modificare locazione", "#", :"ng-click" => "openModal($event,'#{edit_lease_path(lease.id)}')" %> </p>
-													<p><%= link_to "Cancellare", lease_path(lease.id), :"data-confirm" => "Sei securo?", method: :delete %></p>
-												<% else %>
-													<p><%= link_to "Chiudere locazione", close_lease_path(lease.id) %></p>
-													<p><strong>Data di registrazione:</strong> <%= lease.registration_date.strftime("%d-%m-%Y") %>
-												<% end %>
 												<% if lease.registration_number.present? %>
 													<p><strong>Numero di registrazione:</strong> <%= lease.registration_number %>
 												<% end %>
 												<% if lease.registration_agency.present? %>
 													<p><strong>Agenzia di registrazione:</strong> <%= lease.registration_agency %>
 												<% end %>
+												<% if lease.registration_date.present? %>
+													<p><strong>Data di registrazione:</strong> <%= lease.registration_date.strftime("%d-%m-%Y") %>
+												<% end %>
+												<% lease.asset_expenses.each do |e| %>
+													<p><strong><%= e.expense.name %>:</strong> <%= number_to_currency(e.amount) %></p>
+												<% end %>
 											</div>
-											<%= render :partial => "lease_files", :locals => {:lease => lease }%>
+											<div class="col-sm-4">
+												<p><%= link_to "Aggiungere documente", "javascript:;", :"ng-click" => "openModal($event,'#{lease_attachment_lease_path(lease.id)}')", :class => "btn btn-info btn-block" %></p>
+												<% if lease.registration_date.blank? %>
+													<% unless lease.users.empty? %>
+													<p><%= link_to "Registrare", "#", :"ng-click" => "openModal($event,'#{registration_lease_path(lease.id)}')", :class => "btn btn-info btn-block" %></p>
+													<% end %>
+													<p><%= link_to "Modificare locazione", "#", :"ng-click" => "openModal($event,'#{edit_lease_path(lease.id)}')", :class => "btn btn-info btn-block" %> </p>
+													<p><%= link_to "Cancellare", lease_path(lease.id), :class => "btn btn-danger btn-block", :"data-confirm" => "Sei securo?", method: :delete %></p>
+												<% else %>
+													<p><%= link_to "Chiudere locazione", close_lease_path(lease.id), :class => "btn btn-danger btn-block" %></p>
+												<% end %>
+											</div>
+											<%= render :partial => "users", :locals => {:lease => lease } %>
+											<%= render :partial => "lease_files", :locals => {:lease => lease } %>
 											
 											<% unless i + 1 >= s %><div class="col-sm-12"><hr /></div><% end %>
 										</div>

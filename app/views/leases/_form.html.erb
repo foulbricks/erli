@@ -1,43 +1,4 @@
 <%= form_for @lease, html: {:novalidate => "novalidate", name: "leaseForm", class: "form-horizontal", :target => "iframe" } do |f| %>
-							
-	<%= f.fields_for :users, @user do |u| %>
-		<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][0][first_name]'].$dirty && leaseForm['lease[users_attributes][0][first_name]'].$invalid }" ng-init="first_name='<%= @user.first_name %>'">
-			<%= u.label :first_name, "Nome", :class => "col-sm-3 control-label" %>	
-			<div class="col-sm-9">
-				<%= u.text_field :first_name, :class => "form-control", :placeholder => "Nome", :"ng-model" => "first_name", :"ng-required" => true %>
-				<span class="error-message" ng-show="leaseForm['lease[users_attributes][0][first_name]'].$dirty && leaseForm['lease[users_attributes][0][first_name]'].$invalid">Nome è richiesto.</span>
-			</div>
-		</div>
-		<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][0][last_name]'].$dirty && leaseForm['lease[users_attributes][0][last_name]'].$invalid }" ng-init="last_name='<%= @user.last_name %>'">
-			<%= u.label :last_name, "Cognome", :class => "col-sm-3 control-label" %>	
-			<div class="col-sm-9">
-				<%= u.text_field :last_name, :class => "form-control", :placeholder => "Cognome", :"ng-model" => "last_name", :"ng-required" => true %>
-				<span class="error-message" ng-show="leaseForm['lease[users_attributes][0][last_name]'].$dirty && leaseForm['lease[users_attributes][0][last_name]'].$invalid">Cognome è richiesto.</span>
-			</div>
-		</div>
-		<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][0][email]'].$dirty && leaseForm['lease[users_attributes][0][email]'].$invalid }" ng-init="email='<%= @user.email %>'">
-			<%= u.label :email, :class => "col-sm-3 control-label" %>	
-			<div class="col-sm-9">
-				<%= u.email_field :email, :class => "form-control", :placeholder => "Email", :"ng-model" => "email", :"ng-required" => true %>
-				<span class="error-message" ng-show="leaseForm['lease[users_attributes][0][email]'].$dirty && leaseForm['lease[users_attributes][0][email]'].$invalid">Email non è valido.</span>
-			</div>
-		</div>
-		<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][0][codice_fiscale]'].$dirty && leaseForm['lease[users_attributes][0][codice_fiscale]'].$invalid }" ng-init="codice='<%= @user.codice_fiscale %>'">
-			<%= u.label :codice_fiscale, "Codice fiscale", :class => "col-sm-3 control-label" %>	
-			<div class="col-sm-9">
-				<%= u.text_field :codice_fiscale, :class => "form-control", :placeholder => "Codice Fiscale", :"ng-model" => "codice", :"ng-required" => true %>
-				<span class="error-message" ng-show="leaseForm['lease[users_attributes][0][codice_fiscale]'].$dirty && leaseForm['lease[users_attributes][0][codice_fiscale]'].$invalid">Codice fiscale è richiesto.</span>
-			</div>
-		</div>
-	<% end %>
-	
-	<div class="form-group" ng-class="{'has-error':leaseForm['lease[percentage]'].$dirty && leaseForm['lease[percentage]'].$invalid }" ng-init="percentage='<%= number_with_delimiter(@lease.percentage) %>'">
-		<%= f.label :percentage, :class => "col-sm-3 control-label" %>	
-		<div class="col-sm-9">
-			<%= f.text_field :percentage, :class => "form-control", :placeholder => "Percentuale", :"ng-model" => "percentage", :"ng-required" => true %>
-			<span class="error-message" ng-show="leaseForm['lease[percentage]'].$dirty && leaseForm['lease[percentage]'].$invalid">Percentuale è richiesto.</span>
-		</div>
-	</div>
 	
 	<div class="form-group" ng-class="{'has-error':leaseForm['lease[start_date]'].$dirty && leaseForm['lease[start_date]'].$invalid }" ng-init="start_date='<%= @lease.start_date.strftime("%d/%m/%Y") if @lease.start_date.present? %>'">
 		<%= f.label :start_date, :class => "col-sm-3 control-label" %>
@@ -128,6 +89,18 @@
 			<span class="error-message" ng-show="leaseForm['lease[deposit]'].$dirty && leaseForm['lease[deposit]'].$invalid">Cauzione è richiesto.</span>
 		</div>
 	</div>
+	
+	<%= f.fields_for :asset_expenses do |ae| %>
+		<div class="form-group" ng-class="{'has-error':leaseForm['lease[asset_expenses_attributes][<%= ae.index %>][amount]'].$dirty && leaseForm['lease[asset_expenses_attributes][<%= ae.index %>][amount]'].$invalid }" 
+			ng-init="amount<%= ae.index.to_s %>='<%= number_with_delimiter(ae.object.amount) %>'">
+			<%= ae.label :amount, ae.object.expense.name, :class => "col-sm-3 control-label" %>
+			<div class="col-sm-9">
+				<%= ae.text_field :amount, :class => "form-control", :placeholder => "Quantita", :"ng-model" => "amount" +  ae.index.to_s, :"ng-required" => true %>
+				<span class="error-message" ng-show="leaseForm['lease[asset_expenses_attributes][<%= ae.index %>][amount]'].$dirty && leaseForm['lease[asset_expenses_attributes][<%= ae.index %>][amount]'].$invalid"><%= ae.object.expense.name %> è richiesto.</span>
+			</div>
+			<%= ae.hidden_field :expense_id, :value => ae.object.expense.id %>
+		</div>
+	<% end %>
 	
 	<div class="form-group">
 		<div class="col-sm-9 col-sm-offset-3">

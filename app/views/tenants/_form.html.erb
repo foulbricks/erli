@@ -1,0 +1,57 @@
+<% url = @user.new_record? ? lease_tenants_path(@lease.id) : lease_tenant_path(@lease.id, @user.id) %>
+<% method = @user.new_record? ? :post : :put %>
+<%= form_for @user, :url => url, :method => method, html: {:novalidate => "novalidate", name: "userForm", class: "form-horizontal", :target => "iframe" } do |u| %>
+	<div class="form-group" ng-class="{'has-error':userForm['user[first_name]'].$dirty && userForm['user[first_name]'].$invalid }" ng-init="first_name='<%= @user.first_name %>'">
+		<%= u.label :first_name, "Nome", :class => "col-sm-3 control-label" %>	
+		<div class="col-sm-9">
+			<%= u.text_field :first_name, :class => "form-control", :placeholder => "Nome", :"ng-model" => "first_name", :"ng-required" => true %>
+			<span class="error-message" ng-show="userForm['user[first_name]'].$dirty && userForm['user[first_name]'].$invalid">Nome è richiesto.</span>
+		</div>
+	</div>
+	<div class="form-group" ng-init="last_name='<%= @user.last_name %>'">
+		<%= u.label :last_name, "Cognome", :class => "col-sm-3 control-label" %>	
+		<div class="col-sm-9">
+			<%= u.text_field :last_name, :class => "form-control", :placeholder => "Cognome", :"ng-model" => "last_name" %>
+		</div>
+	</div>
+	<div class="form-group" ng-class="{'has-error':userForm['user[email]'].$dirty && userForm['user[email]'].$invalid }" ng-init="email='<%= @user.email %>'">
+		<%= u.label :email, :class => "col-sm-3 control-label" %>	
+		<div class="col-sm-9">
+			<%= u.email_field :email, :class => "form-control", :placeholder => "Email", :"ng-model" => "email", :"ng-required" => true %>
+			<span class="error-message" ng-show="userForm['user[email]'].$dirty && userForm['user[email]'].$invalid">Email non è valido.</span>
+		</div>
+	</div>
+	
+	<% unless @user.secondary? %>
+		<div class="form-group" ng-class="{'has-error':userForm['user[codice_fiscale]'].$dirty && userForm['user[codice_fiscale]'].$invalid }" ng-init="codice='<%= @user.codice_fiscale %>'">
+			<%= u.label :codice_fiscale, "Codice fiscale", :class => "col-sm-3 control-label" %>	
+			<div class="col-sm-9">
+				<%= u.text_field :codice_fiscale, :class => "form-control", :placeholder => "Codice Fiscale", :"ng-model" => "codice", :"ng-required" => true %>
+				<span class="error-message" ng-show="userForm['user[codice_fiscale]'].$dirty && userForm['user[codice_fiscale]'].$invalid">Codice fiscale è richiesto.</span>
+			</div>
+		</div>
+	
+		<div class="form-group">
+			<%= u.label :partita_iva, "Partita IVA?", :class => "control-label col-sm-3" %>
+			<div class="col-sm-9">
+				<p style="margin-top: 5px;"><%= u.check_box :partita_iva %></p>
+			</div>
+		</div>
+		
+		<% unless @lease.registration_date.present? %>
+		<div class="form-group" ng-class="{'has-error':userForm['user[percentage]'].$dirty && userForm['user[percentage]'].$invalid }" ng-init="percentage='<%= number_with_delimiter(@user.percentage) %>'">
+			<%= u.label :percentage, :class => "col-sm-3 control-label" %>	
+			<div class="col-sm-9">
+				<%= u.text_field :percentage, :class => "form-control", :placeholder => "Percentuale", :"ng-model" => "percentage", :"ng-required" => true %>
+				<span class="error-message" ng-show="userForm['user[percentage]'].$dirty && userForm['user[percentage]'].$invalid">Percentuale è richiesto.</span>
+			</div>
+		</div>
+		<% end %>
+	<% end %>
+	<div class="form-group">
+		<div class="col-sm-9 col-sm-offset-3">
+			<%= u.submit "Salva", :class => "btn btn-primary", :"ng-disabled" => "userForm.$invalid" %>
+			<button type="button" class="btn btn-default" ng-click="$hide()">Chiudere</button>
+		</div>
+	</div>
+<% end %>

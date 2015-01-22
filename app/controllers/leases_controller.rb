@@ -7,17 +7,14 @@ class LeasesController < ApplicationController
   
   def new
     @lease = Lease.new(:apartment_id => params[:apartment_id])
-    @user = @lease.users.build
     @contracts = Contract.all
     @apartment = Apartment.find(params[:apartment_id])
+    @lease.build_expenses(@apartment.building_id)
     render :layout => false
   end
   
   def create
     @lease  = Lease.new(lease_params)
-    user = @lease.users.first
-    user.passwd, user.passwd_confirmation = user.make_temporary_password
-    user.building_id = @lease.apartment.building_id
     
     respond_to do |format|
       if @lease.save
@@ -34,7 +31,6 @@ class LeasesController < ApplicationController
   def edit
     @lease = Lease.find(params[:id])
     @contracts = Contract.all
-    @user = @lease.users.where("secondary = false").first
     @apartment = @lease.apartment
     render :layout => false
   end
@@ -70,8 +66,16 @@ class LeasesController < ApplicationController
     render :layout => false
   end
   
+  def tenant
+    @lease = Lease.find(params[:id])
+    @apartment = @lease.apartment
+    @user = @lease.users.build
+    render :layout => false
+  end
+  
   def lease_attachment
     @lease = Lease.find(params[:id])
+    @apartment = @lease.apartment
     render :layout => false
   end
   
@@ -95,8 +99,9 @@ class LeasesController < ApplicationController
   def close
     @lease = Lease.find(params[:id])
     @lease.update_columns(:active => false, :inactive_date => Date.today)
+    @lease.cache_users
     @lease.users.each {|u| u.destroy }
-    flash[:notice] = "Locazione chiuso con successo"
+    flash[:notice] = "Locazione chiusa con successo"
     redirect_to leases_path
   end
   
@@ -118,8 +123,10 @@ class LeasesController < ApplicationController
     .permit(:percentage, :contract_id, :apartment_id, :invoice_address, :start_date, :end_date, :amount,
             :payment_frequency, :deposit, :registration_date, :registration_number, :registration_agency,
             :cap, :localita, :provincia,
-            :users_attributes => [:id, :first_name, :last_name, :email, :codice_fiscale],
-            :lease_attachments_attributes => [:document, :lease_document])
+            :users_attributes => [:id, :first_name, :last_name, :email, :codice_fiscale, :secondary, 
+              :percentage, :partita_iva],
+            :lease_attachments_attributes => [:document, :lease_document],
+            :asset_expenses_attributes => [:id, :expense_id, :amount, :asset_id, :asset_type])
   end
   
 end

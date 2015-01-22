@@ -37,6 +37,7 @@ it:
       user:
         first_name: "Nome"
         last_name: "Cognome"
+        percentage: "Percentuale"
       lease:
         percentage: "Percentuale di Locazione"
         invoice_address: "Indirizzo di fatturazione"
@@ -54,6 +55,7 @@ it:
         last_name: "Cognome"
         email: "Email"
         codice_fiscale: "Codice fiscale"
+        percentage: "Percentuale"
       asset_expense:
         amount: "Quantita"
   date:

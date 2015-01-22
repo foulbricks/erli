@@ -35,7 +35,7 @@ Rails.application.routes.draw do
   
   resources :leases do
     resources :invoices
-    resources :users
+    resources :tenants, :except => [:index]
     member do
       get "registration"
       get "download_attachment"
@@ -44,6 +44,7 @@ Rails.application.routes.draw do
       get "history"
       post "history"
       get "delete_attachment"
+      get "tenant"
     end
   end
   

@@ -1,0 +1,122 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+		<div class="modal-content" ng-controller="leaseFormController">
+			<div class="modal-header">
+				<h4>Nuovo Inquilino per Appartamento <%= @apartment.name %></h4>
+			</div>
+			
+			<div class="modal-body">
+				<%= form_for @lease, html: {:novalidate => "novalidate", name: "leaseForm", class: "form-horizontal", :target => "iframe" } do |f| %>
+					<%= f.fields_for :users, @user do |u| %>
+						<div class="user">
+							<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][0][first_name]'].$dirty && leaseForm['lease[users_attributes][0][first_name]'].$invalid }" ng-init="first_name='<%= @user.first_name %>'">
+								<%= u.label :first_name, "Nome", :class => "col-sm-3 control-label" %>	
+								<div class="col-sm-9">
+									<%= u.text_field :first_name, :class => "form-control", :placeholder => "Nome", :"ng-model" => "first_name", :"ng-required" => true %>
+									<span class="error-message" ng-show="leaseForm['lease[users_attributes][0][first_name]'].$dirty && leaseForm['lease[users_attributes][0][first_name]'].$invalid">Nome è richiesto.</span>
+								</div>
+							</div>
+							<div class="form-group" ng-init="last_name='<%= @user.last_name %>'">
+								<%= u.label :last_name, "Cognome", :class => "col-sm-3 control-label" %>	
+								<div class="col-sm-9">
+									<%= u.text_field :last_name, :class => "form-control", :placeholder => "Cognome", :"ng-model" => "last_name" %>
+								</div>
+							</div>
+							<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][0][email]'].$dirty && leaseForm['lease[users_attributes][0][email]'].$invalid }" ng-init="email='<%= @user.email %>'">
+								<%= u.label :email, :class => "col-sm-3 control-label" %>	
+								<div class="col-sm-9">
+									<%= u.email_field :email, :class => "form-control", :placeholder => "Email", :"ng-model" => "email", :"ng-required" => true %>
+									<span class="error-message" ng-show="leaseForm['lease[users_attributes][0][email]'].$dirty && leaseForm['lease[users_attributes][0][email]'].$invalid">Email non è valido.</span>
+								</div>
+							</div>
+						</div>
+						<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][0][codice_fiscale]'].$dirty && leaseForm['lease[users_attributes][0][codice_fiscale]'].$invalid }" ng-init="codice='<%= @user.codice_fiscale %>'">
+							<%= u.label :codice_fiscale, "Codice fiscale", :class => "col-sm-3 control-label" %>	
+							<div class="col-sm-9">
+								<%= u.text_field :codice_fiscale, :class => "form-control", :placeholder => "Codice Fiscale", :"ng-model" => "codice", :"ng-required" => true %>
+								<span class="error-message" ng-show="leaseForm['lease[users_attributes][0][codice_fiscale]'].$dirty && leaseForm['lease[users_attributes][0][codice_fiscale]'].$invalid">Codice fiscale è richiesto.</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<%= u.label :partita_iva, "Partita IVA?", :class => "control-label col-sm-3" %>
+							<div class="col-sm-9">
+								<p style="margin-top: 5px;"><%= u.check_box :partita_iva %></p>
+							</div>
+						</div>
+	
+						<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][0][percentage]'].$dirty && leaseForm['lease[users_attributes][0][percentage]'].$invalid }" ng-init="percentage='<%= number_with_delimiter(@user.percentage) %>'">
+							<%= u.label :percentage, :class => "col-sm-3 control-label" %>	
+							<div class="col-sm-9">
+								<%= u.text_field :percentage, :class => "form-control", :placeholder => "Percentuale", :"ng-model" => "percentage", :"ng-required" => true %>
+								<span class="error-message" ng-show="leaseForm['lease[users_attributes][0][percentage]'].$dirty && leaseForm['lease[users_attributes][0][percentage]'].$invalid">Percentuale è richiesto.</span>
+							</div>
+						</div>
+					<% end %>
+					
+					<% (1..3).each do |i| %>
+						<%= f.fields_for :users, @user do |u| %>
+							<div ng-if="userCount > <%= u.index %>">
+								<hr />
+								<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][<%= u.index %>][first_name]'].$dirty && leaseForm['lease[users_attributes][<%= u.index %>][first_name]'].$invalid }" ng-init="first_name='<%= @user.first_name %>'">
+									<%= u.label :first_name, "Nome", :class => "col-sm-3 control-label" %>	
+									<div class="col-sm-9">
+										<%= u.text_field :first_name, :class => "form-control", :placeholder => "Nome", :"ng-model" => "first_name#{u.index}", :"ng-required" => true %>
+										<span class="error-message" ng-show="leaseForm['lease[users_attributes][<%= u.index %>][first_name]'].$dirty && leaseForm['lease[users_attributes][<%= u.index %>][first_name]'].$invalid">Nome è richiesto.</span>
+									</div>
+								</div>
+								<div class="form-group" ng-init="last_name='<%= @user.last_name %>'">
+									<%= u.label :last_name, "Cognome", :class => "col-sm-3 control-label" %>	
+									<div class="col-sm-9">
+										<%= u.text_field :last_name, :class => "form-control", :placeholder => "Cognome", :"ng-model" => "last_name#{u.index}" %>
+									</div>
+								</div>
+								<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][<%= u.index %>][email]'].$dirty && leaseForm['lease[users_attributes][<%= u.index %>][email]'].$invalid }" ng-init="email='<%= @user.email %>'">
+									<%= u.label :email, :class => "col-sm-3 control-label" %>	
+									<div class="col-sm-9">
+										<%= u.email_field :email, :class => "form-control", :placeholder => "Email", :"ng-model" => "email#{u.index}", :"ng-required" => true %>
+										<span class="error-message" ng-show="leaseForm['lease[users_attributes][<%= u.index %>][email]'].$dirty && leaseForm['lease[users_attributes][<%= u.index %>][email]'].$invalid">Email non è valido.</span>
+									</div>
+									<%= u.hidden_field :secondary, :value => true %>
+								</div>
+							</div>
+						<% end %>
+					<% end %>
+					
+					<div class="form-group" ng-if="userCount <= 3">
+						<div class="col-sm-9 col-sm-offset-3">
+							<p><%= link_to "Aggiungere utente secondario", "#", :"ng-click" => "incrementUserCount($event)" %></p>
+						</div>
+					</div>
+	
+					<div class="form-group">
+						<div class="col-sm-9 col-sm-offset-3">
+							<%= f.submit "Salva", :class => "btn btn-primary", :"ng-disabled" => "leaseForm.$invalid" %>
+							<button type="button" class="btn btn-default" ng-click="$hide()">Chiudere</button>
+						</div>
+					</div>
+	
+				<% end %>
+			</div>
+			<div class="modal-footer">
+				<iframe name="iframe" id="iframe" style="display:none" ></iframe>
+				<script type="text/javascript">
+				$("#iframe").on("load", function(e){
+					var errors = $(this).contents().find("body").text();
+					if(errors){
+						var errs = JSON.parse(errors);
+						var errorsList = $(".leaseFormErrors").html("");
+						errs.forEach(function(err){
+							errorsList.append("<li>" + err + "</li>");
+						});
+					}
+					else {
+						window.location = "/leases";
+					}
+				});
+				</script>
+				<ul class="danger leaseFormErrors">
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

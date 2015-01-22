@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150117065556) do
+ActiveRecord::Schema.define(version: 20150121075603) do
 
   create_table "apartment_repartition_tables", force: true do |t|
     t.integer  "apartment_id"
@@ -78,6 +78,17 @@ ActiveRecord::Schema.define(version: 20150117065556) do
     t.datetime "updated_at"
   end
 
+  create_table "cached_tenants", force: true do |t|
+    t.string   "name"
+    t.string   "codice_fiscale"
+    t.boolean  "partita_iva"
+    t.decimal  "percentage",     precision: 15, scale: 2
+    t.string   "email"
+    t.integer  "lease_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "contracts", force: true do |t|
     t.string   "name"
     t.decimal  "istat"
@@ -114,14 +125,12 @@ ActiveRecord::Schema.define(version: 20150117065556) do
   end
 
   create_table "leases", force: true do |t|
-    t.decimal  "percentage",          precision: 15, scale: 2, default: 0.0,   null: false
     t.integer  "contract_id"
     t.integer  "apartment_id"
     t.string   "invoice_address"
     t.string   "cap"
     t.string   "localita"
     t.string   "provincia"
-    t.boolean  "partita_iva",                                  default: false
     t.date     "start_date"
     t.date     "end_date"
     t.decimal  "amount",              precision: 15, scale: 2
@@ -132,9 +141,6 @@ ActiveRecord::Schema.define(version: 20150117065556) do
     t.string   "registration_agency"
     t.boolean  "active",                                       default: true
     t.date     "inactive_date"
-    t.string   "name"
-    t.string   "codice_fiscale"
-    t.string   "email"
     t.boolean  "resolved",                                     default: true
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -179,9 +185,12 @@ ActiveRecord::Schema.define(version: 20150117065556) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "codice_fiscale"
-    t.boolean  "secondary",              default: false
+    t.boolean  "secondary",                                       default: false
     t.integer  "lease_id"
     t.integer  "building_id"
+    t.boolean  "partita_iva"
+    t.decimal  "percentage",             precision: 15, scale: 2, default: 0.0
+    t.integer  "tenant_id"
   end
 
 end
