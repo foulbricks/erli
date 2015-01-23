@@ -32,6 +32,7 @@ class LeasesController < ApplicationController
     @lease = Lease.find(params[:id])
     @contracts = Contract.all
     @apartment = @lease.apartment
+    @lease.build_expenses(@apartment.building_id)
     render :layout => false
   end
   

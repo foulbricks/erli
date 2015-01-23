@@ -39,10 +39,10 @@ class Lease < ActiveRecord::Base
   end
   
   def searchable_attributes
-    [contract.name, address, cap, localita, provincia, start_date.strftime("%d-%m-%Y"),
+    ([contract.name, address, cap, localita, provincia, start_date.strftime("%d-%m-%Y"),
      end_date.strftime("%d-%m-%Y"), registration_date.strftime("%d-%m-%Y"), amount.to_s,
      payment_frequency.to_s + " Mesi", deposit.to_s, registration_number.to_s, registration_agency,
-     payment_frequency.to_s + " Mese"].join(" ")
+     payment_frequency.to_s + " Mese"] + cached_tenants.map(&:summary) ).join(" ")
   end
   
   def build_expenses(building_id)
@@ -52,7 +52,7 @@ class Lease < ActiveRecord::Base
       expenses.each {|e| asset_expenses.build(:expense_id => e.id, :amount => 0) }
     else
       expenses.each do |e| 
-        unless asset_expenses.where("expense = ?", e.id).count > 0
+        unless asset_expenses.where("expense_id = ?", e.id).count > 0
           asset_expenses.build(:expense_id => e.id, :amount => 0)
         end
       end

@@ -33,7 +33,6 @@
 					<tr>
 						<th></th>
 						<th>Nomi</th>
-						<th>Email</th>
 						<th>Data di Inizio</th>
 						<th>Data di Fine</th>
 						<th>Data di Chiuso</th>
@@ -43,37 +42,56 @@
 					<% @leases.each do |lease| %>
 						<tr class="<%= lease.resolved? ? "success" : "danger" %>">
 							<td><a href="#" class="toggle-table"><small class="glyphicon glyphicon-plus" aria-hidden="true"></small></a></td>
-							<td><%= lease.cached_tenants.map {|c| c.name }.join(",") %></td>
-							<td><%= lease.cached_tenants.map {|c| c.email }.join(",") %></td>
+							<td><%= truncate(lease.cached_tenants.map {|c| c.name }.join(","), :length => 40) %></td>
 							<td><%= lease.start_date.strftime("%d-%m-%Y") %></td>
 							<td><%= lease.end_date.strftime("%d-%m-%Y") %></td>
 							<td><%= lease.inactive_date.strftime("%d-%m-%Y") %></td>
 						</tr>
 						<tr class="child-table">
-							<td colspan="6" style="background-color: #fff;">
-								<div class="col-sm-4">
-									<p><strong>Data di registrazione:</strong> <%= lease.registration_date.strftime("%d-%m-%Y") %></p>
-									<p><strong>Numero di registrazione:</strong> <%= lease.registration_number %></p>
-									<p><strong>Agenzia di registrazione:</strong> <%= lease.registration_agency %></p>
-									<p><strong>Canone di Locazione:</strong> <%= number_to_currency(lease.amount) %></p>
-									<p><strong>Cauzione:</strong> <%= number_to_currency(lease.deposit) %></p>
-								</div>
-								<div class="col-sm-4">
-									<p><strong>Percentuale:</strong> <%= number_to_percentage(lease.percentage) %></p>
-									<p><strong>Tipo di contratto:</strong> <%= lease.contract.name %></p>
-									<p><strong>Indirizzo di fatturazione:</strong><br /> <%= lease.address %></p>
-									<p><strong>Frequenza di pagamento:</strong> <%= lease.payment_frequency %> Mese</p>
-								</div>
-								<div class="col-sm-4">
-									<p><strong>Documenti</strong></p>
-									<% if lease.lease_attachments.size > 0 %>
-										<ul>
-											<% lease.lease_attachments.each do |f| %>
-												<% name = f.lease_document? ? "Documente di Locazione" : f.document.file.filename %>
-												<li><%= link_to name, download_attachment_lease_path(f.id) %></li>
-											<% end %>
-										</ul>
+							<td colspan="5" style="background-color: #fff;">
+								<div class="row summary">
+									<div class="col-sm-4">
+										<p><strong>Data di registrazione:</strong> <%= lease.registration_date.strftime("%d-%m-%Y") %></p>
+										<p><strong>Numero di registrazione:</strong> <%= lease.registration_number %></p>
+										<p><strong>Agenzia di registrazione:</strong> <%= lease.registration_agency %></p>
+									</div>
+									<div class="col-sm-4">
+										<p><strong>Percentuale:</strong> <%= number_to_percentage(lease.percentage) %></p>
+										<p><strong>Tipo di contratto:</strong> <%= lease.contract.name %></p>
+										<p><strong>Indirizzo di fatturazione:</strong><br /> <%= lease.address %></p>
+										<p><strong>Frequenza di pagamento:</strong> <%= lease.payment_frequency %> Mese</p>
+									</div>
+									<div class="col-sm-4">
+										<p><strong>Canone di Locazione:</strong> <%= number_to_currency(lease.amount) %></p>
+										<p><strong>Cauzione:</strong> <%= number_to_currency(lease.deposit) %></p>
+										<% lease.asset_expenses.each do |e| %>
+											<p><strong><%= e.expense.name %>:</strong> <%= number_to_currency(e.amount) %></p>
+										<% end %>
+									</div>
+									<% if lease.cached_tenants.size > 0 %>
+										<div class="col-sm-12">
+											<div class="row" style="margin:10px;">
+												<hr />
+												<h4 style="margin:4px;">Inquilini</h4>
+											</div>
+										</div>
+										<% lease.cached_tenants.each do |user| %>
+											<div class="col-sm-12">
+												<div class="row" style="margin:10px;">
+													<hr style="margin-top:0" />
+													<div class="col-sm-6">
+														<p><strong>Nome:</strong> <%= user.name %></p>
+														<p><strong>Email:</strong> <%= user.email %></p>
+													</div>
+													<div class="col-sm-6">
+														<p><strong>Percentuale:</strong> <%= user.percentage %></p>
+														<p><strong><%= user.partita_iva? ? "Partita IVA" : "Codice Fiscale:" %></strong> <%= user.codice_fiscale %></p>
+													</div>
+												</div>
+											</div>
+										<% end %>
 									<% end %>
+									<%= render :partial => "lease_files", :locals => {:lease => lease } %>
 								</div>
 							</td>
 						</tr>
