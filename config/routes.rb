@@ -10,7 +10,12 @@ Rails.application.routes.draw do
                        only: [:new, :create, :destroy]
                        
   resources :buildings do
-    resources :building_expenses
+    resources :building_expenses do
+      member do
+        get "download_attachment"
+        get "delete_attachment"
+      end
+    end
     collection do
       post "set_workspace"
     end
@@ -25,7 +30,12 @@ Rails.application.routes.draw do
   end
   
   resources :apartments do
-    resources :apartment_expenses, :except => [:index]
+    resources :apartment_expenses, :except => [:index] do
+      member do
+        get "download_attachment"
+        get "delete_attachment"
+      end
+    end
   end
   
   resources :expenses

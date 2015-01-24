@@ -1,0 +1,85 @@
+<div class="row" ng-controller="buildingExpensesController">
+	<div class="col-sm-12">
+		<% if flash[:notice] %>
+			<div class="alert alert-success"><%= flash[:notice] %></div>
+		<% elsif flash[:alert] %>
+			<div class="alert alert-danger"><%= flash[:alert] %></div>
+		<% end %>
+		
+		<h3>Spese Generale</h3>
+		<% if @expenses.length > 0 %>
+			<table class="table table-collapsed">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Nome</th>
+						<th>Data Conguaglio</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @expenses.each do |expense| %>
+						<tr class="info">
+							<td>
+								<% if @building.asset_expenses.where(:expense_id => expense.id).size > 0 %>
+									<a href="#" class="toggle-table"><small class="glyphicon glyphicon-plus" aria-hidden="true"></small>		<% end %>
+							</td>
+							<td><%= expense.name %></td>
+							<td><% if expense.balance_date %>
+									<%= expense.balance_date.value.strftime("%d-%m-%Y") %>
+								<% end %>
+							</td>
+							<td><%= link_to "Nuova spesa", "#", :placement => "left", :"tooltip-url" => new_building_building_expense_path(@building.id) + "?expense_id=#{expense.id}", :title => "Nuova spesa per #{@building.name}", :"erli-tooltip" => "popover" %></td>
+						</tr>
+						<% if @building.asset_expenses.where(:expense_id => expense.id).size > 0 %>
+							<tr class="child-table">
+								<td colspan="4">
+									<table class="table table-condensed table-striped" style="margin-left:5px;margin-bottom:0px;">
+										<thead>
+											<tr>
+												<th>Quantita</th>
+												<th>Aggiornata</th>
+												<th colspan="2">Azioni</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody>
+											<% @building.asset_expenses.where(:expense_id => expense.id).all.each do |e| %>
+												<tr>
+													<td><%= number_to_currency(e.amount) %></td>
+													<td><%= e.updated_at.strftime("%d-%m-%Y")%></td>
+													<td><%= link_to "Aggiornare", "#", :placement => "left", :"tooltip-url" => edit_building_building_expense_path(@building.id, e.id)  + "?expense_id=#{expense.id}", :title => "Aggiornare spesa per #{@building.name}", :"erli-tooltip" => "popover" %>
+													<td><%= link_to "Cancellare", building_building_expense_path(@building.id, e.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
+													<td><% if e.expense_attachment.present? %>
+															<a href="#" data-placement="left" title="" data-animation="am-flip-x" data-auto-close="1" data-template="expense<%= e.id %>" bs-popover><span class="glyphicon glyphicon-file" style="font-size:16px;"></span></a>
+															<script type="text/ng-template" id="expense<%= e.id %>">
+																<div class="popover">
+																	<div class="arrow"></div>
+																	<div class="popover-title">
+																		<h5><%= e.expense_attachment.document.file.filename %></h5>
+																	</div>
+																	<div class="popover-content">
+																		<div class="text-center">
+																			<a class="btn btn-success" href="<%= download_attachment_building_building_expense_path(@building.id, e.expense_attachment.id) %>">Scaricare</a>
+																			<a class="btn btn-danger" href="<%= delete_attachment_building_building_expense_path(@building.id, e.expense_attachment.id) %>">Cancellare</a>
+																		</div>
+																	</div>
+																</div>	
+															</script>
+														<% end %>
+													</td>
+												</tr>
+											<% end %>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						<% end %>
+					<% end %>
+				</tbody>
+			</table>
+		<% else %>
+			<p>Attualmente non ci sono spese disponibili</p>
+		<% end %>
+	</div>
+</div>

@@ -140,8 +140,22 @@ controller("apartmentExpensesController", [
 ]).
 
 controller("apartmentExpenseFormController", [
+	"$scope", "$tooltip",
+	function($scope, $tooltip){
+		
+	}
+]).
+
+controller("buildingExpensesController", [
 	"$scope", "$http",
 	function($scope, $http){
+		
+	}
+]).
+
+controller("buildingExpenseFormController", [
+	"$scope", "$tooltip",
+	function($scope, $tooltip){
 		
 	}
 ]).

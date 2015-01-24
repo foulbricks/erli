@@ -1,6 +1,7 @@
 class Expense < ActiveRecord::Base
   has_many :asset_expenses
   belongs_to :repartition_table
+  belongs_to :balance_date
   
   before_save :add_to_invoice_for_apartment
   

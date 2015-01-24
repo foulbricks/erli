@@ -13,7 +13,8 @@
 					<tr>
 						<th></th>
 						<th>Numero di Appartamento</th>
-						<th>Numero di Locazioni</th>
+						<th>Numero di Inquilini</th>
+						<th>Stato</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -25,12 +26,13 @@
 									<a href="#" class="toggle-table"><small class="glyphicon glyphicon-plus" aria-hidden="true"></small>		<% end %>
 							</td>
 							<td><%= apartment.name %></td>
-							<td><%= apartment.active_leases.size %></td>
-							<td><%= link_to "Nuova spesa", "#", :"data-placement" => "left", :"data-template" => new_apartment_apartment_expense_path(apartment.id), :title => "Nuova spesa per #{apartment.name}", :"data-auto-close" => "1", :"bs-popover" => "popover" %></td>
+							<td><%= apartment.active_leases.first.try(:users).try(:size) || 0 %></td>
+							<td>Pagato</h2>
+							<td><%= link_to "Nuova spesa", "#", :placement => "left", :"tooltip-url" => new_apartment_apartment_expense_path(apartment.id), :title => "Nuova spesa per #{apartment.name}", :"erli-tooltip" => "popover" %></td>
 						</tr>
 						<% if apartment.asset_expenses.size > 0%>
 							<tr class="child-table">
-								<td colspan="4">
+								<td colspan="5">
 									<table class="table table-condensed table-striped" style="margin-left:5px;margin-bottom:0px;">
 										<thead>
 											<tr>
@@ -38,6 +40,7 @@
 												<th>Quantita</th>
 												<th>Aggiornata</th>
 												<th colspan="2">Azioni</th>
+												<th></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -46,8 +49,26 @@
 													<td><%= expense.expense.name %></td>
 													<td><%= number_to_currency(expense.amount) %></td>
 													<td><%= expense.updated_at.strftime("%d-%m-%Y")%></td>
-													<td><%= link_to "Aggiornare", edit_apartment_apartment_expense_path(apartment.id, expense.id) %>
+													<td><%= link_to "Aggiornare", "#", :placement => "left", :"tooltip-url" => edit_apartment_apartment_expense_path(apartment.id, expense.id), :title => "Aggiornare spesa per #{apartment.name}", :"erli-tooltip" => "popover" %>
 													<td><%= link_to "Cancellare", apartment_apartment_expense_path(apartment.id, expense.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
+													<td><% if expense.expense_attachment.present? %>
+															<a href="#" data-placement="left" title="" data-animation="am-flip-x" data-auto-close="1" data-template="expense<%= expense.id %>" bs-popover><span class="glyphicon glyphicon-file" style="font-size:16px;"></span></a>
+															<script type="text/ng-template" id="expense<%= expense.id %>">
+																<div class="popover" style="width:250px">
+																	<div class="arrow"></div>
+																	<div class="popover-title">
+																		<h5><%= expense.expense_attachment.document.file.filename %></h5>
+																	</div>
+																	<div class="popover-content">
+																		<div class="text-center">
+																			<a class="btn btn-success" href="<%= download_attachment_apartment_apartment_expense_path(apartment.id, expense.expense_attachment.id) %>">Scaricare</a>
+																			<a class="btn btn-danger" href="<%= delete_attachment_apartment_apartment_expense_path(apartment.id, expense.expense_attachment.id) %>">Cancellare</a>
+																		</div>
+																	</div>
+																</div>	
+															</script>
+														<% end %>
+													</td>
 												</tr>
 											<% end %>
 										</tbody>

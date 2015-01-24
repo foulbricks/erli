@@ -1,0 +1,9 @@
+<div class="popover">
+	<div class="arrow"></div>
+	<div class="popover-title">
+		<h5>Spesa <%= @expense.name %> per edificio <%= @building.name %>
+	</div>
+	<div class="popover-content">
+		<%= render :partial => "form" %>
+	</div>
+</div>

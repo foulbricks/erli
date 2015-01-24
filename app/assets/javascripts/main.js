@@ -21,30 +21,6 @@ $(".table-collapsed a.toggle-table").on("click", function(e){
 
 $("[bs-modal], [bs-popover]").on("click", function(e){ e.preventDefault(); });
 
-$(document).on("submit", "form[name=apartmentExpenseForm]", function(e){
-	e.preventDefault();
-	var form = $("form[name=apartmentExpenseForm]");
-	$.ajax({
-		type: form.attr("method"),
-		url: form.attr("action"),
-		data: form.serialize(),
-		success: function(data) {
-			if(data.errors){
-				var errorsList = $(".leaseFormErrors").html("");
-				data.errors.forEach(function(err){
-					errorsList.append("<li>" + err + "</li>");
-				});
-			}
-			else {
-				$(".leaseFormErrors").html("");
-				window.location = "/apartment_expenses"
-			}
-		}
-	})
-});
-
-
-
 $(document).on("click", ".extra-file", function(event){
 	event.preventDefault();
 	var p = $(this).parent().prev().clone();

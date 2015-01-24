@@ -23,6 +23,36 @@ directive("compareTo", function(){
 	}
 }).
 
+directive("erliTooltip", [
+	"$tooltip", "$timeout",
+	function($tooltip, $timeout){
+		return {
+			restrict: "A",
+			scope: true,
+			link: function(scope, element, attrs){
+				scope.erli_enabled = false;
+				element.bind("click", function(e){
+					e.preventDefault();
+					if(!scope.erli_enabled){
+						var t = $tooltip(element, {
+							template: attrs.tooltipUrl,
+							title: attrs.title,
+							placement: attrs.placement,
+							autoClose: 1,
+							trigger: "click"
+						})
+				
+						t.$promise.then(function(y){
+							t.show();
+							scope.erli_enabled = true;
+						});
+					}
+				});
+			}
+		}
+	}
+]).
+
 directive("calendar", [
 	"moment",
 	function(moment){

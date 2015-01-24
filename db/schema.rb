@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150121075603) do
+ActiveRecord::Schema.define(version: 20150123082527) do
 
   create_table "apartment_repartition_tables", force: true do |t|
     t.integer  "apartment_id"
@@ -92,6 +92,13 @@ ActiveRecord::Schema.define(version: 20150121075603) do
   create_table "contracts", force: true do |t|
     t.string   "name"
     t.decimal  "istat"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "expense_attachments", force: true do |t|
+    t.integer  "asset_expense_id"
+    t.string   "document"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

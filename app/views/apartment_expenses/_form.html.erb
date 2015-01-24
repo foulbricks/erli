@@ -1,19 +1,44 @@
-<%= form_for @expense, url: apartment_apartment_expenses_path(@apartment.id), html: {:novalidate => "novalidate", name: "apartmentExpenseForm" } do |f| %>
+<% url = @expense.new_record? ? apartment_apartment_expenses_path(@apartment.id) : apartment_apartment_expense_path(@apartment.id, @expense.id) %>
+<% method = @expense.new_record? ? :post : :put %>
+<%= form_for @expense, url: url, method: method, html: {:novalidate => "novalidate", name: "apartmentExpenseForm", :multipart => true, :target => "iframe" } do |f| %>
 	<div class="form-group">
 		<%= f.label :expense_id, "Nome di Spesa" %>
 		<%= f.select :expense_id, options_from_collection_for_select(@expenses, "id", "name", @expense.expense_id), {}, {:class => "form-control"} %>
 	</div>
 
-	<div class="form-group" ng-class="{'has-error':apartmentExpenseForm['asset_expense[amount]'].$dirty && apartmentForm['asset_expense[amount]'].$invalid }">
+	<div class="form-group" ng-class="{'has-error':apartmentExpenseForm['asset_expense[amount]'].$dirty && apartmentForm['asset_expense[amount]'].$invalid }" ng-init="amount='<%= number_with_delimiter(@expense.amount) %>'">
 		<%= f.label :amount, "Quantita", :class => "control-label" %>
 		<%= f.text_field :amount, :class => "form-control", :placeholder => "Quantita", :"ng-model" => "amount", :"ng-required" => true %>
 		<span class="error-message" ng-show="apartmentExpenseForm['asset_expense[amount]'].$dirty && apartmentExpenseForm['asset_expense[amount]'].$invalid">Quantita è richiesta.</span>
 	</div>
+	<%= f.fields_for :expense_attachment, @expense.expense_attachment || @expense.build_expense_attachment do |a| %>
+		<div class="form-group">
+			<%= a.label :document, "Documente", :class => "control-label" %>
+			<p><%= a.file_field :document, :placeholder => "Documente" %></p>
+		</div>
+	<% end %>
 	<div class="form-group"
 		<div class="col-sm-9 col-sm-offset-3">
 			<%= f.submit "Salva Spesa di Appartamento", :class => "btn btn-primary", :"ng-disabled" => "apartmentExpenseForm.$invalid"%>
 		</div>
 		<ul class="danger leaseFormErrors">
 		</ul>
+		<iframe name="iframe" id="iframe" style="display:none" ></iframe>
+		<script type="text/javascript">
+		$("#iframe").on("load", function(e){
+			var errors = $(this).contents().find("body").text();
+			if(errors){
+				var errs = JSON.parse(errors);
+				var errorsList = $(".leaseFormErrors").html("");
+				errs.forEach(function(err){
+					errorsList.append("<li>" + err + "</li>");
+				});
+			}
+			else {
+				window.location = "/apartment_expenses";
+			}
+		});
+		</script>
 	</div>
+	
 <% end %>

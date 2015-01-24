@@ -1,0 +1,41 @@
+<% url = @asset_expense.new_record? ? building_building_expenses_path(@building.id) : building_building_expense_path(@building.id, @asset_expense.id) %>
+<% method = @asset_expense.new_record? ? :post : :put %>
+<%= form_for @asset_expense, url: url, method: method, html: {:novalidate => "novalidate", name: "buildingExpenseForm", :multipart => true, :target => "iframe" } do |f| %>
+
+	<div class="form-group" ng-class="{'has-error':buildingExpenseForm['asset_expense[amount]'].$dirty && apartmentForm['asset_expense[amount]'].$invalid }" ng-init="amount='<%= number_with_delimiter(@asset_expense.amount) %>'">
+		<%= f.label :amount, "Quantita", :class => "control-label" %>
+		<%= f.text_field :amount, :class => "form-control", :placeholder => "Quantita", :"ng-model" => "amount", :"ng-required" => true %>
+		<span class="error-message" ng-show="buildingExpenseForm['asset_expense[amount]'].$dirty && buildingExpenseForm['asset_expense[amount]'].$invalid">Quantita è richiesta.</span>
+	</div>
+	<%= f.fields_for :expense_attachment, @asset_expense.expense_attachment || @asset_expense.build_expense_attachment do |a| %>
+		<div class="form-group">
+			<%= a.label :document, "Documente", :class => "control-label" %>
+			<p><%= a.file_field :document, :placeholder => "Documente" %></p>
+		</div>
+	<% end %>
+	<div class="form-group"
+		<div class="col-sm-9 col-sm-offset-3">
+			<%= f.hidden_field :expense_id, :value => @expense.id %>
+			<%= f.submit "Salva Spesa di Appartamento", :class => "btn btn-primary", :"ng-disabled" => "buildingExpenseForm.$invalid"%>
+		</div>
+		<ul class="danger leaseFormErrors">
+		</ul>
+		<iframe name="iframe" id="iframe" style="display:none" ></iframe>
+		<script type="text/javascript">
+		$("#iframe").on("load", function(e){
+			var errors = $(this).contents().find("body").text();
+			if(errors){
+				var errs = JSON.parse(errors);
+				var errorsList = $(".leaseFormErrors").html("");
+				errs.forEach(function(err){
+					errorsList.append("<li>" + err + "</li>");
+				});
+			}
+			else {
+				window.location = "<%= building_building_expenses_path(@building.id) %>";
+			}
+		});
+		</script>
+	</div>
+	
+<% end %>
