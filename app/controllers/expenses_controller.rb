@@ -54,7 +54,8 @@ class ExpensesController < ApplicationController
   private
   
   def expenses_params
-    params.require(:expense).permit(:name, :kind, :add_to_invoice, :repartition_table_id, :building_id, :balance_date_id)
+    params.require(:expense).permit(:name, :kind, :add_to_invoice, :repartition_table_id, 
+            :building_id, :balance_date_id, :iva_exempt)
   end
   
   def find_tables_and_dates

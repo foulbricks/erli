@@ -45,7 +45,7 @@ class ContractsController < ApplicationController
   
   private
   def contract_params
-    params.require(:contract).permit(:name, :istat)
+    params.require(:contract).permit(:name, :istat, :iva_exempt)
   end
   
 end
