@@ -103,3 +103,73 @@ input.ng-dirty.ng-invalid{
     padding: 6px;
   }
 }
+
+body.invoice {
+	padding-top: 10px;
+	background-color: #fff;
+	hr {border-top: 1px solid #000;margin:10px 0;}
+	.address, .invoice-info {
+		border: 1px solid #000;
+		font-style:italic;
+		padding:10px;
+	}
+	.invoice-info { 
+		margin-top:30px;
+		hr {border-top:2px solid #000;}
+	}
+	.divider {
+		border-top: 2px solid rgb(192, 192, 192);
+		margin: 15px 0;
+	}
+	.tenant {
+		border: 1px solid #000;
+		padding:10px;
+		.name { font-size: 20px; height:80px;}
+	}
+	.codice {
+		font-size: 10px;
+		margin-top: 65px;
+		line-height:8px;
+		span { padding-left:60px;}
+	}
+	.expense {
+		text-transform:uppercase;
+		height:220px;
+		font-size: 12px;
+	}
+	.prestazioni {
+		text-transform:uppercase;
+		height:100px;
+		font-size: 12px;
+	}
+	.taxes {
+		font-size: 14px;
+		font-weight: bold;
+		text-transform: uppercase;
+		font-style: italic;
+		.iva {
+			font-size: 10px;
+			font-weight:initial;
+			margin:0;
+		}
+		p { margin:10px 0;}
+		.total { border-top: 3px double rgb(84,84,169);}
+		.percentage {
+			font-weight:initial;
+			font-style:initial;
+			font-size:12px;
+			padding-left:0;
+			margin-left:0;
+			margin-right:0;
+			padding-right:0;
+		}
+		.amount {font-style:initial;}
+	}
+	.footer {
+		color: rgb(84,84,169); 
+		font-size:10px; 
+		font-weight:bold;
+		margin-top: -10px;
+		font-style:italic;
+	}
+}

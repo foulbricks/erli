@@ -42,9 +42,10 @@ Rails.application.routes.draw do
   resources :repartition_tables
   resources :contracts
   resources :balance_dates
+  resources :invoices
+  resources :companies, :only => [:edit, :update]
   
   resources :leases do
-    resources :invoices
     resources :tenants, :except => [:index]
     member do
       get "registration"

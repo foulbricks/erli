@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150123082527) do
+ActiveRecord::Schema.define(version: 20150126000115) do
 
   create_table "apartment_repartition_tables", force: true do |t|
     t.integer  "apartment_id"
@@ -45,6 +45,9 @@ ActiveRecord::Schema.define(version: 20150123082527) do
     t.datetime "updated_at"
     t.date     "start_date"
     t.date     "end_date"
+    t.integer  "invoice_id"
+    t.integer  "lease_id"
+    t.date     "paid_on"
   end
 
   create_table "balance_dates", force: true do |t|
@@ -76,6 +79,11 @@ ActiveRecord::Schema.define(version: 20150123082527) do
     t.text     "address"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "localita"
+    t.string   "provincia"
+    t.string   "cap"
+    t.string   "background"
+    t.string   "home_number"
   end
 
   create_table "cached_tenants", force: true do |t|
@@ -85,6 +93,20 @@ ActiveRecord::Schema.define(version: 20150123082527) do
     t.decimal  "percentage",     precision: 15, scale: 2
     t.string   "email"
     t.integer  "lease_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "companies", force: true do |t|
+    t.string   "name"
+    t.string   "address"
+    t.string   "home_number"
+    t.string   "provincia"
+    t.string   "localita"
+    t.string   "cap"
+    t.string   "partita_iva"
+    t.string   "phone"
+    t.string   "fax"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -119,6 +141,27 @@ ActiveRecord::Schema.define(version: 20150123082527) do
     t.string   "access_token"
     t.string   "refresh_token"
     t.datetime "expires_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "invoice_charges", force: true do |t|
+    t.decimal  "amount",           precision: 15, scale: 2
+    t.date     "start_date"
+    t.date     "end_date"
+    t.integer  "invoice_id"
+    t.date     "paid_on"
+    t.boolean  "paid",                                      default: false
+    t.string   "kind"
+    t.integer  "asset_expense_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "invoices", force: true do |t|
+    t.integer  "number"
+    t.integer  "lease_id"
+    t.string   "document"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -1,4 +1,5 @@
 class Building < ActiveRecord::Base
+  mount_uploader :background, BackgroundUploader
   
   validates :name, :presence => true, :uniqueness => true
   

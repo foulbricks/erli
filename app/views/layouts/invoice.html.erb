@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width initial-scale=1">
+  	<title>Erli</title>
+  	<%= wicked_pdf_stylesheet_link_tag 'application' %>
+	<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  	<%= csrf_meta_tags %>
+</head>
+<body class="invoice">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 border-left">
+				<div class="row">
+					<div class="col-xs-5 address">
+						<p><strong>ERLI s.r.l.</strong></p>
+						<p>Via Avigliana 13/1 10138 - Torino</p>
+						<p>Partita IVA 02154160010</p>
+						<p>Tel / Fax 011/4343797</p>
+					</div>
+					<div class="col-xs-4 col-xs-offset-3 invoice-info">
+						<div class="row">
+							<div class="col-xs-6">
+								<p>TORINO</p>
+							</div>
+							<div class="col-xs-6">
+								<p class="text-right"><strong>02/01/2014</strong></p>
+							</div>
+						</div>
+						<hr />
+						<div class="row">
+							<div class="col-xs-6">
+								<p>FATTURA N.</p>
+							</div>
+							<div class="col-xs-6">
+								<p class="text-right"><strong>1</strong></p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<hr class="divider" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6 codice">
+						<p>Partita IVA cliente: <span>12345644141</span></p>
+						<p>Cod. fisc. cliente:</p>
+						<p>Cod. fisc. cliente:</p>
+						<p>Cod. fisc. cliente:</p>
+						<p>Cod. fisc. cliente:</p>
+						<p>Cod. fisc. cliente:</p>
+					</div>
+					<div class="col-xs-6 tenant">
+						<p class="name">TASSINARI FRANCESCO</p>
+						<hr />
+						<div class="col-xs-6" style="margin-left:-15px">
+							<p>P.ZZA IV NOVEMBRE<br />
+							10093 COLLEGNO</p>
+						</div>
+						<div class="col-xs-6">
+							<p>N.3<br />
+								Prov. TO</p>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<hr class="divider" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="expense col-xs-12">
+						<div class="row">
+							<p class="col-xs-9">Canone di Locazione Mese Di Gennaio 2014 Canone di Locazione Mese Di Gennaio 2014 Canone di Locazione Mese Di Gennaio 2014 Canone di Locazione Mese Di Gennaio 2014 Canone di Locazione Mese Di Gennaio 2014 Canone di Locazione Mese Di Gennaio 2014</p>
+							<p class="col-xs-2 text-right">1.300,00</p>
+						</div>
+						<div class="row">
+							<p class="col-xs-9">Credito Spese Salvo Conguaglio</p>
+							<p class="col-xs-2 text-right">13,00</p>
+						</div>
+						<div class="row">
+							<p class="col-xs-9">Credito Spese Salvo Conguaglio</p>
+							<p class="col-xs-2 text-right">1.300,00</p>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<hr class="divider" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="prestazioni col-xs-12">
+						<div class="row">
+							<p class="col-xs-12">PRESTAZIONI ESSENTIVA</p>
+						</div>
+						<div class="row">
+							<p class="col-xs-9">TASSA REGISTRO CONTR. LOCAZ.</p>
+							<p class="col-xs-2 text-right">9,00</p>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<hr class="divider" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 taxes">
+						<div class="row">
+							<p class="col-xs-9">Imponibile:</p>
+							<p class="col-xs-2 text-right amount">110,20</p>
+						</div>
+						<div class="row">
+							<p class="col-xs-9 text-right">IVA Fattura:</p>
+							<p class="col-xs-2 text-right amount">0,00</p>
+							<p class="col-xs-1 percentage">20,00 %</p>
+							<p class="col-xs-11 text-right iva">Essente IVA art. 10<br />
+								n.8 D.P.R. 633772</p>
+						</div>
+						<div class="row">
+							<p class="col-xs-9 text-right">Interessi Legali:</p>
+							<p class="col-xs-2 text-right amount">0,00</p>
+						</div>
+						<div class="row">
+							<p class="col-xs-9">Imponibile Essente IVA:</p>
+							<p class="col-xs-2 text-right amount">9,00</p>
+						</div>
+						<div class="row">
+							<p class="col-xs-9 text-right">Totale Fattura:</p>
+							<p class="col-xs-2 text-right total amount">119,20</p>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<hr class="divider" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 footer text-center">
+						<p>Immobiliare ERLI S.r.l. Via Avigliana 13/1 10138 TORINO - P. IVA 02354360010 - TEL/FAX 0114343797</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

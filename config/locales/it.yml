@@ -14,6 +14,14 @@ it:
       building:
         name: "Nome"
         address: "Indirizzo"
+        home_number: "Numero Civico"
+        background: "Sfondo"
+      company:
+        name: "Nome"
+        address: "Indirizzo"
+        home_number: "Numero Civico"
+        partita_iva: "Partita IVA"
+        phone: "Telefono/FAX"
       contract:
         name: "Nome"
       bollo_range:

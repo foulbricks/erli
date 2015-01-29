@@ -14,7 +14,7 @@
 		<div class="row">
 			<div class="col-xs-12 border-left">
 				<% if logged_in? && cookies[:building].present? %>
-					<div id="wrapper">
+					<div id="wrapper" style="background:url(<%= @main_building.background.opaque.url %>) left top;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;">
 					    <div id="sidebar-wrapper">
 					        <ul class="sidebar-nav">
 					            <li><%= link_to "Inizio", root_path %></li>

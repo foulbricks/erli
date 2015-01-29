@@ -1,0 +1,89 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h3>Informazione Aziendali</h3>
+		<hr />
+	</div>
+	<div class="row" ng-controller="companyFormController">
+		<div class="col-xs-12">
+			<% if @company.errors.any? %>
+				<div class="alert alert-danger">
+					<strong>Il formulario non è valido.</strong><br />
+					<ul>
+						<% for message in @company.errors.full_messages %>
+							<li><%= message %></li>
+						<% end %>
+					</ul>
+				</div>
+			<% end %>
+			
+			<%= form_for @company, :url => "/companies/1", :method => :put, html: {:novalidate => "novalidate", name: "companyForm", class: "form-horizontal" } do |f| %>
+		
+				<div class="form-group" ng-class="{'has-error':companyForm['company[name]'].$dirty && companyForm['company[name]'].$invalid }" ng-init="name='<%= @company.name %>'">
+					<%= f.label :name, :class => "col-sm-3 control-label" %>
+					<div class="col-sm-9">
+						<%= f.text_field :name, :class => "form-control", :placeholder => "Nome", :"ng-model" => "name", :"ng-required" => true %>
+						<span class="error-message" ng-show="companyForm['company[name]'].$dirty && companyForm['company[name]'].$invalid">Nome e richiesto.</span>
+					</div>
+				</div>
+		
+				<div class="form-group" ng-class="{'has-error':companyForm['company[address]'].$dirty && companyForm['company[address]'].$invalid }" ng-init="address='<%= @company.address %>'">
+					<%= f.label :address, :class => "col-sm-3 control-label" %>
+					<div class="col-sm-9">
+						<%= f.text_field :address, :class => "form-control", :placeholder => "Indirizzo", :"ng-model" => "address", :"ng-required" => true %>
+						<span class="error-message" ng-show="companyForm['company[address]'].$dirty && companyForm['company[address]'].$invalid">Indirizzo e richiesto.</span>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<%= f.label :home_number, :class => "col-sm-3 control-label" %>
+					<div class="col-sm-9">
+						<%= f.text_field :home_number, :class => "form-control", :placeholder => "Numero Civico", :"ng-model" => "home_number" %>
+					</div>
+				</div>
+				
+				<div class="form-group" ng-class="{'has-error':companyForm['company[cap]'].$dirty && companyForm['company[cap]'].$invalid }" ng-init="cap='<%= @company.cap %>'">
+					<%= f.label :cap, :class => "col-sm-3 control-label" %>
+					<div class="col-sm-9">
+						<%= f.text_field :cap, :class => "form-control", :placeholder => "CAP", :"ng-model" => "cap", :"ng-required" => true %>
+						<span class="error-message" ng-show="companyForm['company[cap]'].$dirty && companyForm['company[cap]'].$invalid">CAP e richiesto.</span>
+					</div>
+				</div>
+				
+				<div class="form-group" ng-class="{'has-error':companyForm['company[localita]'].$dirty && companyForm['company[localita]'].$invalid }" ng-init="localita='<%= @company.localita %>'">
+					<%= f.label :localita, :class => "col-sm-3 control-label" %>
+					<div class="col-sm-9">
+						<%= f.text_field :localita, :class => "form-control", :placeholder => "Localita", :"ng-model" => "localita", :"ng-required" => true %>
+						<span class="error-message" ng-show="companyForm['company[localita]'].$dirty && companyForm['company[localita]'].$invalid">Localita e richiesta.</span>
+					</div>
+				</div>
+				
+				<div class="form-group" ng-class="{'has-error':companyForm['company[provincia]'].$dirty && companyForm['company[provincia]'].$invalid }" ng-init="provincia='<%= @company.provincia %>'">
+					<%= f.label :provincia, :class => "col-sm-3 control-label" %>
+					<div class="col-sm-9">
+						<%= f.text_field :provincia, :class => "form-control", :placeholder => "Provincia", :"ng-model" => "provincia", :"ng-required" => true %>
+						<span class="error-message" ng-show="companyForm['company[provincia]'].$dirty && companyForm['company[provincia]'].$invalid">Provincia e richiesta.</span>
+					</div>
+				</div>
+				
+				<div class="form-group" ng-class="{'has-error':companyForm['company[paritita_iva]'].$dirty && companyForm['company[partita_iva]'].$invalid }" ng-init="partita_iva='<%= @company.partita_iva %>'">
+					<%= f.label :partita_iva, :class => "col-sm-3 control-label" %>
+					<div class="col-sm-9">
+						<%= f.text_field :partita_iva, :class => "form-control", :placeholder => "Partita IVA", :"ng-model" => "partita_iva", :"ng-required" => true %>
+						<span class="error-message" ng-show="companyForm['company[partita_iva]'].$dirty && companyForm['company[partita_iva]'].$invalid">Partita IVA e richiesta.</span>
+					</div>
+				</div>
+				
+				<div class="form-group" ng-class="{'has-error':companyForm['company[phone]'].$dirty && companyForm['company[phone]'].$invalid }" ng-init="phone='<%= @company.phone %>'">
+					<%= f.label :phone, :class => "col-sm-3 control-label" %>
+					<div class="col-sm-9">
+						<%= f.text_field :phone, :class => "form-control", :placeholder => "Telefono/FAX", :"ng-model" => "phone", :"ng-required" => true %>
+						<span class="error-message" ng-show="companyForm['company[phone]'].$dirty && companyForm['company[phone]'].$invalid">Telefono e richiesto.</span>
+					</div>
+				</div>
+				<div class="col-sm-9 col-sm-offset-3">
+					<%= f.submit "Salva", :class => "btn btn-lg btn-primary", :"ng-disabled" => "companyForm.$invalid"%>
+				</div>
+			<% end %>
+		</div>
+	</div>
+</div>

@@ -1,7 +1,9 @@
 <h3>Welcome <%= logged_user.name %></h3>
 <div class="row calendar-box" ng-controller="CalendarController">
 	<div class="col-sm-12">
-		<!-- <div class="alert alert-info" role="alert">Oh snap! Change a few things up and try submitting again.</div> -->
+		<% if flash[:notice].present? %>
+			<div class="alert alert-info" role="alert"><%= flash[:notice] %></div>
+		<% end %>
 		<div class="row">
 			<div class="col-xs-6 text-left" ng-if="calendarControl.showControls">
 				<div class="btn-group">

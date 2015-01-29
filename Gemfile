@@ -36,6 +36,10 @@ gem 'google-api-client', :require => 'google/api_client'
 gem 'will_paginate', '~> 3.0.6'
 gem "carrierwave", "~> 0.10.0"
 gem "delocalize"
+gem 'wkhtmltopdf-binary', '~> 0.9.9.3'
+gem 'wicked_pdf'
+#gem "rmagick"
+gem "mini_magick", "~> 3.7.0"
 
 # Use unicorn as the app server
 # gem 'unicorn'

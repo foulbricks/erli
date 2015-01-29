@@ -17,10 +17,44 @@
 			<span class="error-message" ng-show="newBuildingForm['building[name]'].$dirty && newBuildingForm['building[name]'].$invalid">Nome è richiesto.</span>
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group" ng-class="{'has-error':newBuildingForm['building[address]'].$dirty && newBuildingForm['building[address]'].$invalid }" ng-init="address='<%= @building.address %>'">
 		<%= f.label :address, :class => "col-sm-3 control-label" %>
 		<div class="col-sm-9">
-			<%= f.text_area :address, :placeholder => "Indirizzo", :class => "form-control" %>
+			<%= f.text_field :address, :placeholder => "Indirizzo", :class => "form-control", :"ng-model" => "address", :"ng-required" => true %>
+			<span class="error-message" ng-show="newBuildingForm['building[address]'].$dirty && newBuildingForm['building[address]'].$invalid">Indirizzo è richiesto.</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<%= f.label :home_number, :class => "col-sm-3 control-label" %>
+		<div class="col-sm-9">
+			<%= f.text_field :home_number, :placeholder => "Casa Numero", :class => "form-control" %>
+		</div>
+	</div>
+	<div class="form-group" ng-class="{'has-error':newBuildingForm['building[cap]'].$dirty && newBuildingForm['building[cap]'].$invalid }" ng-init="cap='<%= @building.cap %>'">
+		<%= f.label :cap, :class => "col-sm-3 control-label" %>
+		<div class="col-sm-9">
+			<%= f.text_field :cap, :placeholder => "CAP", :class => "form-control", :"ng-model" => "cap", :"ng-required" => true %>
+			<span class="error-message" ng-show="newBuildingForm['building[cap]'].$dirty && newBuildingForm['building[cap]'].$invalid">CAP è richiesto.</span>
+		</div>
+	</div>
+	<div class="form-group" ng-class="{'has-error':newBuildingForm['building[provincia]'].$dirty && newBuildingForm['building[provincia]'].$invalid }" ng-init="provincia='<%= @building.provincia %>'">
+		<%= f.label :provincia, :class => "col-sm-3 control-label" %>
+		<div class="col-sm-9">
+			<%= f.text_field :provincia, :placeholder => "Provincia", :class => "form-control", :"ng-model" => "provincia", :"ng-required" => true %>
+			<span class="error-message" ng-show="newBuildingForm['building[provincia]'].$dirty && newBuildingForm['building[provincia]'].$invalid">Provincia è richiesta.</span>
+		</div>
+	</div>
+	<div class="form-group" ng-class="{'has-error':newBuildingForm['building[localita]'].$dirty && newBuildingForm['building[localita]'].$invalid }" ng-init="localita='<%= @building.localita %>'">
+		<%= f.label :localita, :class => "col-sm-3 control-label" %>
+		<div class="col-sm-9">
+			<%= f.text_field :localita, :placeholder => "Localita", :class => "form-control", :"ng-model" => "localita", :"ng-required" => true %>
+			<span class="error-message" ng-show="newBuildingForm['building[localita]'].$dirty && newBuildingForm['building[localita]'].$invalid">Localita è richiesta.</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<%= f.label :background, :class => "col-sm-3 control-label" %>
+		<div class="col-sm-9">
+			<%= f.file_field :background %>
 		</div>
 	</div>
 	<div class="col-sm-9 col-sm-offset-3">
