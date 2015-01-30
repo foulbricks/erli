@@ -71,6 +71,26 @@ class Lease < ActiveRecord::Base
     end
   end
   
+  def partial_start_date?
+    start_date.mday == 1
+  end
+  
+  def monthly_charge
+    if lease_months < 1
+      amount
+    else
+      (amount/lease_months * 100).round / 100.0
+    end
+  end
+  
+  def daily_charge
+    (amount/(start_date..end_date).count * 100).round /100.0
+  end
+  
+  def lease_months
+    (start_date.year * 12 + start_date.month) - (end_date.year * 12 + end_date.month)
+  end
+  
   private
   
   def percentage_maximum
