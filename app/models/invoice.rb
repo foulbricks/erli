@@ -2,26 +2,18 @@ class Invoice < ActiveRecord::Base
   has_many :invoice_charges, :dependent => :destroy
   
   
-  def generate(building_id)
-    
-  end
-  
-  def self.generate_rent(invoice, lease, invoice_date)
+  def self.generate(building_id, invoice_date=Date.today)
+    Lease.where(:active => true).all.each do |lease|
     if lease.registration_date.present? && (lease.start_date..lease.end_date).include?(invoice_date)
-      date_tables = lease.date_tables(invoice_date)
-      rent_charges = lease.invoices.all.map do |invoice|
-        invoice.invoice_charges.where(:kind => "Rent").all
-      end.compact
-      
-      if lease.start_date.at_beginning_of_month == Date.today.prev_month.at_beginning_of_month
-        unless rent_charges.detect {|c| c.start_date == lease.start_date }
-          total = (lease.start_date..lease.start_date.end_of_month).entries.size / amount
-          invoice.invoice_charges.build(:amount => amount, 
-                                        :start_date => lease.start_date)
-        end
+      invoice = self.new
+      if charge_rent?(lease, invoice_date)
+        rent = invoice.invoice_charges.build(:kind => "rent", :lease_id => lease.id)
+        period = charge_period(lease, invoice_date)
+        rent.start_date, rent.end_date = period.first, period.last
+        rent.amount = charge_amount_with_istat(lease, invoice_date)
       end
+      
     end
-    
   end
   
   def self.apartment_expenses(apartment, lease)
@@ -42,15 +34,16 @@ class Invoice < ActiveRecord::Base
     charges = lease.invoice_charges.where(:kind => "rent").all
     
     if lease.lease_months <= lease.payment_frequency
-      charges.size == 0 ? lease.amount : 0 
-    elsif lease.partial_month? && same_month?(charge_date.prev_month, lease.start_date) && charges.size < 1
-      (lease.monthly_charge * lease.payment_frequency) + partial_charge(lease)
+      a = charges.size == 0 ? lease.amount : 0 
+    elsif lease.partial_start_date? && same_month?(charge_date.prev_month, lease.start_date) && charges.size < 1
+      a = (lease.monthly_charge * lease.payment_frequency) + partial_charge(lease)
     elsif same_period?(charge_date, lease.end_date, lease.payment_frequency)
       total_charges_so_far = charges.map(&:amount).sum
-      lease.amount - total_charges_so_far
+      a = lease.amount - total_charges_so_far
     else
-      lease.monthly_charge * lease.payment_frequency
+      a = lease.monthly_charge * lease.payment_frequency
     end
+    (a * 100).round / 100.0
   end
   
   def self.charge_amount_with_istat(lease, charge_date)
@@ -64,10 +57,12 @@ class Invoice < ActiveRecord::Base
       setup_ratio = setup_istat > 0 ? setup_istat/100.0 : 1
       
       if period.first >= istat_date 
-        amount + (amount * contract_ratio * setup_ratio)
-      elsif period.include?(istat_date))
+        a = amount + (amount * contract_ratio * setup_ratio)
+        (a * 100).round / 100.0
+      elsif period.include?(istat_date)
         num_days = (istat_date..period.last).count
-        amount + (num_days * lease.daily_charge * contract_ratio * setup_ratio)
+        a = amount + (num_days * lease.daily_charge * contract_ratio * setup_ratio)
+        (a * 100).round / 100.0
       else
         amount
       end
@@ -87,7 +82,7 @@ class Invoice < ActiveRecord::Base
   end
   
   def self.same_period?(from_date, include_date, months)
-    (from_date..(from_date + months)).include?(include_date)
+    (from_date..(from_date + months.months)).include?(include_date)
   end
   
   def self.charge_period(lease, charge_date)
@@ -104,26 +99,34 @@ class Invoice < ActiveRecord::Base
     start, to = period.first, period.last
     from, names = start, []
     while from < to
-      names << [I18n.t("dates.month_names")[from.month], from.year]
+      names << [I18n.t("date.month_names")[from.month], from.year]
       from = from.end_of_month + 1.day
     end
     str = names.size > 1 ? "Mesi di " : "Mese di "
     h = names.group_by {|n| n[1] }
     h.each do |year, val|
-      str = val.map{|m| m[0] }.join(" ") + " #{year}"
+      str += val.map{|m| m[0].capitalize }.join(" ") + " #{year} "
     end
-    str
+    str.chop
   end
   
-  # def date_tables(stop_date)
-  #   ranges = []
-  #   from = start_date
-  #   while from < end_date && from <= stop_date
-  #     to = end_date.end_of_month == from.end_of_month ? end_date : from.end_of_month
-  #     ranges << (from..to)
-  #     from = from.next_month.at_beginning_of_month
-  #   end
-  #   ranges
-  # end
+  def self.charge_rent?(lease,charge_date)
+    return true if lease.start_date > charge_date - 1.month && lease.end_date <= charge_date
+    tables = date_tables(charge_date, lease.start_date, lease.end_date, lease.payment_frequency)
+    tables.last.first == charge_date.at_beginning_of_month
+  end
+  
+  def self.date_tables(stop_date, start_date, end_date, step)
+    ranges = []
+    months = step == 1 ? 0 : step
+    from = start_date
+    while from < end_date && from <= stop_date
+      in_end_date = same_period?(from.end_of_month, end_date.end_of_month, step)
+      to = in_end_date ? end_date : (from.end_of_month + months.months)
+      ranges << (from..to)
+      from = from.next_month.at_beginning_of_month + months.months
+    end
+    ranges
+  end
   
 end

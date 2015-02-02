@@ -9,6 +9,7 @@ class CreateInvoiceCharges < ActiveRecord::Migration
       t.boolean   :paid,        :default => false
       t.string    :kind
       t.integer   :asset_expense_id
+      t.integer   :lease_id
       
       t.timestamps
     end

@@ -3,5 +3,6 @@ class AddDependenciesToAssetExpenses < ActiveRecord::Migration
     add_column :asset_expenses, :invoice_id, :integer
     add_column :asset_expenses, :lease_id, :integer
     add_column :asset_expenses, :paid_on, :date
+    add_column :asset_expenses, :paid, :boolean
   end
 end

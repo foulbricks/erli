@@ -7,6 +7,7 @@ class Lease < ActiveRecord::Base
   has_many :asset_expenses, as: :asset, :dependent => :destroy
   has_many :cached_tenants, :dependent => :destroy
   has_many :invoices
+  has_many :invoice_charges
   
   accepts_nested_attributes_for :users, reject_if: proc { |attributes| attributes['first_name'].blank? || attributes['email'].blank? }
   accepts_nested_attributes_for :lease_attachments, reject_if: proc { |attributes| attributes['document'].blank? }
@@ -72,7 +73,7 @@ class Lease < ActiveRecord::Base
   end
   
   def partial_start_date?
-    start_date.mday == 1
+    start_date.mday != 1
   end
   
   def monthly_charge
@@ -84,11 +85,11 @@ class Lease < ActiveRecord::Base
   end
   
   def daily_charge
-    (amount/(start_date..end_date).count * 100).round /100.0
+    (amount/(start_date..end_date).count * 100).round / 100.0
   end
   
   def lease_months
-    (start_date.year * 12 + start_date.month) - (end_date.year * 12 + end_date.month)
+    ((start_date.year * 12 + start_date.month) - (end_date.year * 12 + end_date.month)).abs
   end
   
   private
