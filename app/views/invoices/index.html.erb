@@ -1,0 +1,47 @@
+<div class="row">
+	<div class="col-sm-12">
+		<% if flash[:notice] %>
+			<div class="alert alert-success"><%= flash[:notice] %></div>
+		<% elsif flash[:alert] %>
+			<div class="alert alert-danger"><%= flash[:alert] %></div>
+		<% end %>
+		
+		<h3>Fatture</h3>
+		<p class="text-right"><%= link_to "Creare Fattura", new_invoice_path %></p>
+		<% if @invoices.length > 0 %>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Numero</th>
+						<th>Appartamento</th>
+						<th>Totale</th>
+						<th>Generato</th>
+						<th>Periodo</th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @invoices.each do |invoice| %>
+						<tr>
+							<td><%= invoice.name %></td>
+							<td><%= invoice.lease.apartment.name %></td>
+							<td><%= invoice.total %></td>
+							<td><%= invoice.created_at.strftime("%d-%m-%Y") %> (m<sup>2</sup>)</td>
+							<td><%= invoice.start_date.strftime("%d-%m-%Y") - invoice.end_date.strftime("%d-%m-%Y") %></td>
+							<td><%= link_to "Approvare", edit_invoice_path(invoice.id) %></td>
+							<td><%= link_to "Modificare", edit_invoice_path(invoice.id) %></td>
+							<td><%= link_to "Scaricare", edit_invoice_path(invoice.id) %></td>
+							<td><%= link_to "Cancellare", invoice_path(invoice.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
+						</tr>
+					<% end %>
+					
+				</tbody>
+			</table>
+		<% else %>
+			<p>Attualmente non ci sono fatture disponibili</p>
+		<% end %>
+	</div>
+</div>

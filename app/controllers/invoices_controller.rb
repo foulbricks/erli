@@ -2,12 +2,8 @@ class InvoicesController < ApplicationController
   before_filter :check_admin, :check_building_cookie
   
   def index
-    respond_to do |format|
-      format.pdf do
-        render  :pdf => "test.pdf",
-                :template => "layouts/invoice.html.erb"
-      end
-    end
+    @invoices = Invoice.where(building_id: cookies[:building]).
+                        paginate(:per_page => 50, :page => params[:page]).order("created_at DESC")
   end
   
   def new

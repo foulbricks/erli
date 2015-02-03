@@ -4,15 +4,15 @@ class Invoice < ActiveRecord::Base
   
   def self.generate(building_id, invoice_date=Date.today)
     Lease.where(:active => true).all.each do |lease|
-    if lease.registration_date.present? && (lease.start_date..lease.end_date).include?(invoice_date)
-      invoice = self.new
-      if charge_rent?(lease, invoice_date)
-        rent = invoice.invoice_charges.build(:kind => "rent", :lease_id => lease.id)
-        period = charge_period(lease, invoice_date)
-        rent.start_date, rent.end_date = period.first, period.last
-        rent.amount = charge_amount_with_istat(lease, invoice_date)
+      if lease.registration_date.present?
+        invoice = self.new
+        if charge_rent?(lease, invoice_date) && (lease.start_date..lease.end_date).include?(invoice_date)
+          rent = invoice.invoice_charges.build(:kind => "rent", :lease_id => lease.id)
+          period = charge_period(lease, invoice_date)
+          rent.start_date, rent.end_date = period.first, period.last
+          rent.amount = charge_amount_with_istat(lease, invoice_date)
+        end
       end
-      
     end
   end
   
