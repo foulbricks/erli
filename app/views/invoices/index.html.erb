@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" ng-controller="invoiceTableController">
 	<div class="col-sm-12">
 		<% if flash[:notice] %>
 			<div class="alert alert-success"><%= flash[:notice] %></div>
@@ -7,6 +7,15 @@
 		<% end %>
 		
 		<h3>Fatture</h3>
+		<div style="margin:20px;" class="text-right">
+			<%= form_tag("/invoices/generate", :method => "post", :class => "form-inline") do %>
+				<div class="form-group">
+					<%= label_tag "date", "Data", :class => "control-label" %>
+				  	<%= text_field_tag "date", nil, :class => "form-control", :"bs-datepicker" => "dd/MM/yyyy", :"data-date-format" => "dd-MM-yyyy", :"data-autoclose" => "1", :placeholder => "Data", :"ng-model" => "date", :"date-type" => "string" %>
+					<button type="submit" class="btn btn-default">Simulare la data della fattura</button>
+				</div>
+			<% end %>
+		</div>
 		<p class="text-right"><%= link_to "Creare Fattura", new_invoice_path %></p>
 		<% if @invoices.length > 0 %>
 			<table class="table table-striped">
@@ -26,14 +35,14 @@
 				<tbody>
 					<% @invoices.each do |invoice| %>
 						<tr>
-							<td><%= invoice.name %></td>
-							<td><%= invoice.lease.apartment.name %></td>
+							<td><%= invoice.number %></td>
+							<td></td>
 							<td><%= invoice.total %></td>
-							<td><%= invoice.created_at.strftime("%d-%m-%Y") %> (m<sup>2</sup>)</td>
-							<td><%= invoice.start_date.strftime("%d-%m-%Y") - invoice.end_date.strftime("%d-%m-%Y") %></td>
+							<td><%= invoice.created_at.strftime("%d-%m-%Y") %> </td>
+							<td><%= invoice.start_date.strftime("%d-%m-%Y") %> - <%= invoice.end_date.strftime("%d-%m-%Y") %></td>
 							<td><%= link_to "Approvare", edit_invoice_path(invoice.id) %></td>
 							<td><%= link_to "Modificare", edit_invoice_path(invoice.id) %></td>
-							<td><%= link_to "Scaricare", edit_invoice_path(invoice.id) %></td>
+							<td><%= link_to "Scaricare", download_invoice_path(invoice.id) %></td>
 							<td><%= link_to "Cancellare", invoice_path(invoice.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
 						</tr>
 					<% end %>

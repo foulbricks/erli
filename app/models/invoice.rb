@@ -1,19 +1,57 @@
 class Invoice < ActiveRecord::Base
+  mount_uploader :document, DocumentUploader
   has_many :invoice_charges, :dependent => :destroy
   
   
   def self.generate(building_id, invoice_date=Date.today)
-    Lease.where(:active => true).all.each do |lease|
-      if lease.registration_date.present?
-        invoice = self.new
-        if charge_rent?(lease, invoice_date) && (lease.start_date..lease.end_date).include?(invoice_date)
-          rent = invoice.invoice_charges.build(:kind => "rent", :lease_id => lease.id)
-          period = charge_period(lease, invoice_date)
-          rent.start_date, rent.end_date = period.first, period.last
-          rent.amount = charge_amount_with_istat(lease, invoice_date)
+    puts building_id
+    Apartment.where(:building_id => building_id).all.each do |apartment|
+      puts apartment
+      apartment.active_leases.all.each do |lease|
+        if lease.registration_date.present?
+          invoice = self.new(:building_id => building_id)
+          if charge_rent?(lease, invoice_date) && (lease.start_date..lease.end_date).include?(invoice_date)
+            rent = invoice.invoice_charges.build(:kind => "rent", :lease_id => lease.id)
+            period = charge_period(lease, invoice_date)
+            rent.start_date, rent.end_date = period.first, period.last
+            rent.amount = charge_amount_with_istat(lease, invoice_date)
+          end
+          pdf_html = renderer.render :template => "layouts/invoice.html.erb", :layout => nil,
+                                     :locals => {:company => Company.first}
+          pdf_string = WickedPdf.new.pdf_from_string(pdf_html, :page_size => "Letter")
+          temp = tempfile(pdf_string)
+          invoice.document = File.open temp.path
+          invoice.number = 1
+          invoice.start_date = Date.today
+          invoice.end_date = Date.today
+          invoice.total = 0
+          invoice.save
+          temp.unlink
         end
       end
     end
+  end
+  
+      
+  def self.renderer
+    av = ActionView::Base.new()
+    av.view_paths = ActionController::Base.view_paths
+    av.class_eval do
+      include Rails.application.routes.url_helpers
+      include ApplicationHelper
+      def protect_against_forgery?
+        false
+      end
+    end
+    av
+  end
+  
+  def self.tempfile(pdf_string)
+    tempfile = Tempfile.new(["#{Time.now.to_i}", ".pdf"], Rails.root.join('tmp'))
+    tempfile.binmode
+    tempfile.write pdf_string
+    tempfile.close
+    tempfile
   end
   
   def self.apartment_expenses(apartment, lease)

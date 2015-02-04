@@ -38,11 +38,20 @@ Rails.application.routes.draw do
     end
   end
   
+  resources :invoices do
+    member do
+      get "approve"
+      get "download"
+    end
+    collection do
+      post "generate"
+    end
+  end
+  
   resources :expenses
   resources :repartition_tables
   resources :contracts
   resources :balance_dates
-  resources :invoices
   resources :companies, :only => [:edit, :update]
   
   resources :leases do

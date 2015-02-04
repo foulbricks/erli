@@ -26,8 +26,24 @@ class InvoicesController < ApplicationController
     
   end
   
-  def show
-    
+  def generate
+    begin
+      date = Date.parse(params[:date])
+      Invoice.generate(cookies[:building], date)
+    rescue => e
+      flash[:alert] = e.message
+    end
+    redirect_to invoices_path
+  end
+  
+  def download
+    @file = Invoice.find(params[:id]).document
+    send_file(@file.file.path,
+      :filename => @file.file.filename,
+      :type => @file.file.content_type,
+      :disposition => "attachment",
+      :url_based_filename => true
+    )
   end
   
   private

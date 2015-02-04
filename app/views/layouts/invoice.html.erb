@@ -13,10 +13,10 @@
 			<div class="col-xs-12 border-left">
 				<div class="row">
 					<div class="col-xs-5 address">
-						<p><strong>ERLI s.r.l.</strong></p>
-						<p>Via Avigliana 13/1 10138 - Torino</p>
-						<p>Partita IVA 02154160010</p>
-						<p>Tel / Fax 011/4343797</p>
+						<p><strong><%= company.name %></strong></p>
+						<p><%= company.address %> <%= company.home_number %> <%= company.cap %> - <%= company.localita %></p>
+						<p>Partita IVA <%= company.partita_iva %></p>
+						<p>Tel / Fax <%= company.phone %></p>
 					</div>
 					<div class="col-xs-4 col-xs-offset-3 invoice-info">
 						<div class="row">

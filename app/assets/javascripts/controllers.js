@@ -167,6 +167,13 @@ controller("companyFormController", [
 	}
 ]).
 
+controller("invoiceTableController", [
+	"$scope",
+	function($scope){
+		
+	}
+]).
+
 controller("CalendarController", [
 	"$scope", "moment",
 	function($scope, moment){
