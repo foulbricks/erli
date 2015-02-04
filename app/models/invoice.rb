@@ -4,54 +4,26 @@ class Invoice < ActiveRecord::Base
   
   
   def self.generate(building_id, invoice_date=Date.today)
-    puts building_id
     Apartment.where(:building_id => building_id).all.each do |apartment|
-      puts apartment
       apartment.active_leases.all.each do |lease|
         if lease.registration_date.present?
-          invoice = self.new(:building_id => building_id)
-          if charge_rent?(lease, invoice_date) && (lease.start_date..lease.end_date).include?(invoice_date)
-            rent = invoice.invoice_charges.build(:kind => "rent", :lease_id => lease.id)
-            period = charge_period(lease, invoice_date)
-            rent.start_date, rent.end_date = period.first, period.last
-            rent.amount = charge_amount_with_istat(lease, invoice_date)
-          end
-          pdf_html = renderer.render :template => "layouts/invoice.html.erb", :layout => nil,
-                                     :locals => {:company => Company.first}
-          pdf_string = WickedPdf.new.pdf_from_string(pdf_html, :page_size => "Letter")
-          temp = tempfile(pdf_string)
+          
+          invoice = self.new(:building_id => building_id, :number => get_invoice_number(invoice_date),
+                             :lease_id => lease.id, :start_date => invoice_date.at_beginning_of_month,
+                             :end_date => invoice_date.end_of_month)
+          
+          charge_rent(lease, invoice, invoice_date)
+
+          temp = tempfile(render_pdf(lease, invoice, invoice_date))
           invoice.document = File.open temp.path
-          invoice.number = 1
-          invoice.start_date = Date.today
-          invoice.end_date = Date.today
+          temp.unlink
+          
           invoice.total = 0
           invoice.save
-          temp.unlink
+          
         end
       end
     end
-  end
-  
-      
-  def self.renderer
-    av = ActionView::Base.new()
-    av.view_paths = ActionController::Base.view_paths
-    av.class_eval do
-      include Rails.application.routes.url_helpers
-      include ApplicationHelper
-      def protect_against_forgery?
-        false
-      end
-    end
-    av
-  end
-  
-  def self.tempfile(pdf_string)
-    tempfile = Tempfile.new(["#{Time.now.to_i}", ".pdf"], Rails.root.join('tmp'))
-    tempfile.binmode
-    tempfile.write pdf_string
-    tempfile.close
-    tempfile
   end
   
   def self.apartment_expenses(apartment, lease)
@@ -61,6 +33,15 @@ class Invoice < ActiveRecord::Base
   def self.registered_leases(building_id)
     Lease.where("active = ? AND building_id = ? AND registration_date IS NOT NULL AND registration_date <> ''",
                 true, building_id).all
+  end
+  
+  def self.charge_rent(lease, invoice, invoice_date=Date.today)
+    if charge_rent?(lease, invoice_date) && (lease.start_date..lease.end_date).include?(invoice_date)
+      rent = invoice.invoice_charges.build(:kind => "rent", :lease_id => lease.id)
+      period = charge_period(lease, invoice_date)
+      rent.start_date, rent.end_date = period.first, period.last
+      rent.amount = charge_amount_with_istat(lease, invoice_date)
+    end
   end
   
   private
@@ -165,6 +146,40 @@ class Invoice < ActiveRecord::Base
       from = from.next_month.at_beginning_of_month + months.months
     end
     ranges
+  end
+  
+  def self.renderer
+    av = ActionView::Base.new()
+    av.view_paths = ActionController::Base.view_paths
+    av.class_eval do
+      include Rails.application.routes.url_helpers
+      include ApplicationHelper
+      def protect_against_forgery?
+        false
+      end
+    end
+    av
+  end
+  
+  def self.tempfile(pdf_string)
+    tempfile = Tempfile.new(["#{Time.now.to_i}", ".pdf"], Rails.root.join('tmp'))
+    tempfile.binmode
+    tempfile.write pdf_string
+    tempfile.close
+    tempfile
+  end
+  
+  def self.render_pdf(lease, invoice, invoice_date)
+    pdf_html = renderer.render :template => "layouts/invoice.html.erb", :layout => nil,
+                               :locals => {:company => Company.first, :lease => lease, :invoice => invoice, 
+                                           :invoice_date => invoice_date }
+    WickedPdf.new.pdf_from_string(pdf_html, :page_size => "Letter")
+  end
+  
+  def self.get_invoice_number(invoice_date=Date.today)
+    Invoice.where("created_at >= ? AND created_at <= ?", 
+                  invoice_date.at_beginning_of_year, invoice_date.end_of_year).order("number DESC").first
+    i.try(:number).try(:+, 1) || 1
   end
   
 end
