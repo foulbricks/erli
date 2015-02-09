@@ -81,7 +81,8 @@ class Invoice < ActiveRecord::Base
     with_iva = invoice.invoice_charges.select {|i| !i.iva_exempt? }
     total_iva = with_iva.map(&:amount).sum
     total_without_iva = without_iva.map(&:amount).sum
-    iva = lease.contract.iva_exempt? || !Setup.first.iva ? 0 : (total_iva * Setup.first.iva/100.0)
+    setup = Setup.where(:building_id => lease.apartment.building.id).first || Setup.new
+    iva = lease.contract.iva_exempt? || !setup.iva ? 0 : (total_iva * setup.iva/100.0)
     bollo_total = bollo ? bollo.price : 0
     total_iva + total_without_iva + iva + bollo_total
   end
@@ -266,11 +267,12 @@ class Invoice < ActiveRecord::Base
   end
   
   def self.render_pdf(lease, invoice, invoice_date)
+    building_id = lease.apartment.building.id
     period = charge_period(lease, invoice_date)
     pdf_html = renderer.render :template => "layouts/invoice.html.erb", :layout => nil, encoding: 'utf8',
                                :locals => {:company => Company.first, :lease => lease, :invoice => invoice, 
                                            :invoice_date => invoice_date, :month_description => month_description(period),
-                                           :setup => Setup.first }
+                                           :setup => (Setup.where(:building_id => building_id).first || Setup.new) }
     WickedPdf.new.pdf_from_string(pdf_html, :page_size => "Letter")
   end
   
