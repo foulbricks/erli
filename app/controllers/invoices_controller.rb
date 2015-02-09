@@ -87,8 +87,7 @@ class InvoicesController < ApplicationController
     begin
       date = Date.parse(params[:date])
       Invoice.generate(cookies[:building], date)
-    rescue => e
-      flash[:alert] = e.message
+
     end
     redirect_to invoices_path
   end
