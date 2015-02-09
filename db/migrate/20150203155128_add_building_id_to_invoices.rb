@@ -4,5 +4,6 @@ class AddBuildingIdToInvoices < ActiveRecord::Migration
     add_column :invoices, :start_date, :date
     add_column :invoices, :end_date, :date
     add_column :invoices, :total, :decimal, :precision => 15, :scale => 2, :default => 0
+    add_column :invoices, :approved, :boolean
   end
 end

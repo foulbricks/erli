@@ -7,6 +7,29 @@
 		<%= f.text_field :amount, :class => "form-control", :placeholder => "Quantita", :"ng-model" => "amount", :"ng-required" => true %>
 		<span class="error-message" ng-show="buildingExpenseForm['asset_expense[amount]'].$dirty && buildingExpenseForm['asset_expense[amount]'].$invalid">Quantita è richiesta.</span>
 	</div>
+	<div class="form-group" ng-class="{'has-error':buildingExpenseForm['asset_expense[start_date]'].$dirty && buildingExpenseForm['asset_expense[start_date]'].$invalid }" ng-init="start_date='<%= @asset_expense.start_date.strftime("%d/%m/%Y") if @asset_expense.start_date.present? %>'">
+		<%= f.label :start_date, "Data di Inizio", :class => "control-label" %>
+		<div class="input-group">
+			<%= f.text_field :start_date, :class => "form-control", :placeholder => "Data di inizio", :"ng-model" => "start_date", :"ng-required" => true, :"bs-datepicker" => "dd/MM/yyyy", :"data-date-format" => "dd/MM/yyyy", :"data-autoclose" => "1", :"date-type" => "string" %>
+            <span class="input-group-btn">
+              <label for="asset_expense_start_date" class="btn btn-default"><i class="glyphicon glyphicon-calendar"></i></label>
+            </span>
+		</div>
+		<span class="error-message" ng-show="buildingExpenseForm['asset_expense[start_date]'].$dirty && buildingExpenseForm['asset_expense[start_date]'].$invalid">Data di inizio è richiesta.</span>
+	</div>
+	
+	<div class="form-group" ng-class="{'has-error':buildingExpenseForm['asset_expense[end_date]'].$dirty && buildingExpenseForm['asset_expense[end_date]'].$invalid }" ng-init="end_date='<%= @asset_expense.end_date.strftime("%d/%m/%Y") if @asset_expense.end_date.present? %>'">
+		<%= f.label :end_date, :class => "control-label" %>
+		<div class="input-group">
+			<%= f.text_field :end_date, :class => "form-control", :placeholder => "Data di fine", :"ng-model" => "end_date", :"ng-required" => true, :"bs-datepicker" => "dd/MM/yyyy", :"data-date-format" => "dd/MM/yyyy", :"data-autoclose" => "1", :"date-type" => "string" %>
+            <span class="input-group-btn">
+              <label class="btn btn-default" for="asset_expense_end_date"><i class="glyphicon glyphicon-calendar"></i></label>
+            </span>
+		</div>
+		<span class="error-message" ng-show="buildingExpenseForm['asset_expense[end_date]'].$dirty && buildingExpenseForm['asset_expense[end_date]'].$invalid">Data di fine è richiesta.</span>
+	</div>
+	
+	
 	<%= f.fields_for :expense_attachment, @asset_expense.expense_attachment || @asset_expense.build_expense_attachment do |a| %>
 		<div class="form-group">
 			<%= a.label :document, "Documente", :class => "control-label" %>

@@ -1,0 +1,66 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h3>Modificare fattura per appartamento <%= @invoice.lease.apartment.name %></h3>
+		<hr />
+	</div>
+</div>
+
+<div class="row" ng-controller="invoiceFormController">
+	<div class="col-xs-12">
+
+		<% if @invoice.errors.any? %>
+			<div class="alert alert-danger">
+				<strong>Form is invalid.</strong><br />
+				<ul>
+					<% for message in @invoice.errors.full_messages %>
+						<li><%= message %></li>
+					<% end %>
+				</ul>
+			</div>
+		<% end %>
+
+		<%= form_for @invoice, html: {:novalidate => "novalidate", name: "invoiceForm", class: "form-horizontal" } do |f| %>
+			<%= f.fields_for :invoice_charges do |i| %>
+				<% if i.object.name.present? %>
+					<div class="form-group" ng-class="{'has-error':invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][name]'].$dirty && invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][name]'].$invalid }" 
+						ng-init="name<%= i.index.to_s %>='<%= i.object.name %>'">
+						<%= i.label :name, "Nome", :class => "col-sm-3 control-label" %>
+						<div class="col-sm-9">
+							<%= i.text_field :name, :class => "form-control", :placeholder => "Nome", :"ng-model" => "name" +  i.index.to_s, :"ng-required" => true %>
+							<span class="error-message" ng-show="invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][name]'].$dirty && invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][name]'].$invalid">Nome è richiesto.</span>
+						</div>
+					</div>
+				<% end %>
+			
+				<div class="form-group" ng-class="{'has-error':invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][amount]'].$dirty && invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][amount]'].$invalid }" 
+					ng-init="amount<%= i.index.to_s %>='<%= number_with_delimiter(i.object.amount) %>'">
+					<%= i.label :amount, i.object.generated_name, :class => "col-sm-3 control-label" %>
+					<div class="col-sm-5">
+						<%= i.text_field :amount, :class => "form-control", :placeholder => "Quantita", :"ng-model" => "amount" +  i.index.to_s, :"ng-required" => true %>
+						<span class="error-message" ng-show="invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][amount]'].$dirty && invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][amount]'].$invalid"><%= i.object.generated_name %> è richiesto.</span>
+					</div>
+					<% if i.object.kind =~ /building_expense|custom_expense/ && !@invoice.lease.contract.iva_exempt %>
+					<%= i.label :iva_exempt, "Essente IVA?", :class => "control-label col-sm-3" %>
+					<div class="col-sm-1">
+						<p style="margin-top: 5px;"><%= i.check_box :iva_exempt %></p>
+					</div>
+					<% end %>
+					<%= i.hidden_field :asset_expense_id, :value => i.object.asset_expense_id %>
+					<%= i.hidden_field :start_date, :value => i.object.start_date %>
+					<%= i.hidden_field :end_date, :value => i.object.end_date %>
+					<%= i.hidden_field :lease_id, :value => i.object.lease_id %>
+					<%= i.hidden_field :kind, :value => i.object.kind %>
+				</div>
+			<% end %>
+	
+			<div class="col-sm-9 col-sm-offset-3">
+				<%= f.submit :class => "btn btn-lg btn-primary", :"ng-disabled" => "invoiceForm.$invalid"%>
+			</div>
+		<% end %>
+		<p class="text-right">
+			<%= link_to invoices_path, {} do %> 
+			<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>  Tornare alla lista
+			<% end %>
+		</p>
+	</div>
+</div>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150203155128) do
+ActiveRecord::Schema.define(version: 20150208221606) do
 
   create_table "apartment_repartition_tables", force: true do |t|
     t.integer  "apartment_id"
@@ -160,6 +160,8 @@ ActiveRecord::Schema.define(version: 20150203155128) do
     t.string   "kind"
     t.integer  "asset_expense_id"
     t.integer  "lease_id"
+    t.boolean  "iva_exempt",                                default: false
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -174,6 +176,7 @@ ActiveRecord::Schema.define(version: 20150203155128) do
     t.date     "start_date"
     t.date     "end_date"
     t.decimal  "total",       precision: 15, scale: 2, default: 0.0
+    t.boolean  "approved"
   end
 
   create_table "lease_attachments", force: true do |t|
@@ -204,6 +207,7 @@ ActiveRecord::Schema.define(version: 20150203155128) do
     t.boolean  "resolved",                                     default: true
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "home_number"
   end
 
   create_table "repartition_tables", force: true do |t|

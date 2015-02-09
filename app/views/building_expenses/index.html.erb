@@ -29,7 +29,7 @@
 									<%= expense.balance_date.value.strftime("%d-%m-%Y") %>
 								<% end %>
 							</td>
-							<td><%= link_to "Nuova spesa", "#", :placement => "left", :"tooltip-url" => new_building_building_expense_path(@building.id) + "?expense_id=#{expense.id}", :title => "Nuova spesa per #{@building.name}", :"erli-tooltip" => "popover" %></td>
+							<td><%= link_to "Nuova spesa", "#", :placement => "bottom-right", :"tooltip-url" => new_building_building_expense_path(@building.id) + "?expense_id=#{expense.id}", :title => "Nuova spesa per #{@building.name}", :"erli-tooltip" => "popover" %></td>
 						</tr>
 						<% if @building.asset_expenses.where(:expense_id => expense.id).size > 0 %>
 							<tr class="child-table">
@@ -48,7 +48,7 @@
 												<tr>
 													<td><%= number_to_currency(e.amount) %></td>
 													<td><%= e.updated_at.strftime("%d-%m-%Y")%></td>
-													<td><%= link_to "Aggiornare", "#", :placement => "left", :"tooltip-url" => edit_building_building_expense_path(@building.id, e.id)  + "?expense_id=#{expense.id}", :title => "Aggiornare spesa per #{@building.name}", :"erli-tooltip" => "popover" %>
+													<td><%= link_to "Aggiornare", "#", :placement => "bottom-right", :"tooltip-url" => edit_building_building_expense_path(@building.id, e.id)  + "?expense_id=#{expense.id}", :title => "Aggiornare spesa per #{@building.name}", :"erli-tooltip" => "popover" %>
 													<td><%= link_to "Cancellare", building_building_expense_path(@building.id, e.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
 													<td><% if e.expense_attachment.present? %>
 															<a href="#" data-placement="left" title="" data-animation="am-flip-x" data-auto-close="1" data-template="expense<%= e.id %>" bs-popover><span class="glyphicon glyphicon-file" style="font-size:16px;"></span></a>

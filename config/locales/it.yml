@@ -10,6 +10,7 @@ it:
       repartition_table: "Tavolo di Ripartizione"
       lease: "Locazione"
       users: "Utenti"
+      invoice: "Fattura"
     attributes:
       building:
         name: "Nome"
@@ -58,6 +59,7 @@ it:
         registration_number: "Numero di registrazione"
         registration_agency: "Agenzia di registrazione"
         contract_id: "Contratto"
+        home_number: "Numero civico"
       lease/users:
         first_name: "Nome"
         last_name: "Cognome"

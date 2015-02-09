@@ -34,6 +34,13 @@
 		</div>
 	</div>
 	
+	<div class="form-group" ng-init="numero_civico='<%= @lease.home_number %>'">
+		<%= f.label :home_number, :class => "col-sm-3 control-label" %>	
+		<div class="col-sm-9">
+			<%= f.text_field :home_number, :class => "form-control", :placeholder => "Numero Civico", :"ng-model" => "numero_civico" %>
+		</div>
+	</div>
+	
 	<div class="form-group" ng-class="{'has-error':leaseForm['lease[cap]'].$dirty && leaseForm['lease[cap]'].$invalid }" ng-init="cap='<%= @lease.cap %>'">
 		<%= f.label :cap, :class => "col-sm-3 control-label" %>	
 		<div class="col-sm-9">

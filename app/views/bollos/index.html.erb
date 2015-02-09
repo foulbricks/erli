@@ -49,7 +49,7 @@
 													<tr>
 														<td><%= bollo.identifier %></td>
 														<td><%= number_to_currency(bollo.price) %></td>
-														<td><%= bollo.invoice_id.present? ? "Fattura Link" : "Fattura non disponibile" %></td>
+														<td><%= bollo.invoice.present? ? link_to("Fattura Link", download_invoice_path(bollo.invoice.id)) : "Fattura non disponibile" %></td>
 														<td><%= link_to "Modificare", edit_bollo_bollo_range_path(bollo.id) %></td>
 														<td><%= link_to "Cancellare", destroy_bollo_bollo_range_path(bollo.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
 													</tr>

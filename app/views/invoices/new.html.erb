@@ -1,0 +1,75 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h3>Nuova fattura</h3>
+		<hr />
+	</div>
+</div>
+
+<div class="row" ng-controller="invoiceFormController">
+	<div class="col-xs-12">
+
+		<% if @invoice.errors.any? %>
+			<div class="alert alert-danger">
+				<strong>Form is invalid.</strong><br />
+				<ul>
+					<% for message in @invoice.errors.full_messages %>
+						<li><%= message %></li>
+					<% end %>
+				</ul>
+			</div>
+		<% end %>
+
+		<%= form_for @invoice, html: {:novalidate => "novalidate", name: "invoiceForm", class: "form-horizontal" } do |f| %>
+			<% leases = Invoice.registered_leases(cookies[:building]).all %>
+			<div class="form-group" ng-init="lease='<%= @invoice.lease_id || leases.first.id %>'">
+				<%= f.label :lease_id, "Appartmento", :class => "col-sm-3 control-label" %>
+				<div class="col-sm-4">
+					<%= f.select :lease_id, options_for_select(leases.map{|l| [l.apartment.name, l.id]}), {}, {:class => "form-control", :"ng-model" => "lease" } %>
+				</div>
+			</div>
+		
+			<%= f.fields_for :invoice_charges do |i| %>
+				<div ng-if="expenseCount > <%= i.index %>">
+					<div class="form-group" ng-class="{'has-error':invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][name]'].$dirty && invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][name]'].$invalid }" 
+						ng-init="name<%= i.index.to_s %>='<%= i.object.name %>'">
+						<%= i.label :name, "Nome", :class => "col-sm-3 control-label" %>
+						<div class="col-sm-9">
+							<%= i.text_field :name, :class => "form-control", :placeholder => "Nome", :"ng-model" => "name" +  i.index.to_s, :"ng-required" => true %>
+							<span class="error-message" ng-show="invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][name]'].$dirty && invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][name]'].$invalid">Nome è richiesto.</span>
+						</div>
+					</div>
+			
+					<div class="form-group" ng-class="{'has-error':invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][amount]'].$dirty && invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][amount]'].$invalid }" 
+						ng-init="amount<%= i.index.to_s %>='<%= number_with_delimiter(i.object.amount) %>'">
+						<%= i.label :amount, "Quantita", :class => "col-sm-3 control-label" %>
+						<div class="col-sm-5">
+							<%= i.text_field :amount, :class => "form-control", :placeholder => "Quantita", :"ng-model" => "amount" +  i.index.to_s, :"ng-required" => true %>
+							<span class="error-message" ng-show="invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][amount]'].$dirty && invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][amount]'].$invalid"><%= i.object.generated_name %> è richiesto.</span>
+						</div>
+						<%= i.label :iva_exempt, "Essente IVA?", :class => "control-label col-sm-3" %>
+						<div class="col-sm-1">
+							<p style="margin-top: 5px;"><%= i.check_box :iva_exempt %></p>
+						</div>
+						<%= i.hidden_field :asset_expense_id, :value => i.object.asset_expense_id %>
+						<%= i.hidden_field :kind, :value => i.object.kind %>
+					</div>
+				</div>
+			<% end %>
+			
+			<div class="form-group" ng-if="expenseCount < 10">
+				<div class="col-sm-9 col-sm-offset-3">
+					<p><%= link_to "Aggiungere spesa", "#", :"ng-click" => "incrementExpenseCount($event)" %></p>
+				</div>
+			</div>
+	
+			<div class="col-sm-9 col-sm-offset-3">
+				<%= f.submit :class => "btn btn-lg btn-primary", :"ng-disabled" => "invoiceForm.$invalid"%>
+			</div>
+		<% end %>
+		<p class="text-right">
+			<%= link_to invoices_path, {} do %> 
+			<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>  Tornare alla lista
+			<% end %>
+		</p>
+	</div>
+</div>

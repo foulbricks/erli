@@ -38,6 +38,8 @@ Rails.application.routes.draw do
     end
   end
   
+  post "invoices" => "invoices#index"
+  
   resources :invoices do
     member do
       get "approve"

@@ -174,6 +174,17 @@ controller("invoiceTableController", [
 	}
 ]).
 
+controller("invoiceFormController", [
+	"$scope",
+	function($scope){
+		$scope.expenseCount = 1;
+		$scope.incrementExpenseCount = function($event){
+			$event.preventDefault();
+			$scope.expenseCount = $scope.expenseCount + 1;
+		}
+	}
+]).
+
 controller("CalendarController", [
 	"$scope", "moment",
 	function($scope, moment){
