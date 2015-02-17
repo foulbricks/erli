@@ -1,11 +1,22 @@
-<div class="cal-context" style="width: 100%">
+<div class="cal-context" style="width: 100%;">
 	<div calendar-month 
-		calendar-current-day="currentDay"
+		calendar-current-day="currentDay" calendar-filter="eventFilter"
 		ng-if="view == 'month'"
 	></div>
 	
 	<div calendar-day
-		calendar-current-day="currentDay"
+		calendar-current-day="currentDay" calendar-filter="eventFilter"
 		ng-if="view == 'day'"
 	></div>
+	
+	<div calendar-agenda
+		calendar-current-day="currentDay" calendar-filter="eventFilter"
+		ng-if="view == 'agenda'"
+	></div>
+	
+	<div calendar-trash
+		calendar-current-day="currentDay" calendar-filter="eventFilter"
+		ng-if="view == 'trash'"
+	></div>
+	
 </div>

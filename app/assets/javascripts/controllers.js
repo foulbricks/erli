@@ -174,6 +174,80 @@ controller("invoiceTableController", [
 	}
 ]).
 
+controller("eventFormController", [
+	"$scope", "$http", "$rootScope", "$templateCache",
+	function($scope, $http, $rootScope, $templateCache){
+		$scope.hideModal;
+		$scope.bindHideModalFunction = function(hideModalFunction){
+		    $scope.hideModal = hideModalFunction;
+		}
+
+		$scope.tenants = [];
+		
+		$scope.$watch("building", function(){
+			if($scope.building){
+				$http({
+					method: "GET",
+					url: "/buildings/" + $scope.building + "/apartments"
+				}).success(function(result){
+					$scope.apartments = result;
+				});
+			}
+		});
+		
+		$scope.$watch("apartment", function(){
+			if($scope.apartment){
+				$http({
+					method: "GET",
+					url: "/apartments/" + $scope.apartment + "/tenants"
+				}).success(function(result){
+					$scope.tenants = result;
+				});
+			}
+		});
+		
+		$scope.createEvent = function($event){
+			$event.preventDefault();
+			$http.post("/events", { event: 
+				{
+					apartment_id: $scope.apartment,
+					building_id: $scope.building,
+					user_id: $scope.tenant,
+					title: $scope.titolo,
+					description: $scope.description,
+					start: $scope.start,
+					finish: $scope.finish,
+					color: $scope.button.color
+				}
+			}).success(function(response){
+				$scope.hideModal();
+				$rootScope.reloadCalendar(moment(response.success).toDate());
+			});
+		}
+		
+		$scope.updateEvent = function($event, id){
+			$event.preventDefault();
+			$http.put("/events/" + id, { event: 
+				{
+					apartment_id: $scope.apartment,
+					building_id: $scope.building,
+					user_id: $scope.tenant,
+					title: $scope.titolo,
+					description: $scope.description,
+					start: $scope.start,
+					finish: $scope.finish,
+					color: $scope.button.color
+				}
+			}).success(function(response){
+				$scope.hideModal();
+				$templateCache.remove("/events/" + id + "/edit");
+				$rootScope.reloadCalendar();
+			});
+		}
+		
+	}
+]).
+
 controller("invoiceFormController", [
 	"$scope",
 	function($scope){
@@ -186,10 +260,16 @@ controller("invoiceFormController", [
 ]).
 
 controller("CalendarController", [
-	"$scope", "moment",
-	function($scope, moment){
+	"$scope", "moment", "$rootScope", "$http",
+	function($scope, moment, $rootScope, $http){
 		$scope.calendarView = "month";
 		$scope.calendarDay = new Date();
+		
+		$rootScope.reloadCalendar = function(date){
+			var d = date || new Date($scope.calendarDay);
+			console.log(d)
+			$scope.calendarDay = d;
+		}
 		
 		$scope.setCalendarToToday = function(){
 			$scope.calendarDay = new Date();
@@ -198,5 +278,69 @@ controller("CalendarController", [
 		$scope.setCalendarView = function(view){
 			$scope.calendarView = view;
 		}
+		
+		$scope.apartments = []
+		$scope.tenants = []
+
+		$scope.$watch("building", function(newVal, oldVal){
+			$scope.apartments = []
+			$scope.tenants = []
+			if($scope.building){
+				$scope.filter = "building_id=" + $scope.building;
+				$rootScope.reloadCalendar();
+				$http({
+					method: "GET",
+					url: "/buildings/" + $scope.building + "/apartments"
+				}).success(function(result){
+					$scope.apartments = result;
+				});
+			}
+			else if(newVal != oldVal){
+				$scope.filter = null;
+				$rootScope.reloadCalendar();
+			}
+		});
+
+		$scope.$watch("apartment", function(oldVal, newVal){
+			$scope.tenants = []
+			if($scope.apartment){
+				$scope.filter = "apartment_id=" + $scope.apartment;
+				$rootScope.reloadCalendar(new Date($scope.calendarDay));
+				$http({
+					method: "GET",
+					url: "/apartments/" + $scope.apartment + "/tenants"
+				}).success(function(result){
+					$scope.tenants = result;
+				});
+			}
+			else if(newVal != oldVal){
+				if($scope.building){
+					$scope.filter = "building_id=" + $scope.building;
+				}
+				else {
+					$scope.filter = null;
+				}
+				$rootScope.reloadCalendar(new Date($scope.calendarDay));
+			}
+		});
+		
+		$scope.$watch("tenant", function(oldVal, newVal){
+			if($scope.tenant){
+				$scope.filter = "user_id=" + $scope.tenant;
+				$rootScope.reloadCalendar(new Date($scope.calendarDay));
+			}
+			else if(newVal != oldVal){
+				if($scope.apartment){
+					$scope.filter = "apartment_id=" + $scope.apartment;
+				}
+				else if($scope.building){
+					$scope.filter = "building_id=" + $scope.building;
+				}
+				else {
+					$scope.filter = null;
+				}
+				$rootScope.reloadCalendar(new Date($scope.calendarDay));
+			}
+		});
 	}
 ]);

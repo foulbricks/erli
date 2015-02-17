@@ -1,6 +1,6 @@
 class BuildingsController < ApplicationController
   before_filter :check_admin
-  before_filter :clear_building, :except => :set_workspace
+  before_filter :clear_building, :except => [:set_workspace, :apartments]
   
   def index
     @buildings = Building.all
@@ -51,6 +51,11 @@ class BuildingsController < ApplicationController
     else
       redirect_to root_path
     end
+  end
+  
+  def apartments
+    @building = Building.find(params[:id])
+    render :json => @building.apartments.map{ |a| { :id => a.id, :name => a.name } }
   end
   
   private

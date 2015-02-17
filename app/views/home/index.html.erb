@@ -1,12 +1,37 @@
 <h3>Welcome <%= logged_user.name %></h3>
+<hr />
 <div class="row calendar-box" ng-controller="CalendarController">
+	<div class="row">
+		<div class="form-group col-xs-4" ng-hide="'<%= cookies[:building].present? || 'false' %>' != 'false' " ng-init="building='<%= cookies[:building] %>'">
+			<label for="building_id" class="control-label">Edificio</label>
+			<%= select_tag "building_id", options_from_collection_for_select(buildings, "id", "name"), {:prompt => "Seleziona", :class => "form-control", :"ng-model" => "building", :"ng-required" => true} %>
+		</div>
+
+		<div class="form-group col-xs-4">
+			<label for="apartment_id" class="control-label">Appartamento</label>
+			<select name="event[apartment_id]" class="form-control" ng-model="apartment" ng-options="option.id as option.name for option in apartments">
+				<option value="">Seleziona</option>
+			</select>
+		</div>
+
+		<div class="form-group col-xs-3">
+			<label for="user_id" class="control-label">Inquilino</label>
+			<select name="event[user_id]" class="form-control" ng-model="tenant" ng-options="option.id as option.name for option in tenants">
+				<option value="">Seleziona</option>
+			</select>
+		</div>
+		<div class="col-xs-1" style="margin-top:25px;">
+			<a href="javascript:;" class="btn btn-default btn-sm" placement="bottom" tooltip-url="/events/new" title ="Nuovo Evento" erli-tooltip="popover"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+		</div>
+	</div>
+	
 	<div class="col-sm-12">
 		<% if flash[:notice].present? %>
 			<div class="alert alert-info" role="alert"><%= flash[:notice] %></div>
 		<% end %>
-		<div class="row">
-			<div class="col-xs-6 text-left" ng-if="calendarControl.showControls">
-				<div class="btn-group">
+		<div class="row cal-control">
+			<div class="col-xs-6 text-left">
+				<div class="btn-group" ng-if="calendarControl.showControls()">
 					<button class="btn btn-primary" ng-click="calendarControl.prev()">Precedente</button>
 					<button class="btn btn-default" ng-click="setCalendarToToday()">Oggi</button>
 					<button class="btn btn-primary" ng-click="calendarControl.next()">Successivo</button>
@@ -17,6 +42,7 @@
 					<button class="btn btn-warning" ng-click="setCalendarView('month')">Mese</button>
 					<button class="btn btn-warning" ng-click="setCalendarView('day')">Giorno</button>
 					<button class="btn btn-warning" ng-click="setCalendarView('agenda')">Agenda</button>
+					<button class="btn btn-warning" ng-click="setCalendarView('trash')">Cestino</button>
 				</div>
 			</div>
 		</div>
@@ -26,6 +52,6 @@
 			</div>
 		</div>
 	
-		<div calendar calendar-view="calendarView" calendar-current-day="calendarDay" calendar-control="calendarControl" calendar-auto-open="true"></div>
+		<div calendar calendar-view="calendarView" calendar-current-day="calendarDay" calendar-control="calendarControl" calendar-auto-open="true" calendar-filter="filter"></div>
 	</div>
 </div>

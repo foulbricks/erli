@@ -39,7 +39,8 @@ directive("erliTooltip", [
 							title: attrs.title,
 							placement: attrs.placement,
 							autoClose: 1,
-							trigger: "click"
+							trigger: "click",
+							container: "body"
 						})
 				
 						t.$promise.then(function(y){
@@ -64,11 +65,13 @@ directive("calendar", [
 				currentDay: "=calendarCurrentDay",
 				control: "=calendarControl",
 				useIsoWeek: "=calendarUseIsoWeek",
-				autoOpen: "=calendarAutoOpen"
+				autoOpen: "=calendarAutoOpen",
+				eventFilter: "=calendarFilter"
 			},
 			controller: ["$scope", function($scope){
 				var self = this;
 				self.titleFunctions = {}
+				self.controlFunctions = {}
 				
 				self.changeView = function(view, newDay){
 					$scope.view = view;
@@ -90,15 +93,18 @@ directive("calendar", [
 					return self.titleFunctions[$scope.view]($scope.currentDay);
 				}
 				
-				
+				$scope.control.showControls = function(){
+					if(!self.controlFunctions[$scope.view]) return true;
+					return self.controlFunctions[$scope.view]();
+				}
 			}]
 		}
 	}
 ]).
 
 directive("calendarMonth", [
-	"$sce", "$timeout", "calendarHelperService",
-	function($sce, $timeout, calendarHelperService){
+	"$sce", "$timeout", "calendarHelperService", "calendarEventsService", "$rootScope", "$popover",
+	function($sce, $timeout, calendarHelperService, calendarEventsService, $rootScope, $popover){
 		return {
 			templateUrl: "templates/month.html",
 			restrict: "A",
@@ -106,12 +112,16 @@ directive("calendarMonth", [
 			scope: {
 				currentDay: "=calendarCurrentDay",
 				useIsoWeek: "=calendarUseIsoWeek",
-				autoOpen: "=calendarAutoOpen"
+				autoOpen: "=calendarAutoOpen",
+				eventFilter: "=calendarFilter"
 			},
 			link: function postLink(scope, element, attrs, calendarController){
 				var firstRun = false;
 				
 				scope.$sce = $sce;
+				
+				scope.keys = $rootScope.Utils.keys;
+				scope.loaded = {};
 				
 				calendarController.titleFunctions.month = function(currentDay){
 					return moment(currentDay).format("MMMM YYYY");
@@ -119,15 +129,51 @@ directive("calendarMonth", [
 				calendarController.showControls = true;
 				
 				function updateView(){
-					scope.view = calendarHelperService.getMonthView(scope.currentDay, scope.useIsoWeek);
-					if(scope.autoOpen && !firstRun){
-						scope.view.forEach(function(week, rowIndex){
-							if(day.inMonth && moment(scope.currentDay).startOf("day").isSame(day.date.startOf("day"))){
-								//scope.dayClicked(rowIndex, cellIndex);
-								$timeout(function(){
-									firstRun = false;
-								});
-							}
+					calendarEventsService.list(scope.eventFilter).success(function(results){
+						scope.view = calendarHelperService.getMonthView(scope.currentDay, scope.useIsoWeek, results);
+						if(scope.autoOpen && !firstRun){
+							scope.view.forEach(function(week, rowIndex){
+								if(day.inMonth && moment(scope.currentDay).startOf("day").isSame(day.date.startOf("day"))){
+									//scope.dayClicked(rowIndex, cellIndex);
+									$timeout(function(){
+										firstRun = false;
+									});
+								}
+							});
+						}
+					});
+				}
+				
+				scope.loadPopover = function(events, day, $event){
+					$event.preventDefault();
+					var color = scope.keys(events)[0]
+					var el = angular.element("#events-" + day.format("YYYY-MM-DD") + "-" + color.replace("#", ""));
+					var dayStr = day.format("DD/MM/YYYY");
+					var html = "";
+					events = events[color];
+					events.forEach(function(event){
+						var e = JSON.parse(event);
+						html += "<p>"
+						html += ("<strong>" + e.title + "</strong>");
+						if(e.description){
+							html += ("<br />" + e.description);
+						}
+						html += "</p>";
+					});
+					
+					if(!scope.loaded[el.attr("id")]){
+						var p = $popover(el, {
+							content: html,
+							title: "Eventi di " + dayStr,
+							placement: "bottom",
+							autoClose: 1,
+							trigger: "click",
+							container: "body",
+							html: true
+						});
+						p.$promise.then(function(y){
+							p.show();
+							scope.loaded[el.attr("id")] = true;
 						});
 					}
 				}
@@ -146,18 +192,164 @@ directive("calendarMonth", [
 ]).
 
 directive("calendarDay", [
-	"$sce", "$timeout", "calendarHelperService",
-	function($sce, $timeout, calendarHelperService){
+	"$sce", "$timeout", "calendarHelperService", "calendarEventsService", "$rootScope", "$http",
+	function($sce, $timeout, calendarHelperService, calendarEventsService, $rootScope, $http){
 		return {
 			templateUrl: "templates/day.html",
 			restrics: "A",
 			require: "^calendar",
 			scope: {
-				currentDay: "=calendarCurrentDay"
+				currentDay: "=calendarCurrentDay",
+				eventFilter: "=calendarFilter"
 			},
 			link: function postLink(scope, element, attrs, calendarController){
 				
-				calendarController.showControls = false;
+				calendarController.titleFunctions.day = function(currentDay) {
+					return moment(currentDay).format('dddd DD MMMM, YYYY');
+				};
+
+				function updateView() {
+					calendarEventsService.list(scope.eventFilter).success(function(results){
+						scope.view = calendarHelperService.getDayView(results, moment(scope.currentDay));
+						scope.events = [];
+						if(scope.view){
+							var evs = [];
+							for(var i = 0; i < scope.view.length; i++){
+								evs = [];
+								var obj = scope.view[i][$rootScope.Utils.keys(scope.view[i])[0]];
+								for(var k = 0; k < obj.length; k++){
+									evs.push(JSON.parse(obj[k]));
+								}
+								scope.events.push(evs);
+							}
+						}
+						else {
+							scope.events = [];
+						}
+						
+					});
+				}
+				
+				scope.clearEvent = function($event, id){
+					$event.preventDefault();
+					$http.get("/events/" + id + "/clear").success(function(){
+						updateView();
+					});
+				}
+
+				scope.$watch('currentDay', updateView);
+				
+			}
+		}
+	}
+]).
+
+directive("calendarAgenda", [
+	"calendarHelperService", "calendarEventsService", "$rootScope", "$http",
+	function(calendarHelperService, calendarEventsService, $rootScope, $http){
+		return {
+			templateUrl: "templates/agenda.html",
+			restrics: "A",
+			require: "^calendar",
+			scope: {
+				currentDay: "=calendarCurrentDay",
+				eventFilter: "=calendarFilter"
+			},
+			link: function postLink(scope, element, attrs, calendarController){
+				
+				calendarController.titleFunctions.agenda = function(currentDay) {
+					return "Agenda";
+				};
+				
+				calendarController.controlFunctions.agenda = function(){
+					return false;
+				}
+
+				function updateView() {
+					calendarEventsService.list(scope.eventFilter).success(function(results){
+						scope.events = [];
+						var evs = [], day = "";
+						$rootScope.Utils.keys(results).forEach(function(key){
+							day = moment(key).format('dddd DD MMMM, YYYY');
+							evs = [day, []];
+							results[key].forEach(function(eventObject){
+								var obj = eventObject[$rootScope.Utils.keys(eventObject)[0]];
+								for(var k = 0; k < obj.length; k++){
+									evs[1].push(JSON.parse(obj[k]));
+								}
+							});
+							scope.events.push(evs);
+						});
+					});
+				}
+				
+				scope.clearEvent = function($event, id){
+					$event.preventDefault();
+					$http.get("/events/" + id + "/clear").success(function(){
+						updateView();
+					});
+				}
+
+				scope.$watch('currentDay', updateView);
+				
+			}
+		}
+	}
+]).
+
+directive("calendarTrash", [
+	"calendarHelperService", "calendarEventsService", "$rootScope", "$http",
+	function(calendarHelperService, calendarEventsService, $rootScope, $http){
+		return {
+			templateUrl: "templates/trash.html",
+			restrics: "A",
+			require: "^calendar",
+			scope: {
+				currentDay: "=calendarCurrentDay",
+				eventFilter: "=calendarFilter"
+			},
+			link: function postLink(scope, element, attrs, calendarController){
+				
+				calendarController.titleFunctions.trash = function(currentDay) {
+					return "Cestino";
+				};
+				
+				calendarController.controlFunctions.trash = function(){
+					return false;
+				}
+
+				function updateView() {
+					if(scope.eventFilter){
+						var f = [scope.eventFilter, "active=false"].join("&");
+					}
+					else {
+						var f = "active=false";
+					}
+					calendarEventsService.list(f).success(function(results){
+						scope.events = [];
+						results.forEach(function(event){
+							event.start = moment(event.start, "YYYY-MM-DD HH:mm").format('dddd DD MMMM, YYYY');
+							event.finish = moment(event.finish, "YYYY-MM-DD HH:mm").format('dddd DD MMMM, YYYY');
+							scope.events.push(event);
+						});
+					});
+				}
+				
+				scope.reinstateEvent = function($event, id){
+					$event.preventDefault();
+					$http.get("/events/" + id + "/reinstate").success(function(){
+						updateView();
+					});
+				}
+				
+				scope.destroyEvent = function($event, id){
+					$event.preventDefault();
+					$http.delete("/events/" + id).success(function(){
+						updateView();
+					});
+				}
+
+				scope.$watch('currentDay', updateView);
 				
 			}
 		}

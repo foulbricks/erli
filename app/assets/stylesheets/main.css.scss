@@ -108,6 +108,14 @@ input.ng-dirty.ng-invalid{
   }
 }
 
+.popover {
+	color: #000;
+}
+
+.btn.active {
+	border: 1px solid #000;
+}
+
 body.invoice {
 	padding-top: 10px;
 	background-color: #fff;

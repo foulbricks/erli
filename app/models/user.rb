@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   belongs_to :building
   has_many :friends, class_name: "User", foreign_key: "tenant_id", :dependent => :destroy
   belongs_to :tenant, class_name: "User"
+  has_many :events
   
   validates_presence_of :first_name, :email
   validates_presence_of :last_name, :if => "lease_id.blank?"

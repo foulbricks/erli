@@ -1,5 +1,26 @@
 <div class="cal-day-box">
-<div class="row-fluid clearfix cal-row-head">
-  <div class="span1 col-xs-1 cal-cell">Time</div>
-  <div class="span11 col-xs-11 cal-cell">Events</div>
+	<div class="row-fluid clearfix cal-row-head" ng-if="events.length">
+		<div class="col-xs-3 cal-cell">Titolo</div>
+  	  	<div class="col-xs-6 cal-cell">Descrizione</div>
+	</div>
+
+
+	<div class="cal-day-panel clearfix">
+		<div class="cal-day-panel-hour">
+
+			<div class="cal-day-hour" ng-repeat="eventAry in events" style="background-color: {{ eventAry[0].color }} !important;color:white;">
+
+	  		  	<div class="cal-day-hour-part" ng-repeat="event in eventAry">
+	    			<div class="col-xs-3"><b>{{ event.title }}</b></div>
+	    			<div class="col-xs-6">{{ event.description }}</div>
+					<div class="col-xs-1"><button type="button" class="btn btn-default btn-sm" placement="left" tooltip-url="/events/{{ event.id }}/edit" title ="Modificare Evento" erli-tooltip="popover"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button></div>
+					<div class="col-xs-1"><button type="button" class="btn btn-default btn-sm" ng-click="clearEvent($event, event.id)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button></div>
+	  		  	</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-12 text-center" ng-if="events < 1">
+		<p>Non ci sono punti all'ordine del giorno.</p>
+	</div>
+
 </div>

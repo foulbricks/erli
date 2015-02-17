@@ -3,6 +3,7 @@ class Apartment < ActiveRecord::Base
   has_many :apartment_repartition_tables, :dependent => :destroy
   has_many :leases, :dependent => :destroy
   has_many :asset_expenses, :as => :asset
+  has_many :events
   
   after_create do |a|
     RepartitionTable.where(:building_id => a.building.id).all.each do |r|

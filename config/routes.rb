@@ -16,6 +16,9 @@ Rails.application.routes.draw do
         get "delete_attachment"
       end
     end
+    member do
+      get "apartments"
+    end
     collection do
       post "set_workspace"
     end
@@ -36,6 +39,9 @@ Rails.application.routes.draw do
         get "delete_attachment"
       end
     end
+    member do
+      get "tenants"
+    end
   end
   
   post "invoices" => "invoices#index"
@@ -55,6 +61,13 @@ Rails.application.routes.draw do
   resources :contracts
   resources :balance_dates
   resources :companies, :only => [:edit, :update]
+  resources :events do
+    member do
+      get "clear"
+      get "reinstate"
+    end
+  end
+      
   
   resources :leases do
     resources :tenants, :except => [:index]

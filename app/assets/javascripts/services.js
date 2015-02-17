@@ -7,7 +7,7 @@ factory("calendarHelperService", [
 	function($filter, moment){
 		var helper = {};
 		
-		helper.getMonthView = function(currentDay, useISOWeek){
+		helper.getMonthView = function(currentDay, useISOWeek, events){
 			var dateOffset = isISOWeek() ? 1 : 0;
 			
 			function getWeekDayIndex(){
@@ -37,13 +37,14 @@ factory("calendarHelperService", [
 						}
 					}
 				}
-				
+
 				buildRow[getWeekDayIndex(startOfMonth)] = {
 					label: startOfMonth.date(),
 					inMonth: true,
 					isToday: moment().startOf("day").isSame(startOfMonth),
 					date: startOfMonth.clone(),
-					weekend: startOfMonth.day() == 6 || startOfMonth.day() == 0
+					weekend: startOfMonth.day() == 6 || startOfMonth.day() == 0,
+					events: events[startOfMonth.format("YYYY-MM-DD")]
 				};
 				
 				if(i == numberOfDaysInMonth){
@@ -73,6 +74,10 @@ factory("calendarHelperService", [
 			
 		}
 		
+	    helper.getDayView = function(events, currentDay) {
+			return events[currentDay.format("YYYY-MM-DD")];;
+	    }
+		
 		helper.getMonthNames = function(short){
 			return short ? moment.monthsShort() : moment.months();
 		}
@@ -91,5 +96,23 @@ factory("calendarHelperService", [
 		}
 		
 		return helper;
+	}
+]).
+
+factory("calendarEventsService", [
+	"$http",
+	function($http){
+		var event = {};
+		
+		event.list = function(filter){
+			if(typeof filter != "undefined"){
+				return $http.get("/events?" + filter);
+			}
+			else {
+				return $http.get("/events")
+			}
+		}
+		
+		return event;
 	}
 ]);

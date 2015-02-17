@@ -1,5 +1,6 @@
 class ApartmentsController < ApplicationController
-  before_filter :check_admin, :check_building_cookie
+  before_filter :check_admin
+  before_filter :check_building_cookie, :except => [:tenants]
   
   def index
     @apartments = Apartment.where(:building_id => cookies[:building]).order(:name).all
@@ -41,6 +42,16 @@ class ApartmentsController < ApplicationController
     
     flash[:notice] = "Appartamento cancellato con successo"
     redirect_to apartments_path
+  end
+  
+  def tenants
+    @apartment = Apartment.find(params[:id])
+    lease = @apartment.active_leases.first
+    if lease
+      render :json => lease.users.map {|u| {:id => u.id, :name => u.name }}
+    else
+      render :json => []
+    end
   end
   
   private

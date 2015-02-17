@@ -1,6 +1,6 @@
 "use strict"
 
-angular.module("erli", ["mgcrea.ngStrap", "ngAnimate"]).
+angular.module("erli", ["mgcrea.ngStrap", "ngAnimate", "ngSanitize"]).
 
 config(["$httpProvider", 
 	function(provider){
@@ -8,8 +8,11 @@ config(["$httpProvider",
 	}
 ]).
 
-run(["moment", function(moment){
+run(["moment", "$rootScope", function(moment, $rootScope){
 	moment.locale("it");
+    $rootScope.Utils = {
+       keys : Object.keys
+    }
 }]);
 
 $(document).on("ready page:load", function(args){

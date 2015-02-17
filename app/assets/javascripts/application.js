@@ -14,8 +14,10 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require moment/moment
+//= require moment/locale/it
 //= require angular/angular
 //= require angular-animate/angular-animate
+//= require angular-sanitize/angular-sanitize
 //= require bootstrap-sass-official/assets/javascripts/bootstrap
 //= require angular-strap/dist/angular-strap
 //= require angular-strap/dist/angular-strap.tpl

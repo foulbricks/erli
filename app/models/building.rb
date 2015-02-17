@@ -5,5 +5,6 @@ class Building < ActiveRecord::Base
   
   has_many :apartments
   has_many :asset_expenses, as: :asset
+  has_many :events
   
 end
