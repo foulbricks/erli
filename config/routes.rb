@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
 
   resources :users do
+    member do
+      
+    end
     collection do
       get "forgot_password"
     end
