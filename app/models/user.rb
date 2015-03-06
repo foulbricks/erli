@@ -73,11 +73,11 @@ class User < ActiveRecord::Base
   end
   
   def within_activation_time?
-    Time.now - activation_code_set_at < 2.days
+    Time.now - activation_code_set_at < 3.days
   end
   
-  def withing_pw_reset_time?
-    Time.now - pw_code_set_at < 2.days
+  def within_pw_reset_time?
+    Time.now - pw_code_set_at < 3.days
   end
   
   def make_activation_code!

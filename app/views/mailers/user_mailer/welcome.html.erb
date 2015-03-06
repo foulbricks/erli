@@ -150,15 +150,15 @@
                 <tr>
                     <td class="content">
 
-                        <h2>Hi <%= @user.name %>,</h2>
+                        <h2>Ciao <%= @user.name %>,</h2>
 
-                        <p><%= @company.welcome_email_text %></p>
+                        <p><%= @company.welcome(@building) %></p>
 
                         <table>
                             <tr>
                                 <td align="center">
                                     <p>
-                                        <a href="#" class="button">Attivare il Conto</a>
+                                        <a href="<%= @domain %>/users/activate/<%= @user.activation_code %>" class="button">Attivare il Conto</a>
                                     </p>
                                 </td>
                             </tr>
@@ -180,7 +180,7 @@
                 <tr>
                     <td class="content footer" align="center">
                         <p><%= @building.name %>, <%= [@building.address, @building.home_number, @building.cap, @building.localita, @building.provincia].join(" ") %></p>
-                        <p><a href="mailto:<%= @setup.email %>"><%= @setup.email %></a></p>
+                        <p><a href="mailto:<%= @setup.email.to_s %>"><%= @setup.email.to_s %></a></p>
                     </td>
                 </tr>
             </table>

@@ -38,9 +38,17 @@ class LeasesController < ApplicationController
   
   def update
     @lease = Lease.find(params[:id])
+    registration = @lease.registration_date
     
     respond_to do |format|
       if @lease.update(lease_params)
+        if registration.blank? && @lease.registration_date.present?
+          @lease.users.each do |user|
+            user.make_activation_code!
+            user.save
+            UserMailer.welcome(user)
+          end
+        end
         flash[:notice] = "Locazione modificata con successo"
         format.json { render :json => { :success => true } }
         format.html { render :text => "" }
@@ -125,7 +133,7 @@ class LeasesController < ApplicationController
             :payment_frequency, :deposit, :registration_date, :registration_number, :registration_agency,
             :cap, :localita, :provincia,
             :users_attributes => [:id, :first_name, :last_name, :email, :codice_fiscale, :secondary, 
-              :percentage, :partita_iva],
+              :percentage, :partita_iva, :building_id],
             :lease_attachments_attributes => [:document, :lease_document],
             :asset_expenses_attributes => [:id, :expense_id, :amount, :asset_id, :asset_type])
   end

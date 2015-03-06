@@ -1,6 +1,16 @@
 class UserMailer < ActionMailer::Base
   
   def forgot_password(member)
+    @building = user.lease.apartment.building
+    @user = user
+    @company = Company.first
+    @setup = Setup.first
+    if Rails.env.development?
+      @domain = "http://localhost:3000/"
+    else
+      @domain = ""
+    end  
+    
     mail(
       :to     => member.email,
       :from   => "noreply@erli.com",
@@ -18,12 +28,22 @@ class UserMailer < ActionMailer::Base
     )
   end
   
-  def welcome(member)
+  def welcome(user)
+    @building = user.lease.apartment.building
+    @user = user
+    @company = Company.first
+    @setup = Setup.first
+    if Rails.env.development?
+      @domain = "http://localhost:3000/"
+    else
+      @domain = ""
+    end  
+    
     mail(
-      :to     => member.email,
+      :to     => user.email,
       :from   => "noreply@erli.com",
-      :subject => "Please activate your account",
-      :template_path => "/mailers/user_mailer"
+      :subject => "Si prega di attivare il tuo account per #{@building.name}",
+      :template_path => "/mailers/user_mailer/welcome"
     )
   end
     

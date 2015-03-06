@@ -1,11 +1,9 @@
 Rails.application.routes.draw do
 
   resources :users do
-    member do
-      
-    end
     collection do
       get "forgot_password"
+      post "forgot_password"
     end
   end
   
@@ -91,8 +89,9 @@ Rails.application.routes.draw do
   root "home#index"
   get "apartment_expenses" => "apartment_expenses#index", as: :apartment_expenses
   
-  get "/auth/:provider/callback" => "google_sessions#create"
-  get "test" => "google_sessions#new"
+  get "user/reset-password/:pw_code" => "user#reset_password"
+  post "user/reset-password/:pw_code" => "user#reset_password"
+  get "user/activate/:activation_code" => "user#activate"
   
   
   # The priority is based upon order of creation: first created -> highest priority.
