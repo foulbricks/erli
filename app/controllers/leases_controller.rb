@@ -20,7 +20,7 @@ class LeasesController < ApplicationController
       if @lease.save
         flash[:notice] = "Locazione salvata con successo"
         format.json { render :json => {:success => true } }
-        format.html { render :text => "" }
+        format.html { render :text => "success" }
       else
         format.json { render :json => {:errors => @lease.errors.full_messages} }
         format.html { render :text => @lease.errors.full_messages }
@@ -47,7 +47,7 @@ class LeasesController < ApplicationController
         end
         flash[:notice] = "Locazione modificata con successo"
         format.json { render :json => { :success => true } }
-        format.html { render :text => "" }
+        format.html { render :text => "success" }
       else
         format.json { render :json => {:errors => @lease.errors.full_messages} }
         format.html {

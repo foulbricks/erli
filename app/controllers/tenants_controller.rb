@@ -20,7 +20,7 @@ class TenantsController < ApplicationController
         @user.send_signup_notification! if @user.lease.registration_date.present?
         flash[:notice] = "Utente salvato con successo"
         format.json { render :json => {:success => true } }
-        format.html { render :text => "" }
+        format.html { render :text => "success" }
       else
         format.json { render :json => {:errors => @user.errors.full_messages} }
         format.html { render :text => @user.errors.full_messages }
@@ -42,7 +42,7 @@ class TenantsController < ApplicationController
       if @user.update(user_params)
         flash[:notice] = "Utente modificato con successo"
         format.json { render :json => { :success => true } }
-        format.html { render :text => "" }
+        format.html { render :text => "success" }
       else
         format.json { render :json => {:errors => @user.errors.full_messages} }
         format.html {

@@ -2,7 +2,7 @@ class AdsController < ApplicationController
   before_filter :check_admin, :only => [:administration, :approve, :approve_all]
   
   def index
-    @ads = Ad.where("building_id = ?", cookies[:building]).
+    @ads = Ad.where("building_id = ?", cookies[:building]).order("created_at DESC").
                     paginate(:page => params[:page], :per_page => 5)
   end
   

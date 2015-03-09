@@ -61,14 +61,14 @@
 				<script type="text/javascript">
 				$("#iframe").on("load", function(e){
 					var errors = $(this).contents().find("body").text();
-					if(errors){
+					if(errors && !(/success/.test(errors))){
 						var errs = JSON.parse(errors);
 						var errorsList = $(".leaseFormErrors").html("");
 						errs.forEach(function(err){
 							errorsList.append("<li>" + err + "</li>");
 						});
 					}
-					else {
+					else if (errors && /success/.test(errors)){
 						window.location = "/leases";
 					}
 				});

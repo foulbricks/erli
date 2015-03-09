@@ -155,7 +155,9 @@
                 <tr>
                     <td class="content footer" align="center">
                         <p><%= @building.name %>, <%= [@building.address, @building.home_number, @building.cap, @building.localita, @building.provincia].join(" ") %></p>
-                        <p><a href="mailto:<%= @setup.erli_admin_email.to_s %>"><%= @setup.erli_admin_email.to_s %></a></p>
+                        <% if @setup %>
+                        	<p><a href="mailto:<%= @setup.email.to_s %>"><%= @setup.email.to_s %></a></p>
+						<% end %>
                     </td>
                 </tr>
             </table>

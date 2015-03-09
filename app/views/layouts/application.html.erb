@@ -36,7 +36,7 @@
 									<li><%= link_to "Contratto", root_path %></li>
 									<li><%= link_to "Fatture", root_path %></li>
 									<li><%= link_to "MAV", root_path %></li>
-									<li><%= link_to "Amministrare Annunci", root_path %></li>
+									<li><%= link_to "I Tuoi Annunci", root_path %></li>
 									<li><%= link_to "Annunci", ads_path %></li>
 									<li><%= mail_to Setup.where("building_id = ?", cookies[:building]).first.try(:erli_admin_email), "Contattare" %></li>
 								</ul>

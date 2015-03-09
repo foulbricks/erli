@@ -38,13 +38,15 @@ jQuery(document).ready(function ($) {
         }
     };
 	
-	$("ad-images").each(function(index, container){
+	var $containers = $(".ad-images")
+	$containers.each(function(index, container){
 	    var jssor_slider1 = new $JssorSlider$($(container).attr("id"), options);
 
 	    function ScaleSlider() {
 	        var parentWidth = jssor_slider1.$Elmt.parentNode.clientWidth;
+			console.log(parentWidth)
 	        if (parentWidth)
-	            jssor_slider1.$ScaleWidth(Math.min(parentWidth, 600));
+	            jssor_slider1.$ScaleWidth(Math.min(parentWidth - 30, 720));
 	        else
 	            window.setTimeout(ScaleSlider, 30);
 	    }
@@ -54,5 +56,4 @@ jQuery(document).ready(function ($) {
 	    $(window).bind("resize", ScaleSlider);
 	    $(window).bind("orientationchange", ScaleSlider);
 	});
-
 });

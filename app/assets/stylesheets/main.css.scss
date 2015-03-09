@@ -185,3 +185,10 @@ body.invoice {
 		font-style:italic;
 	}
 }
+
+.pagination span, .pagination em, .pagination a { 
+	padding:5px 10px; 
+	border:1px solid #000;
+	background-color:#fff;
+	border-radius: 4px;
+}

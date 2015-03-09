@@ -1,3 +1,5 @@
+//= require carousel
+
 $(function(){
 	$(".default-building").on("change", function(){
 		$(this).submit();
