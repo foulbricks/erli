@@ -39,23 +39,24 @@
 		<hr />
 		<%= f.fields_for :ad_attachments do |image| %>
 			<div ng-if="imageCount > <%= image.index %>">
-				<div class="form-group">
-					<div class="col-sm-12">
-						<%= image_tag(image.object.image.thumb_url) if image.object.image.present? %>
+				<% if image.object.image.present? %>
+					<div class="form-group">
+						<div class="col-xs-4 col-sm-3 col-sm-offset-3" style="margin-bottom:5px;">
+							<%= image_tag(image.object.image.thumb.url) %>
+						</div>
+						<%= image.label :remove_image, "Rimuovi immagine?", :class => "control-label col-xs-6 col-sm-3" %>
+						<div class="col-sm-3 col-xs-4">
+							<p style="margin-top: 5px;"><%= image.check_box :remove_image %></p>
+						</div>
 					</div>
+				<% end %>
+				<div class="form-group">
+
 					<%= image.label :image, "Immagine", :class => "col-sm-3 control-label" %>
 					<div class="col-sm-9">
 						<%= image.file_field :image %>
 					</div>
 				</div>
-				<% if image.object.image.present? %>
-					<div class="form-group">
-						<%= image.label :remove_image, "Rimuovi immagine?", :class => "control-label col-sm-3 col-sm-offset-3" %>
-						<div class="col-sm-6">
-							<p style="margin-top: 5px;"><%= image.check_box :remove_image %></p>
-						</div>
-					</div>
-				<% end %>
 				<hr />
 			</div>
 		<% end %>

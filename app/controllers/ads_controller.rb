@@ -2,7 +2,7 @@ class AdsController < ApplicationController
   before_filter :check_admin, :only => [:administration, :approve, :approve_all]
   
   def index
-    @ads = Ad.where("building_id = ?", cookies[:building]).order("created_at DESC").
+    @ads = Ad.where("building_id = ? AND approved = true", cookies[:building]).order("created_at DESC").
                     paginate(:page => params[:page], :per_page => 5)
   end
   
@@ -18,7 +18,11 @@ class AdsController < ApplicationController
     
     if @ad.save
       flash[:notice] = "Annuncio salvato con successo"
-      redirect_to ads_path
+      if user.admin?
+        redirect_to administration_ads_path
+      else
+        redirect_to personal_ads_ads_path
+      end
     else
       render "new"
     end
@@ -38,7 +42,11 @@ class AdsController < ApplicationController
     
     if (user.admin? || @ad.user == user) && @ad.update(ad_params)
       flash[:notice] = "Annuncio modificato con successo"
-      redirect_to ads_path
+      if user.admin?
+        redirect_to administration_ads_path
+      else
+        redirect_to personal_ads_ads_path
+      end
     else
       render "edit"
     end
@@ -52,7 +60,16 @@ class AdsController < ApplicationController
     end
     
     flash[:notice] = "Annuncio cancellato con successo"
-    redirect_to ads_path
+    if user.admin?
+      redirect_to administration_ads_path
+    else
+      redirect_to personal_ads_ads_path
+    end
+  end
+  
+  def personal_ads
+    @ads = Ad.where("building_id = ? and user_id = ?", cookies[:building], session[:user_id]).order("created_at DESC").
+          paginate(:page => params[:page], :per_page => 5)
   end
   
   def administration
