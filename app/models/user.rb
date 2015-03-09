@@ -58,6 +58,7 @@ class User < ActiveRecord::Base
   
   def send_signup_notification!
     self.activation_code = make_token
+    self.activation_code_set_at = Time.now
     save && UserMailer.welcome(self).deliver
   end
   

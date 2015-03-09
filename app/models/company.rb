@@ -7,6 +7,8 @@ class Company < ActiveRecord::Base
   end
   
   def forgot_password(building)
-    reset_password_text.to_s.gsub(/\[\[\s*edificio\s*\]\]/, building.name)
+    text = reset_password_text.to_s
+    text.gsub!(/\[\[\s*edificio\s*\]\]/, building.name) if building
+    text
   end
 end

@@ -1,20 +1,20 @@
 class UserMailer < ActionMailer::Base
   
-  def forgot_password(member)
-    @building = user.lease.apartment.building
+  def forgot_password(user)
+    @building = user.try(:lease).try(:apartment).try(:building)
     @user = user
     @company = Company.first
-    @setup = Setup.first
+    @setup = Setup.where("building_id = ?", @building.id).first if @building
     if Rails.env.development?
-      @domain = "http://localhost:3000/"
+      @domain = "http://localhost:3000"
     else
       @domain = ""
     end  
     
     mail(
-      :to     => member.email,
+      :to     => user.email,
       :from   => "noreply@erli.com",
-      :subject => "Account Password Reset",
+      :subject => "Reimpostazione Password Dell'Account",
       :template_path => "/mailers/user_mailer"
     )
   end
@@ -32,9 +32,9 @@ class UserMailer < ActionMailer::Base
     @building = user.lease.apartment.building
     @user = user
     @company = Company.first
-    @setup = Setup.first
+    @setup = Setup.where("building_id = ?", @building.id).first
     if Rails.env.development?
-      @domain = "http://localhost:3000/"
+      @domain = "http://localhost:3000"
     else
       @domain = ""
     end  
@@ -43,7 +43,7 @@ class UserMailer < ActionMailer::Base
       :to     => user.email,
       :from   => "noreply@erli.com",
       :subject => "Si prega di attivare il tuo account per #{@building.name}",
-      :template_path => "/mailers/user_mailer/welcome"
+      :template_path => "/mailers/user_mailer"
     )
   end
     

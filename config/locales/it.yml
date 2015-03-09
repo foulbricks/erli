@@ -11,6 +11,7 @@ it:
       lease: "Locazione"
       users: "Utenti"
       invoice: "Fattura"
+      ad: "Annuncio"
     attributes:
       building:
         name: "Nome"

@@ -11,7 +11,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150305203108) do
+ActiveRecord::Schema.define(version: 20150308013417) do
+
+  create_table "ad_attachments", force: true do |t|
+    t.integer  "ad_id"
+    t.string   "image"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "ads", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "building_id"
+    t.text     "description"
+    t.decimal  "amount"
+    t.string   "contact"
+    t.boolean  "approved"
+    t.date     "end_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "apartment_repartition_tables", force: true do |t|
     t.integer  "apartment_id"
@@ -262,7 +281,6 @@ ActiveRecord::Schema.define(version: 20150305203108) do
     t.string   "activation_code"
     t.datetime "activation_code_set_at"
     t.string   "pw_code"
-    t.string   "pw_code_set_at"
     t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -273,6 +291,7 @@ ActiveRecord::Schema.define(version: 20150305203108) do
     t.boolean  "partita_iva"
     t.decimal  "percentage",             precision: 15, scale: 2, default: 0.0
     t.integer  "tenant_id"
+    t.datetime "pw_code_set_at"
   end
 
 end

@@ -25,3 +25,6 @@
 //= require services
 //= require controllers
 //= require directives
+//= require jssor
+//= require jssor.slider
+//= require carousel

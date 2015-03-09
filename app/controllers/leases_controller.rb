@@ -43,11 +43,7 @@ class LeasesController < ApplicationController
     respond_to do |format|
       if @lease.update(lease_params)
         if registration.blank? && @lease.registration_date.present?
-          @lease.users.each do |user|
-            user.make_activation_code!
-            user.save
-            UserMailer.welcome(user)
-          end
+          @lease.users.each { |user| user.send_signup_notification! }
         end
         flash[:notice] = "Locazione modificata con successo"
         format.json { render :json => { :success => true } }

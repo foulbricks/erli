@@ -1,0 +1,77 @@
+<div style="background: #fff;box-sizing:border-box;padding:20px;">
+	<% if @ad.errors.any? %>
+		<div class="alert alert-danger">
+			<strong>La forma non e valida.</strong><br />
+			<ul>
+				<% for message in @ad.errors.full_messages %>
+					<li><%= message %></li>
+				<% end %>
+			</ul>
+		</div>
+	<% end %>
+
+	<%= form_for @ad, html: {:novalidate => "novalidate", name: "adForm", class: "form-horizontal", :multipart => true } do |f| %>
+		<div class="form-group" ng-class="{'has-error':adForm['ad[description]'].$dirty && adForm['ad[description]'].$invalid }">
+			<%= f.label :description, "Descrizione", :class => "control-label col-sm-3" %>
+			<div class="col-sm-9">
+				<%= f.text_area :description, :class => "form-control", :placeholder => "Descrizione", :"ng-model" => "description", :"ng-required" => true, :rows => 7 %>
+				<span class="error-message" ng-show="adForm['ad[description]'].$dirty && adForm['ad[description]'].$invalid">Descrizione è richiesta.</span>
+			</div>
+		</div>
+
+		<div class="form-group" ng-class="{'has-error':adForm['ad[amount]'].$dirty && adForm['ad[amount]'].$invalid }" ng-init="amount='<%= number_with_delimiter(@ad.amount) %>'">
+			<%= f.label :amount, "Quantita", :class => "control-label col-sm-3" %>
+			<div class="col-sm-9">
+				<%= f.text_field :amount, :class => "form-control", :placeholder => "Quantita", :"ng-model" => "amount", :"ng-required" => true %>
+				<span class="error-message" ng-show="adForm['ad[amount]'].$dirty && adForm['ad[amount]'].$invalid">Quantita è richiesta.</span>
+			</div>
+		</div>
+	
+		<div class="form-group" ng-class="{'has-error':adForm['ad[contact]'].$dirty && adForm['ad[contact]'].$invalid }">
+			<%= f.label :contact, "Informazione Sui Conttati", :class => "control-label col-sm-3" %>
+			<div class="col-sm-9">
+				<%= f.text_field :contact, :class => "form-control", :placeholder => "Informazione Sui Conttati", :"ng-model" => "contact", :"ng-required" => true %>
+				<span class="error-message" ng-show="adForm['ad[contact]'].$dirty && adForm['ad[contact]'].$invalid">Informazione Sui Conttati è Richiesta.</span>
+			</div>
+		</div>
+	
+		<span ng-init="imageCount = <%= @ad.ad_attachments.select {|ad| ad.image.present? }.size + 1 %>"></span>
+		<hr />
+		<%= f.fields_for :ad_attachments do |image| %>
+			<div ng-if="imageCount > <%= image.index %>">
+				<div class="form-group">
+					<div class="col-sm-12">
+						<%= image_tag(image.object.image.thumb_url) if image.object.image.present? %>
+					</div>
+					<%= image.label :image, "Immagine", :class => "col-sm-3 control-label" %>
+					<div class="col-sm-9">
+						<%= image.file_field :image, :class => "form-control" %>
+					</div>
+				</div>
+				<% if image.object.image.present? %>
+					<div class="form-group">
+						<%= image.label :remove_image, "Rimuovi immagine?", :class => "control-label col-sm-3 col-sm-offset-3" %>
+						<div class="col-sm-6">
+							<p style="margin-top: 5px;"><%= image.check_box :remove_image %></p>
+						</div>
+					</div>
+				<% end %>
+				<hr />
+			</div>
+		<% end %>
+	
+		<div class="form-group" ng-if="imageCount < 10">
+			<div class="col-sm-9 col-sm-offset-3">
+				<p><%= link_to "Aggiungere immagine", "#", :"ng-click" => "incrementImageCount($event)" %></p>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-9 col-sm-offset-3">
+				<%= f.hidden_field :user_id, :value => session[:user_id] %>
+				<%= f.hidden_field :building_id, :value => cookies[:building] %>
+				<%= f.submit :class => "btn btn-lg btn-primary", :"ng-disabled" => "adForm.$invalid"%>
+			</div>
+		</div>
+	<% end %>
+</div>

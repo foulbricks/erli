@@ -68,7 +68,17 @@ Rails.application.routes.draw do
       get "reinstate"
     end
   end
-      
+  
+  resources :ads do
+    member do
+      get "approve"
+    end
+    collection do
+      get "approve_all"
+      get "administration"
+      get "personal_ads"
+    end
+  end
   
   resources :leases do
     resources :tenants, :except => [:index]
@@ -89,9 +99,9 @@ Rails.application.routes.draw do
   root "home#index"
   get "apartment_expenses" => "apartment_expenses#index", as: :apartment_expenses
   
-  get "user/reset-password/:pw_code" => "user#reset_password"
-  post "user/reset-password/:pw_code" => "user#reset_password"
-  get "user/activate/:activation_code" => "user#activate"
+  get "users/reset-password/:pw_code" => "users#reset_password"
+  post "users/reset-password/:pw_code" => "users#reset_password"
+  get "users/activate/:activation_code" => "users#activate"
   
   
   # The priority is based upon order of creation: first created -> highest priority.

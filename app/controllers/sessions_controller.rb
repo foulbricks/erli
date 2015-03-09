@@ -2,7 +2,7 @@ class SessionsController < ApplicationController
   skip_before_filter :authorize
   
   def new
-    
+    session[:user_id] = nil
   end
   
   def create
@@ -10,16 +10,18 @@ class SessionsController < ApplicationController
     
     if user && user.active?
       session[:user_id] = user.id
+      cookies[:building] = user.building.try(:id) if !user.admin?
       redirect_to root_url
     else
-      flash.now.alert = "Invalid username and/or password"
+      flash.now.alert = "Email e/o password non validi"
       render "new"
     end
   end
   
   def destroy
     session[:user_id] = nil
-    redirect_to new_session_path, notice: "You have successfully logged out"
+    cookies[:building] = nil
+    redirect_to new_session_path, notice: "E stato uscito con successo"
   end
   
   private

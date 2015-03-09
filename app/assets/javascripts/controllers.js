@@ -174,6 +174,19 @@ controller("invoiceTableController", [
 	}
 ]).
 
+controller("adFormController", [
+	"$scope",
+	function($scope){
+		$scope.description = angular.element("#ad_description").val();
+		$scope.contact = angular.element("#ad_contact").val();
+		
+		$scope.incrementImageCount = function($event){
+			$event.preventDefault();
+			$scope.imageCount = $scope.imageCount + 1;
+		}
+	}
+]).
+
 controller("eventFormController", [
 	"$scope", "$http", "$rootScope", "$templateCache",
 	function($scope, $http, $rootScope, $templateCache){

@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
-  before_filter :check_admin, :clear_building, :except => [:forgot_password]
-  skip_before_filter :authorize, :only => [:forgot_password]
+  before_filter :clear_building
+  before_filter :check_admin, :except => [:forgot_password, :reset_password, :activate]
+  skip_before_filter :authorize, :only => [:forgot_password, :reset_password, :activate]
   
   def index
     @users = User.where(["admin = ?", true]).order("email DESC").all
@@ -81,13 +82,14 @@ class UsersController < ApplicationController
     @user = User.find_by_pw_code(params[:pw_code])
     if @user && @user.within_pw_reset_time?
       if request.post?
-        if @user.update_attributes(user_params)
-          @user.pw_code = nil
-          @user.pw_code_set_at = nil
+        params[:user] ||= {}
+        if params[:user][:passwd] == params[:user][:passwd_confirmation] && params[:user][:passwd].present?
+          @user.reset_pw!(params[:user][:passwd])
           @user.save
           flash[:notice] = "Grazie. La password ha stata modificata. Si prega acceda il sitio con la nuova password"
-          redirect_to root_path
+          redirect_to :controller => "sessions", :action => "new"
         else
+          flash.now[:alert] = "Password non coincide con la conferma"
           render "reset_password"
         end
       else
@@ -95,7 +97,7 @@ class UsersController < ApplicationController
       end
     else
       flash[:alert] = "Il tempo per attivare il tuo account e scaduto. Si prega di modificare entro tre giorni"
-      redirect_to "forgot_password"
+      redirect_to :action => "forgot_password"
     end
   end
   
@@ -105,6 +107,8 @@ class UsersController < ApplicationController
       if user.within_activation_time?
         user.activation_code = nil
         user.activation_code_set_at = nil
+        user.active = true
+        user.building_id = user.lease.apartment.building.id
         user.make_pw_reset_code!
         user.save(:validate => false)
         flash[:notice] = "Grazie. Il tuo account e stato attivato. Si prega di creare la password"

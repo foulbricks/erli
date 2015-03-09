@@ -2,7 +2,7 @@
 <% method = @asset_expense.new_record? ? :post : :put %>
 <%= form_for @asset_expense, url: url, method: method, html: {:novalidate => "novalidate", name: "buildingExpenseForm", :multipart => true, :target => "iframe" } do |f| %>
 
-	<div class="form-group" ng-class="{'has-error':buildingExpenseForm['asset_expense[amount]'].$dirty && apartmentForm['asset_expense[amount]'].$invalid }" ng-init="amount='<%= number_with_delimiter(@asset_expense.amount) %>'">
+	<div class="form-group" ng-class="{'has-error':buildingExpenseForm['asset_expense[amount]'].$dirty && buildingExpenseForm['asset_expense[amount]'].$invalid }" ng-init="amount='<%= number_with_delimiter(@asset_expense.amount) %>'">
 		<%= f.label :amount, "Quantita", :class => "control-label" %>
 		<%= f.text_field :amount, :class => "form-control", :placeholder => "Quantita", :"ng-model" => "amount", :"ng-required" => true %>
 		<span class="error-message" ng-show="buildingExpenseForm['asset_expense[amount]'].$dirty && buildingExpenseForm['asset_expense[amount]'].$invalid">Quantita è richiesta.</span>

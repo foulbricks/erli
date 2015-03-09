@@ -14,20 +14,35 @@
 		<div class="row">
 			<div class="col-xs-12 border-left">
 				<% if logged_in? && cookies[:building].present? %>
-					<div id="wrapper" style="background:url(<%= @main_building.background.opaque.url %>) left top;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;">
-					    <div id="sidebar-wrapper">
-					        <ul class="sidebar-nav">
-					            <li><%= link_to "Inizio", root_path %></li>
-								<li><%= link_to "Locazioni", leases_path %></li>
-								<li><%= link_to "Spese di Condominio", apartment_expenses_path %></li>
-								<li><%= link_to "Spese Genreale", building_building_expenses_path(cookies[:building]) %></li>
-								<li><%= link_to "Fatture", invoices_path %></li>
-								<li><a href="#">Situazione Insolventi</a></li>
-								<li><a href="#">Agenda</a></li>
-								<li><a href="#">Messages</a></li>
-								<li><a href="#">ADs To Be Approved</a></li>
-					        </ul>
-					    </div>
+					<div id="wrapper" style="background:url(<%= @main_building.background.opaque.url %>) left top;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;">				
+						<% if logged_user.admin? %>
+						    <div id="sidebar-wrapper">
+						        <ul class="sidebar-nav">
+						            <li><%= link_to "Inizio", root_path %></li>
+									<li><%= link_to "Locazioni", leases_path %></li>
+									<li><%= link_to "Spese di Condominio", apartment_expenses_path %></li>
+									<li><%= link_to "Spese Genreale", building_building_expenses_path(cookies[:building]) %></li>
+									<li><%= link_to "Fatture", invoices_path %></li>
+									<li><a href="#">Situazione Insolventi</a></li>
+									<li><a href="#">Agenda</a></li>
+									<li><a href="#">Messages</a></li>
+									<li><a href="#">ADs To Be Approved</a></li>
+						        </ul>
+						    </div>
+						<% else %>
+						    <div id="sidebar-wrapper">
+						        <ul class="sidebar-nav">
+									<li><%= link_to "Inizio", root_path %></li>
+									<li><%= link_to "Contratto", root_path %></li>
+									<li><%= link_to "Fatture", root_path %></li>
+									<li><%= link_to "MAV", root_path %></li>
+									<li><%= link_to "Amministrare Annunci", root_path %></li>
+									<li><%= link_to "Annunci", ads_path %></li>
+									<li><%= mail_to Setup.where("building_id = ?", cookies[:building]).first.try(:erli_admin_email), "Contattare" %></li>
+								</ul>
+							</div>
+						<% end %>
+						
 					    <div id="page-content-wrapper">
 					        <div class="container-fluid">
 								<%= yield %>
