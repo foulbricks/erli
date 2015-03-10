@@ -24,8 +24,9 @@
 									<li><%= link_to "Spese Genreale", building_building_expenses_path(cookies[:building]) %></li>
 									<li><%= link_to "Fatture", invoices_path %></li>
 									<li><a href="#">Situazione Insolventi</a></li>
-									<li><a href="#">Agenda</a></li>
-									<li><a href="#">Messages</a></li>
+									<li><%= link_to "Email non Pagati", unpaid_emails_path %></li>
+									<li><%= link_to "Allarmi non Pagati", unpaid_alarms_path %></li>
+									<li><%= link_to "Avvertenze non Pagati", unpaid_warnings_path %></li>
 									<li><%= link_to "Approvare Annunci", administration_ads_path %></li>
 						        </ul>
 						    </div>

@@ -99,6 +99,10 @@ Rails.application.routes.draw do
     end
   end
   
+  resources :unpaid_emails
+  resources :unpaid_alarms
+  resources :unpaid_warnings
+  
   resources :setup, path_names: {edit: "setup"}, only: [:edit, :update]
                        
   root "home#index"
