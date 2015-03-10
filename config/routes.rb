@@ -4,6 +4,11 @@ Rails.application.routes.draw do
     collection do
       get "forgot_password"
       post "forgot_password"
+      get "contract"
+      get "invoices"
+      get "mavs"
+      get "profile"
+      post "profile"
     end
   end
   

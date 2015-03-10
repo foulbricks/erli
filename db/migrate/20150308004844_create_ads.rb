@@ -6,7 +6,7 @@ class CreateAds < ActiveRecord::Migration
       t.text    :description
       t.decimal :amount
       t.string  :contact
-      t.boolean :approved
+      t.boolean :approved, :default => false
       t.date    :end_date
       
       t.timestamps

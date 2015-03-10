@@ -15,6 +15,7 @@ class AdsController < ApplicationController
   
   def create
     @ad = Ad.new(ad_params)
+    user = User.find(session[:user_id])
     
     if @ad.save
       flash[:notice] = "Annuncio salvato con successo"
@@ -24,6 +25,10 @@ class AdsController < ApplicationController
         redirect_to personal_ads_ads_path
       end
     else
+      num = 10 - @ad.ad_attachments.size
+      (1..num).each do 
+        @ad.ad_attachments.build
+      end
       render "new"
     end
   end
@@ -48,6 +53,10 @@ class AdsController < ApplicationController
         redirect_to personal_ads_ads_path
       end
     else
+      num = 10 - @ad.ad_attachments.size
+      (1..num).each do 
+        @ad.ad_attachments.build
+      end
       render "edit"
     end
   end
@@ -84,7 +93,7 @@ class AdsController < ApplicationController
   end
   
   def approve_all
-    Ad.where("building_id = ? and approved = false", cookies[:building]).all.each do |ad|
+    Ad.where("building_id = ? and approved = ?", cookies[:building], false).all.each do |ad|
       ad.update_column(:approved, true)
     end
     redirect_to :action => "administration"
@@ -94,7 +103,7 @@ class AdsController < ApplicationController
   
   def ad_params
     params.require(:ad).permit(:user_id, :building_id, :description, :amount, :contact, :end_date, 
-        :ad_attachments_attributes => [:id, :image, :remove_image])
+        :ad_attachments_attributes => [:id, :image, :_destroy])
   end
   
 end

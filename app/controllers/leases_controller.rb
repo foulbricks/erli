@@ -1,5 +1,6 @@
 class LeasesController < ApplicationController
-  before_filter :check_admin, :check_building_cookie
+  before_filter :check_admin, :except => [:download_attachment]
+  before_filter :check_building_cookie
   
   def index
     @apartments = Apartment.where(:building_id => cookies[:building]).order("name ASC").all
@@ -85,13 +86,21 @@ class LeasesController < ApplicationController
   end
   
   def download_attachment
-    @file = LeaseAttachment.find(params[:id]).document
-    send_file(@file.file.path,
-      :filename => @file.file.filename,
-      :type => @file.file.content_type,
-      :disposition => "attachment",
-      :url_based_filename => true
-    )
+    user = User.find(session[:user_id])
+    attachment = LeaseAttachment.find(params[:id])
+    
+    if user.admin? || (user.lease == attachment.lease and attachment.lease_document?)
+      @file = attachment.document
+    
+      send_file(@file.file.path,
+        :filename => @file.file.filename,
+        :type => @file.file.content_type,
+        :disposition => "attachment",
+        :url_based_filename => true
+      )
+    else
+      redirect_to root_path
+    end
   end
   
   def delete_attachment

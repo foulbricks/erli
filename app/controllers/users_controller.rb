@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_filter :clear_building
-  before_filter :check_admin, :except => [:forgot_password, :reset_password, :activate]
+  before_filter :clear_building, :except => [:contract, :invoices, :mavs, :forgot_password, :profile]
+  before_filter :check_admin, :except => [:forgot_password, :reset_password, :activate, :contract, :invoices, :mavs, :profile]
   skip_before_filter :authorize, :only => [:forgot_password, :reset_password, :activate]
   
   def index
@@ -122,6 +122,38 @@ class UsersController < ApplicationController
     else
       flash[:alert] = "Avete gia attivato il tuo account. Chiedere per reimpostare la password se hai dimenticato la password"
       redirect_to root_path
+    end
+  end
+  
+  def contract
+    @user = User.find(session[:user_id])
+    @contracts = LeaseAttachment.where("lease_id = ? AND lease_document = true", @user.lease_id).all
+  end
+  
+  def invoices
+    
+  end
+  
+  def mavs
+    
+  end
+  
+  def profile
+    @user = User.find(session[:user_id])
+    if request.post?
+      params[:user] ||= {}
+      @user.email = params[:user][:email]
+      if @user.admin?
+        @user.first_name = params[:user][:first_name]
+        @user.last_name = params[:user][:last_name]
+      end
+      if @user.valid?
+        @user.save
+        flash[:notice] = "Profilo salvato con successo"
+        redirect_to root_path
+      else
+        render "profile"
+      end
     end
   end
   

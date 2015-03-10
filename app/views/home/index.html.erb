@@ -56,4 +56,58 @@
 			<div calendar calendar-view="calendarView" calendar-current-day="calendarDay" calendar-control="calendarControl" calendar-auto-open="true" calendar-filter="filter"></div>
 		</div>
 	</div>
+	
+<% else %>
+	<% if @latest_ad %>
+		<h4>Annuncio Più Recente</h4>
+		<div class="row alert alert-info" style="border-color:#31708f;margin:20px 5px;">
+			<div class="col-sm-10 col-sm-offset-1">
+				<% if @latest_ad.ad_attachments.length > 0 %>
+				    <div id="slider<%= @latest_ad.id %>_container" style="position: relative; top: 0px; left: 0px; width: 720px; height: 405px; overflow: hidden; margin: 0 auto 20px;" class="ad-images">
+
+				        <!-- Loading Screen -->
+				        <div u="loading" style="position: absolute; top: 0px; left: 0px;">
+				            <div style="filter: alpha(opacity=70); opacity:0.7; position: absolute; display: block;
+				                background-color: #000000; top: 0px; left: 0px;width: 100%;height:100%;">
+				            </div>
+				            <div style="position: absolute; display: block; background: url(<%= asset_path('loading.gif') %>) no-repeat center center;
+				                top: 0px; left: 0px;width: 100%;height:100%;">
+				            </div>
+				        </div>
+
+				        <!-- Slides Container -->
+				        <div u="slides" style="cursor: move; position: absolute; left: 0px; top: 0px; width: 720px; height: 405px; overflow: hidden;">
+							<% @latest_ad.ad_attachments.each do |attachment| %>
+					            <div>
+					                <img u="image" src="<%= attachment.image.url %>" />
+					            </div>
+							<% end %>
+				        </div>
+
+				        <div u="navigator" class="jssorb05">
+				            <div u="prototype"></div>
+				        </div>
+						<% if @latest_ad.ad_attachments.size > 1 %>
+				        <!-- Arrow Left -->
+					        <span u="arrowleft" class="jssora12l" style="width: 30px; height: 46px; top: 183px; left: 0px;"></span>
+					        <!-- Arrow Right -->
+					        <span u="arrowright" class="jssora12r" style="width: 30px; height: 46px; top: 183px; right: 0px"></span>					
+						<% end %>
+				    </div>
+				<% end %>
+				<div class="text-center">
+					<p><%= @latest_ad.description %></p>
+					<p><strong style="color:#000;">Prezzo</strong><br /><%= number_to_currency(@latest_ad.amount) %></p>
+					<p><strong style="color:#000;">Informazione Sui Conttati:</strong><br /><%= @latest_ad.contact %></p>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<p class="text-right" style="margin:20px 20px 50px 20px;font-size:16px;">
+				<%= link_to ads_path, {} do %>
+					<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>  Vedere più annunci
+				<% end %>
+			</p>
+		</div>
+	<% end %>
 <% end %>

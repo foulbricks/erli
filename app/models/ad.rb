@@ -3,7 +3,7 @@ class Ad < ActiveRecord::Base
   belongs_to :user
   belongs_to :building
   
-  accepts_nested_attributes_for :ad_attachments, :reject_if => proc {|attrs| attrs["image"].blank? }
+  accepts_nested_attributes_for :ad_attachments, :reject_if => proc {|attrs| attrs["image"].blank? }, :allow_destroy => true
   
   validates :user_id, :building_id, :description, :amount, :contact, :presence => true
   validates :amount, :numericality => true

@@ -1,0 +1,62 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h3>Profilo</h3>
+		<hr />
+	</div>
+</div>
+<div class="row" ng-controller="userFormController">
+	<div class="col-xs-12">
+
+		<% if @user.errors.any? %>
+			<div class="alert alert-danger">
+				<strong>La forma non è invalida.</strong><br />
+				<ul>
+					<% for message in @user.errors.full_messages %>
+						<li><%= message %></li>
+					<% end %>
+				</ul>
+			</div>
+		<% end %>
+
+		<%= form_for @user, url: {:controller => "users", :action => "profile"}, html: {:novalidate => "novalidate", name: "newUserForm", class: "form-horizontal", :method => "post" } do |f| %>
+			<% if @user.admin? %>
+				<div class="form-group" ng-class="{'has-error':newUserForm['user[first_name]'].$dirty && newUserForm['user[first_name]'].$invalid }">
+					<%= f.label :first_name, "Nome", :class => "col-sm-3 control-label" %>
+					<div class="col-sm-9">
+						<%= f.text_field :first_name, :class => "form-control", :placeholder => "First name", :"ng-model" => "firstName", :"ng-required" => true %>
+						<span class="error-message" ng-show="newUserForm['user[first_name]'].$dirty && newUserForm['user[first_name]'].$invalid">Nome è richiesto.</span>
+					</div>
+				</div>
+
+				<div class="form-group" ng-class="{'has-error':newUserForm['user[last_name]'].$dirty && newUserForm['user[last_name]'].$invalid }">
+					<%= f.label :last_name, "Cognome", :class => "col-sm-3 control-label"  %>
+					<div class="col-sm-9">
+						<%= f.text_field :last_name, :class => "form-control", :placeholder => "Last name", :"ng-model" => "lastName", :"ng-required" => true %>
+						<span class="error-message" ng-show="newUserForm['user[last_name]'].$dirty && newUserForm['user[last_name]'].$invalid">Cognome è richiesto.</span>
+					</div>
+				</div>
+			<% else %>
+				<div class="row">
+					<div class="col-sm-12">
+						<p><strong>Nome: </strong> <%= @user.name %></p>
+					</div>
+				</div>
+			<% end %>
+
+			<div class="form-group" ng-class="{'has-error':newUserForm['user[email]'].$dirty && newUserForm['user[email]'].$invalid }">
+				<%= f.label :email, :class => "col-sm-3 control-label" %>
+				<div class="col-sm-9">
+					<%= f.email_field :email, :class => "form-control", :placeholder => "Email", :"ng-model" => "email", :"ng-required" => true %>
+					<span class="error-message" ng-show="newUserForm['user[email]'].$dirty && newUserForm['user[email]'].$invalid">Email non è valido.</span>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-sm-9 col-sm-offset-3">
+					<%= f.submit "Aggiorna Profilo", :class => "btn btn-lg btn-primary", :"ng-disabled" => "newUserForm.$invalid"%>
+				</div>
+			</div>
+	
+		<% end %>
+	</div>
+</div>

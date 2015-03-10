@@ -1,0 +1,19 @@
+<div class="row">
+	<div class="col-sm-12">
+		<h3>Documenti Di Locazione</h3>
+		<hr />
+		<% if @contracts.size > 0 %>
+			<p>Si prega di scaricare i documenti di locazione</p>
+			<% @contracts.each do |contract| %>
+				<p class="text-center">
+					<%= link_to download_attachment_lease_path(contract.id) do %>
+						<span class="glyphicon glyphicon-file" style="font-size:72px;"></span><br /><br />
+					<% end %>
+					<strong><%= contract.document.file.filename %></strong>
+				</p>
+			<% end %>
+		<% else %>
+			<p>Attualmente non ci sono un documento di locazione disponibili</p>
+		<% end %>
+	</div>
+</div>
