@@ -1,0 +1,57 @@
+<div style="background: #fff;box-sizing:border-box;padding:20px;">
+	<% if @warning.errors.any? %>
+		<div class="alert alert-danger">
+			<strong>La forma non e valida.</strong><br />
+			<ul>
+				<% for message in @warning.errors.full_messages %>
+					<li><%= message %></li>
+				<% end %>
+			</ul>
+		</div>
+	<% end %>
+
+	<%= form_for @warning, html: {:novalidate => "novalidate", name: "unpaidWarningForm", class: "form-horizontal", :multipart => true } do |f| %>
+		<div class="form-group" ng-class="{'has-error':unpaidWarningForm['unpaid_warning[body]'].$dirty && unpaidWarningForm['unpaid_warning[body]'].$invalid }">
+			<%= f.label :text, "Testo", :class => "control-label col-sm-3" %>
+			<div class="col-sm-9">
+				<%= f.text_area :text, :class => "form-control", :placeholder => "Testo", :"ng-model" => "body", :"ng-required" => true, :rows => 12 %>
+				<span class="error-message" ng-show="unpaidWarningForm['unpaid_warning[body]'].$dirty && unpaidWarningForm['unpaid_warning[body]'].$invalid">Testo è richiesto.</span>
+			</div>
+		</div>
+
+		<div class="form-group" ng-class="{'has-error':unpaidWarningForm['unpaid_warning[days]'].$dirty && unpaidWarningForm['unpaid_warning[days]'].$invalid }" ng-init="days='<%= @warning.days %>'">
+			<%= f.label :days, "Dopo Numero di Giorni", :class => "control-label col-sm-3" %>
+			<div class="col-sm-9">
+				<%= f.text_field :days, :class => "form-control", :placeholder => "Dopo Numero di Giorni", :"ng-model" => "days", :"ng-required" => true %>
+				<span class="error-message" ng-show="unpaidWarningForm['unpaid_warning[days]'].$dirty && unpaidWarningForm['unpaid_warning[days]'].$invalid">Dopo Numero di Giorni è richiesto.</span>
+			</div>
+		</div>
+		
+		<div class="form-group" ng-init="background='<%= @warning.background || '#286090' %>'">
+			<label class="control-label col-sm-3">Colore di Sfondo:</label>
+			<div class="col-sm-9">
+				<div class="btn-group" ng-model="background" bs-radio-group>
+				  <label class="btn btn-danger"><input type="radio" class="btn btn-danger" value="#000000"> </label>
+				  <label class="btn btn-primary"><input type="radio" class="btn btn-primary" value="#286090"> </label>
+				  <label class="btn btn-success"><input type="radio" class="btn btn-success" value="#5cb85c"> </label>
+				  <label class="btn btn-info"><input type="radio" class="btn btn-info" value="#5bc0de"> </label>
+				  <label class="btn btn-warning"><input type="radio" class="btn btn-warning" value="#f0ad4e"> </label>
+				</div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<%= f.label :flashing, "Lampeggiante", :class => "control-label col-sm-3" %>
+			<div class="col-sm-9">
+				<p style="margin-top: 5px;"><%= f.check_box :flashing %></p>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-9 col-sm-offset-3">
+				<%= f.hidden_field :building_id, :value => cookies[:building] %>
+				<%= f.submit :class => "btn btn-lg btn-primary", :"ng-disabled" => "unpaidWarningForm.$invalid"%>
+			</div>
+		</div>
+	<% end %>
+</div>

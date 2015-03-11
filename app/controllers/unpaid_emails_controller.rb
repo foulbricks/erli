@@ -8,6 +8,9 @@ class UnpaidEmailsController < ApplicationController
   
   def new
     @email = UnpaidEmail.new
+    (1..5).each do 
+      @email.unpaid_email_attachments.build
+    end
   end
   
   def create
@@ -17,12 +20,20 @@ class UnpaidEmailsController < ApplicationController
       flash[:notice] = "Email non pagato salvato con successo"
       redirect_to unpaid_emails_path
     else
+      num = 5 - @email.unpaid_email_attachments.size
+      (1..num).each do 
+        @email.unpaid_email_attachments.build
+      end
       render "new"
     end
   end
   
   def edit
     @email = UnpaidEmail.find(params[:id])
+    num = 5 - @email.unpaid_email_attachments.size
+    (1..num).each do 
+      @email.unpaid_email_attachments.build
+    end
   end
   
   def update
@@ -32,6 +43,10 @@ class UnpaidEmailsController < ApplicationController
       flash[:notice] = "Email non pagato aggiornato con successo"
       redirect_to unpaid_emails_path
     else
+      num = 5 - @email.unpaid_email_attachments.size
+      (1..num).each do 
+        @email.unpaid_email_attachments.build
+      end
       render "edit"
     end
   end
@@ -47,6 +62,7 @@ class UnpaidEmailsController < ApplicationController
   private
   
   def unpaid_email_params
-    params.require(:unpaid_email).permit()
+    params.require(:unpaid_email).permit(:body, :days, :frequency, :building_id,
+                                         :unpaid_email_attachments => [:id, :document, :_destroy])
   end
 end

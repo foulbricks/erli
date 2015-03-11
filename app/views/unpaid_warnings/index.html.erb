@@ -1,0 +1,36 @@
+<div class="row">
+	<div class="col-sm-12">
+		<% if flash[:notice] %>
+			<div class="alert alert-success"><%= flash[:notice] %></div>
+		<% elsif flash[:alert] %>
+			<div class="alert alert-danger"><%= flash[:alert] %></div>
+		<% end %>
+		
+		<h3>Avvertenze non Pagati</h3>
+		<p class="text-right"><%= link_to "Creare Allarme non Pagato", new_unpaid_warning_path %></p>
+		<% if @warnings.length > 0 %>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Testo</th>
+						<th>Giorni</th>
+						<th colspan="2">Azioni</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @warnings.each do |warning| %>
+						<tr>
+							<td><%= truncate(warning.text, 50) %></td>
+							<td><%= warning.days %></td>
+							<td><%= link_to "Modificare", edit_unpaid_warning_path(warning.id) %></td>
+							<td><%= link_to "Cancellare", unpaid_warning_path(warning.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
+						</tr>
+					<% end %>
+					
+				</tbody>
+			</table>
+		<% else %>
+			<p>Attualmente non ci sono avvertenze non pagati disponibili</p>
+		<% end %>
+	</div>
+</div>
