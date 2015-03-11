@@ -11,7 +11,7 @@ class InvoiceCharge < ActiveRecord::Base
     elsif kind == "custom_expense"
       name
     else
-      asset_expense.expense.name
+      asset_expense.expense.try(:name) || ""
     end
   end
 end

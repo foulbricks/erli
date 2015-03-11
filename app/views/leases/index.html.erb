@@ -69,7 +69,9 @@
 													<p><strong>Data di registrazione:</strong> <%= lease.registration_date.strftime("%d-%m-%Y") %>
 												<% end %>
 												<% lease.asset_expenses.each do |e| %>
-													<p><strong><%= e.expense.name %>:</strong> <%= number_to_currency(e.amount) %></p>
+													<% if e.expense %>
+														<p><strong><%= e.expense.name %>:</strong> <%= number_to_currency(e.amount) %></p>
+													<% end %>
 												<% end %>
 											</div>
 											<div class="col-sm-4">

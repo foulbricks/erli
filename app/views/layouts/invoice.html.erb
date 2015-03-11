@@ -95,8 +95,8 @@
 						
 						<% expenses_with_iva_total = expenses_with_iva.map(&:amount).sum %>
 						<% expenses_without_iva_total = expenses_without_iva.map(&:amount).sum %>
-						<% expenses_with_iva_names = expenses_with_iva.map {|i| i.asset_expense.expense.name }.join(", ") %>
-						<% expenses_without_iva_names = expenses_without_iva.map {|i| i.asset_expense.expense.name.upcase }.join(", ") %>
+						<% expenses_with_iva_names = expenses_with_iva.map {|i| i.asset_expense.expense.try(:name) }.join(", ") %>
+						<% expenses_without_iva_names = expenses_without_iva.map {|i| i.asset_expense.expense.try(:name).try(:upcase) }.join(", ") %>
 						
 						<% if expenses_with_iva_total > 0 %>
 							<div class="row">
@@ -114,7 +114,7 @@
 						
 						<% apartment_expenses = invoice.invoice_charges.select {|i| i.kind == "apartment_expense" } %>
 						<% unique = {} %>
-						<% apartment_expenses.each {|a| unique[a.asset_expense.expense.name] ||= []; unique[a.asset_expense.expense.name] << a;}%>
+						<% apartment_expenses.each {|a| unique[a.asset_expense.expense.try(:name)] ||= []; unique[a.asset_expense.expense.try(:name)] << a;}%>
 						<% apartment_expenses_total = apartment_expenses.map(&:amount).sum %>
 						
 						<% unique.each do |k, v| %>

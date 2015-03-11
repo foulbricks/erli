@@ -1,7 +1,7 @@
 <div class="popover">
 	<div class="arrow"></div>
 	<div class="popover-title">
-		<h5>Spesa <%= @expense.expense.name %> per appartamento <%= @apartment.name %></h5>
+		<h5>Spesa <%= @expense.expense.try(:name) %> per appartamento <%= @apartment.name %></h5>
 	</div>
 	<div class="popover-content">
 		<% if @expenses.size > 0 %>

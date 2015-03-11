@@ -100,12 +100,12 @@
 	<%= f.fields_for :asset_expenses do |ae| %>
 		<div class="form-group" ng-class="{'has-error':leaseForm['lease[asset_expenses_attributes][<%= ae.index %>][amount]'].$dirty && leaseForm['lease[asset_expenses_attributes][<%= ae.index %>][amount]'].$invalid }" 
 			ng-init="amount<%= ae.index.to_s %>='<%= number_with_delimiter(ae.object.amount) %>'">
-			<%= ae.label :amount, ae.object.expense.name, :class => "col-sm-3 control-label" %>
+			<%= ae.label :amount, ae.object.expense.try(:name), :class => "col-sm-3 control-label" %>
 			<div class="col-sm-9">
 				<%= ae.text_field :amount, :class => "form-control", :placeholder => "Quantita", :"ng-model" => "amount" +  ae.index.to_s, :"ng-required" => true %>
-				<span class="error-message" ng-show="leaseForm['lease[asset_expenses_attributes][<%= ae.index %>][amount]'].$dirty && leaseForm['lease[asset_expenses_attributes][<%= ae.index %>][amount]'].$invalid"><%= ae.object.expense.name %> è richiesto.</span>
+				<span class="error-message" ng-show="leaseForm['lease[asset_expenses_attributes][<%= ae.index %>][amount]'].$dirty && leaseForm['lease[asset_expenses_attributes][<%= ae.index %>][amount]'].$invalid"><%= ae.object.expense.try(:name) %> è richiesto.</span>
 			</div>
-			<%= ae.hidden_field :expense_id, :value => ae.object.expense.id %>
+			<%= ae.hidden_field :expense_id, :value => ae.object.expense.try(:id) %>
 		</div>
 	<% end %>
 	

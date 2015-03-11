@@ -91,26 +91,29 @@ class Invoice < ActiveRecord::Base
     lease.asset_expenses.each do |lexpense|
       charge_start = invoice.start_date
       charge_end = invoice.end_date
-      balance_date = lexpense.expense.balance_date.value
-      if same_month?(balance_date, invoice_date.prev_month) || (same_month?(balance_date, invoice_date) && balance_date <= invoice_date)
-        aexpenses = lease.apartment.asset_expenses.where("balance_date IS NOT NULL AND expense_id = ? AND " +
-         "start_date <= ?::date AND end_date >= ?::date", lexpense.expense.id, lease.end_date, lease.start_date).all
-        if aexpenses.size > 0
-          expense_calc = expense_total_charge(aexpenses, lease)
-          amount = lease.end_date > invoice_date ? lexpense.amount : 0
-          total =  expense_calc + amount - total_expense_charges(lease, lexpense)
-          invoice.invoice_charges.build(:kind => "building_expense", :lease_id => lease.id,
-            :iva_exempt => lexpense.expense.iva_exempt, :amount => total, :start_date => charge_start,
-            :end_date => charge_end, :asset_expense_id => lexpense.id)
+      
+      if lexpense.expense
+        balance_date = lexpense.expense.balance_date.value
+        if same_month?(balance_date, invoice_date.prev_month) || (same_month?(balance_date, invoice_date) && balance_date <= invoice_date)
+          aexpenses = lease.apartment.asset_expenses.where("balance_date IS NOT NULL AND expense_id = ? AND " +
+           "start_date <= ?::date AND end_date >= ?::date", lexpense.expense.id, lease.end_date, lease.start_date).all
+          if aexpenses.size > 0
+            expense_calc = expense_total_charge(aexpenses, lease)
+            amount = lease.end_date > invoice_date ? lexpense.amount : 0
+            total =  expense_calc + amount - total_expense_charges(lease, lexpense)
+            invoice.invoice_charges.build(:kind => "building_expense", :lease_id => lease.id,
+              :iva_exempt => lexpense.expense.iva_exempt, :amount => total, :start_date => charge_start,
+              :end_date => charge_end, :asset_expense_id => lexpense.id)
+          else
+            invoice.invoice_charges.build(:kind => "building_expense", :lease_id => lease.id, 
+              :iva_exempt => lexpense.expense.iva_exempt, :amount => lexpense.amount, :start_date => charge_start,
+              :end_date => charge_end, :asset_expense_id => lexpense.id)
+          end
         else
           invoice.invoice_charges.build(:kind => "building_expense", :lease_id => lease.id, 
             :iva_exempt => lexpense.expense.iva_exempt, :amount => lexpense.amount, :start_date => charge_start,
             :end_date => charge_end, :asset_expense_id => lexpense.id)
         end
-      else
-        invoice.invoice_charges.build(:kind => "building_expense", :lease_id => lease.id, 
-          :iva_exempt => lexpense.expense.iva_exempt, :amount => lexpense.amount, :start_date => charge_start,
-          :end_date => charge_end, :asset_expense_id => lexpense.id)
       end
     end
   end
