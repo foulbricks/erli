@@ -8,7 +8,7 @@ class UserMailer < ActionMailer::Base
     if Rails.env.development?
       @domain = "http://localhost:3000"
     else
-      @domain = ""
+      @domain = "http://erli-env-ptdjt3gwkb.elasticbeanstalk.com"
     end  
     
     mail(
@@ -36,7 +36,7 @@ class UserMailer < ActionMailer::Base
     if Rails.env.development?
       @domain = "http://localhost:3000"
     else
-      @domain = ""
+      @domain = "http://erli-env-ptdjt3gwkb.elasticbeanstalk.com"
     end  
     
     mail(
