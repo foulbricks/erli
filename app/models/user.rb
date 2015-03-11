@@ -61,12 +61,14 @@ class User < ActiveRecord::Base
     self.activation_code = make_token
     self.activation_code_set_at = Time.now
     save && UserMailer.welcome(self).deliver
+  rescue
   end
   
   def forgot_password!
     make_pw_reset_code!
     save(:validate => false)
     UserMailer.forgot_password(self).deliver
+  rescue
   end
   
   def reset_pw!(pw)
