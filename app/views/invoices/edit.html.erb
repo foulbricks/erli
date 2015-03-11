@@ -39,7 +39,7 @@
 						<%= i.text_field :amount, :class => "form-control", :placeholder => "Quantita", :"ng-model" => "amount" +  i.index.to_s, :"ng-required" => true %>
 						<span class="error-message" ng-show="invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][amount]'].$dirty && invoiceForm['invoice[invoice_charges_attributes][<%= i.index %>][amount]'].$invalid"><%= i.object.generated_name %> è richiesto.</span>
 					</div>
-					<% if i.object.kind =~ /building_expense|custom_expense/ && !@invoice.lease.contract.iva_exempt %>
+					<% if i.object.kind =~ /building_expense|custom_expense/ && !@invoice.lease.contract.try(:iva_exempt) %>
 					<%= i.label :iva_exempt, "Essente IVA?", :class => "control-label col-sm-3" %>
 					<div class="col-sm-1">
 						<p style="margin-top: 5px;"><%= i.check_box :iva_exempt %></p>

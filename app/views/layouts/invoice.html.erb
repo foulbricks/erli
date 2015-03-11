@@ -178,7 +178,7 @@
 							<p class="col-xs-2 text-right amount"><%= number_to_currency(total_iva) %></p>
 						</div>
 						<div class="row">
-							<% if lease.contract.iva_exempt? %>
+							<% if lease.contract.try(:iva_exempt?) %>
 								<% iva = 0 %>
 								<p class="col-xs-9 text-right">IVA Fattura:</p>
 								<p class="col-xs-2 text-right amount">0,00</p>

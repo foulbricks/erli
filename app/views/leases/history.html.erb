@@ -57,7 +57,7 @@
 									</div>
 									<div class="col-sm-4">
 										<p><strong>Percentuale:</strong> <%= number_to_percentage(lease.percentage) %></p>
-										<p><strong>Tipo di contratto:</strong> <%= lease.contract.name %></p>
+										<p><strong>Tipo di contratto:</strong> <%= lease.contract.try(:name) %></p>
 										<p><strong>Indirizzo di fatturazione:</strong><br /> <%= lease.address %></p>
 										<p><strong>Frequenza di pagamento:</strong> <%= lease.payment_frequency %> Mese</p>
 									</div>

@@ -82,7 +82,7 @@ class Invoice < ActiveRecord::Base
     total_iva = with_iva.map(&:amount).sum
     total_without_iva = without_iva.map(&:amount).sum
     setup = Setup.where(:building_id => lease.apartment.building.id).first || Setup.new
-    iva = lease.contract.iva_exempt? || !setup.iva ? 0 : (total_iva * setup.iva/100.0)
+    iva = lease.contract.try(:iva_exempt?) || !setup.iva ? 0 : (total_iva * setup.iva/100.0)
     bollo_total = bollo ? bollo.price : 0
     total_iva + total_without_iva + iva + bollo_total
   end
@@ -165,7 +165,7 @@ class Invoice < ActiveRecord::Base
     period = charge_period(lease, charge_date)
     istat_date = lease.start_date + 12.months
     
-    if lease.lease_months > 12 && lease.contract.istat > 0
+    if lease.lease_months > 12 && lease.contract && lease.contract.istat > 0
       setup_istat = Setup.first.try(:istat) || 0
       contract_ratio = lease.contract.istat/100.0
       setup_ratio = setup_istat > 0 ? setup_istat/100.0 : 1
@@ -285,7 +285,7 @@ class Invoice < ActiveRecord::Base
   end
   
   def self.get_available_bollo(invoice)
-    if invoice.lease.contract.iva_exempt?
+    if invoice.lease.contract && invoice.lease.contract.iva_exempt?
       Bollo.where("invoice_id IS NULL").order("identifier ASC").first
     end
   end

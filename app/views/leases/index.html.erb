@@ -52,7 +52,7 @@
 												<p><strong>Data di Inizio:</strong> <%= lease.start_date.strftime("%d-%m-%Y") %></p>
 												<p><strong>Data di Fine:</strong> <%= lease.end_date.strftime("%d-%m-%Y") %></p>
 												<p><strong>Percentuale:</strong> <%= number_to_percentage(lease.percentage) %></p>
-												<p><strong>Tipo di contratto:</strong> <%= lease.contract.name %></p>
+												<p><strong>Tipo di contratto:</strong> <%= lease.contract.try(:name) %></p>
 												<p><strong>Indirizzo di fatturazione:</strong><br /> <%= lease.address %></p>
 											</div>
 											<div class="col-sm-4">
