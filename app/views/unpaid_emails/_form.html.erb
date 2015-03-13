@@ -1,0 +1,77 @@
+<div style="background: #fff;box-sizing:border-box;padding:20px;">
+	<% if @email.errors.any? %>
+		<div class="alert alert-danger">
+			<strong>La forma non e valida.</strong><br />
+			<ul>
+				<% for message in @email.errors.full_messages %>
+					<li><%= message %></li>
+				<% end %>
+			</ul>
+		</div>
+	<% end %>
+
+	<%= form_for @email, html: {:novalidate => "novalidate", name: "unpaidEmailForm", class: "form-horizontal", :multipart => true } do |f| %>
+		<div class="form-group" ng-class="{'has-error':unpaidEmailForm['unpaid_email[body]'].$dirty && unpaidEmailForm['unpaid_email[body]'].$invalid }">
+			<%= f.label :body, "Testo", :class => "control-label col-sm-3" %>
+			<div class="col-sm-9">
+				<%= f.text_area :body, :class => "form-control", :placeholder => "Testo", :"ng-model" => "body", :"ng-required" => true, :rows => 12 %>
+				<span class="error-message" ng-show="unpaidEmailForm['unpaid_email[body]'].$dirty && unpaidEmailForm['unpaid_email[body]'].$invalid">Corpo è richiesto.</span>
+			</div>
+		</div>
+
+		<div class="form-group" ng-class="{'has-error':unpaidEmailForm['unpaid_email[days]'].$dirty && unpaidEmailForm['unpaid_email[days]'].$invalid }" ng-init="days='<%= @email.days %>'">
+			<%= f.label :days, "Dopo Numero di Giorni", :class => "control-label col-sm-3" %>
+			<div class="col-sm-9">
+				<%= f.text_field :days, :class => "form-control", :placeholder => "Dopo Numero di Giorni", :"ng-model" => "days", :"ng-required" => true %>
+				<span class="error-message" ng-show="unpaidEmailForm['unpaid_email[days]'].$dirty && unpaidEmailForm['unpaid_email[days]'].$invalid">Dopo Numero di Giorni è richiesto.</span>
+			</div>
+		</div>
+	
+		<div class="form-group" ng-class="{'has-error':unpaidEmailForm['unpaid_email[frequency]'].$dirty && unpaidEmailForm['unpaid_email[frequency]'].$invalid }" ng-init="days='<%= @email.days %>'">
+			<%= f.label :frequency, "Frequenza (Giorni)", :class => "control-label col-sm-3" %>
+			<div class="col-sm-9">
+				<%= f.text_field :days, :class => "form-control", :placeholder => "Frequenza", :"ng-model" => "frequency", :"ng-required" => true %>
+				<span class="error-message" ng-show="unpaidEmailForm['unpaid_email[frequency]'].$dirty && unpaidEmailForm['unpaid_email[frequency]'].$invalid">Frequenza è richiesta.</span>
+			</div>
+		</div>
+	
+		<span ng-init="documentCount = <%= @email.unpaid_email_attachments.select {|at| at.document.present? }.size + 1 %>"></span>
+		<hr />
+		<%= f.fields_for :unpaid_email_attachments do |attachment| %>
+			<div ng-if="documentCount > <%= attachment.index %>">
+				<% if attachment.object.document.present? %>
+					<div class="form-group">
+						<div class="col-xs-4 col-sm-3 col-sm-offset-3" style="margin-bottom:5px;">
+							<p><strong><%= attachment.object.document.file.filename %></strong></p>
+						</div>
+						<%= attachment.label :_destroy, "Rimuovi documento?", :class => "control-label col-xs-6 col-sm-3" %>
+						<div class="col-sm-3 col-xs-4">
+							<p style="margin-top: 5px;"><%= attachment.check_box :_destroy %></p>
+						</div>
+					</div>
+				<% end %>
+				<div class="form-group">
+
+					<%= attachment.label :document, "Documento", :class => "col-sm-3 control-label" %>
+					<div class="col-sm-9">
+						<%= attachment.file_field :document %>
+					</div>
+				</div>
+				<hr />
+			</div>
+		<% end %>
+	
+		<div class="form-group" ng-if="documentCount < 5">
+			<div class="col-sm-9 col-sm-offset-3">
+				<p><%= link_to "Aggiungere documento", "#", :"ng-click" => "incrementDocumentCount($event)" %></p>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-9 col-sm-offset-3">
+				<%= f.hidden_field :building_id, :value => cookies[:building] %>
+				<%= f.submit :class => "btn btn-lg btn-primary", :"ng-disabled" => "unpaidEmailForm.$invalid"%>
+			</div>
+		</div>
+	<% end %>
+</div>

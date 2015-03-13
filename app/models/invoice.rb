@@ -4,8 +4,10 @@ class Invoice < ActiveRecord::Base
   mount_uploader :document, DocumentUploader
   has_many :invoice_charges, :dependent => :destroy
   has_many :asset_expenses
+  has_many :mavs, :dependent => :destroy
   has_one :bollo
   belongs_to :lease
+  belongs_to :mav_csv
   
   validates_presence_of :lease_id
   
@@ -25,27 +27,41 @@ class Invoice < ActiveRecord::Base
     approved #or Date.today >= (start_date + 1.month)
   end
   
+  def create_mavs
+    lease.users(:secondary => false).each do |user|
+      unless mavs.where("user_id = ?", user.id).first
+        m = Mav.new
+        m.user_id = user.id
+        m.building_id = building_id
+        m.invoice_id = id
+        m.save
+      end
+    end
+  end
+  
   def self.generate(building_id, invoice_date=Date.today)
+    csv = MavCsv.create!(:building_id => building_id)
     registered_leases(building_id, invoice_date).each do |lease|
-        invoice = self.new(:building_id => building_id, :number => get_invoice_number(lease, invoice_date),
-                           :lease_id => lease.id, :start_date => invoice_date.at_beginning_of_month,
-                           :end_date => invoice_date.end_of_month)
-        
-        charge_rent(lease, invoice, invoice_date)
-        charge_building_expenses(lease, invoice, invoice_date)
-        charge_apartment_expenses(lease, invoice, invoice_date)
-        invoice.temporary_bollo = get_available_bollo(invoice)
-        
-        temp = Invoice.tempfile(Invoice.render_pdf(invoice.lease, invoice, invoice_date))
-        invoice.document = File.open temp.path
-        temp.unlink
-        
-        if invoice.save
-          invoice.temporary_bollo.update_column(:invoice_id, invoice.id) if invoice.temporary_bollo
-          invoice.invoice_charges.where(:kind => "apartment_expense").all.each do |i|
-            i.asset_expense.update_column(:invoice_id, invoice.id)
-          end
+      invoice = self.new(:building_id => building_id, :number => get_invoice_number(lease, invoice_date),
+                         :lease_id => lease.id, :start_date => invoice_date.at_beginning_of_month,
+                         :end_date => invoice_date.end_of_month, :mav_csv_id => csv.id)
+      
+      charge_rent(lease, invoice, invoice_date)
+      charge_building_expenses(lease, invoice, invoice_date)
+      charge_apartment_expenses(lease, invoice, invoice_date)
+      invoice.temporary_bollo = get_available_bollo(invoice)
+      
+      temp = Invoice.tempfile(Invoice.render_pdf(invoice.lease, invoice, invoice_date))
+      invoice.document = File.open temp.path
+      temp.unlink
+      
+      if invoice.save
+        invoice.temporary_bollo.update_column(:invoice_id, invoice.id) if invoice.temporary_bollo
+        invoice.invoice_charges.where(:kind => "apartment_expense").all.each do |i|
+          i.asset_expense.update_column(:invoice_id, invoice.id)
         end
+        invoice.create_mavs
+      end
     end
   end
   

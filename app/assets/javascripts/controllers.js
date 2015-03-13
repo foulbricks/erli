@@ -187,6 +187,32 @@ controller("adFormController", [
 	}
 ]).
 
+controller("unpaidEmailFormController", [
+	"$scope",
+	function($scope){
+		$scope.body = angular.element("#unpaid_email_body").val();
+		
+		$scope.incrementDocumentCount = function($event){
+			$event.preventDefault();
+			$scope.documentCount = $scope.documentCount + 1;
+		}
+	}
+]).
+
+controller("unpaidAlarmFormController", [
+	"$scope",
+	function($scope){
+		$scope.body = angular.element("#unpaid_alarm_body").val();
+	}
+]).
+
+controller("unpaidWarningFormController", [
+	"$scope",
+	function($scope){
+		$scope.text = angular.element("#unpaid_warning_text").val();
+	}
+]).
+
 controller("eventFormController", [
 	"$scope", "$http", "$rootScope", "$templateCache",
 	function($scope, $http, $rootScope, $templateCache){
