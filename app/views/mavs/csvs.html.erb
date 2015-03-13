@@ -1,0 +1,32 @@
+<div class="row">
+	<div class="col-sm-12">
+		<% if flash[:notice] %>
+			<div class="alert alert-success"><%= flash[:notice] %></div>
+		<% elsif flash[:alert] %>
+			<div class="alert alert-danger"><%= flash[:alert] %></div>
+		<% end %>
+		
+		<h3>CSVs Per Mavs</h3>
+		<% if @files.length > 0 %>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Generato</th>
+						<th>Azioni</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @files.each do |file| %>
+						<tr>
+							<td><%= file.created_at.strftime("%d-%m-%Y") %></td>
+							<td><%= link_to "Scaricare", generate_csv_mav_path(file.id) %></td>
+						</tr>
+					<% end %>
+					
+				</tbody>
+			</table>
+		<% else %>
+			<p>Attualmente non ci sono csvs per mav disponibili</p>
+		<% end %>
+	</div>
+</div>

@@ -21,7 +21,7 @@
 				<tbody>
 					<% @emails.each do |email| %>
 						<tr>
-							<td><%= truncate(email.body, 50) %></td>
+							<td><%= truncate(email.body, :length => 50) %></td>
 							<td><%= email.days %></td>
 							<td><%= email.frequency %></td>
 							<td><%= link_to "Modificare", edit_unpaid_email_path(email.id) %></td>

@@ -29,7 +29,7 @@ class Invoice < ActiveRecord::Base
   
   def create_mavs
     lease.users(:secondary => false).each do |user|
-      unless mavs.where("user_id = ?", user.id).first
+      if !user.secondary? && !mavs.where("user_id = ?", user.id).first
         m = Mav.new
         m.user_id = user.id
         m.building_id = building_id
@@ -40,7 +40,7 @@ class Invoice < ActiveRecord::Base
   end
   
   def self.generate(building_id, invoice_date=Date.today)
-    csv = MavCsv.create!(:building_id => building_id)
+    csv = MavCsv.create!(:building_id => building_id, :created_at => invoice_date)
     registered_leases(building_id, invoice_date).each do |lease|
       invoice = self.new(:building_id => building_id, :number => get_invoice_number(lease, invoice_date),
                          :lease_id => lease.id, :start_date => invoice_date.at_beginning_of_month,
@@ -71,8 +71,8 @@ class Invoice < ActiveRecord::Base
   
   def self.registered_leases(building_id, invoice_date=Date.today)
     apartment_ids = Apartment.where(:building_id => building_id).all.map(&:id)
-    Lease.where("active = ? AND apartment_id IN (?) AND registration_date IS NOT NULL AND end_date >= ?",
-                true, apartment_ids, invoice_date).all
+    Lease.where("active = ? AND apartment_id IN (?) AND registration_date IS NOT NULL",
+                true, apartment_ids).all
   end
   
   def self.charge_rent(lease, invoice, invoice_date=Date.today)

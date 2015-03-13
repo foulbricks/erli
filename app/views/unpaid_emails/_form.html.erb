@@ -27,10 +27,10 @@
 			</div>
 		</div>
 	
-		<div class="form-group" ng-class="{'has-error':unpaidEmailForm['unpaid_email[frequency]'].$dirty && unpaidEmailForm['unpaid_email[frequency]'].$invalid }" ng-init="days='<%= @email.days %>'">
+		<div class="form-group" ng-class="{'has-error':unpaidEmailForm['unpaid_email[frequency]'].$dirty && unpaidEmailForm['unpaid_email[frequency]'].$invalid }" ng-init="frequency='<%= @email.frequency%>'">
 			<%= f.label :frequency, "Frequenza (Giorni)", :class => "control-label col-sm-3" %>
 			<div class="col-sm-9">
-				<%= f.text_field :days, :class => "form-control", :placeholder => "Frequenza", :"ng-model" => "frequency", :"ng-required" => true %>
+				<%= f.text_field :frequency, :class => "form-control", :placeholder => "Frequenza", :"ng-model" => "frequency", :"ng-required" => true %>
 				<span class="error-message" ng-show="unpaidEmailForm['unpaid_email[frequency]'].$dirty && unpaidEmailForm['unpaid_email[frequency]'].$invalid">Frequenza è richiesta.</span>
 			</div>
 		</div>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150308013417) do
+ActiveRecord::Schema.define(version: 20150312203114) do
 
   create_table "ad_attachments", force: true do |t|
     t.integer  "ad_id"
@@ -214,6 +214,7 @@ ActiveRecord::Schema.define(version: 20150308013417) do
     t.date     "end_date"
     t.decimal  "total",       precision: 15, scale: 2, default: 0.0
     t.boolean  "approved"
+    t.integer  "mav_csv_id"
   end
 
   create_table "lease_attachments", force: true do |t|
@@ -247,6 +248,23 @@ ActiveRecord::Schema.define(version: 20150308013417) do
     t.string   "home_number"
   end
 
+  create_table "mav_csvs", force: true do |t|
+    t.integer  "building_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "mavs", force: true do |t|
+    t.integer  "building_id"
+    t.integer  "user_id"
+    t.integer  "invoice_id"
+    t.string   "document"
+    t.date     "last_paid_on"
+    t.decimal  "amount_paid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "repartition_tables", force: true do |t|
     t.integer  "building_id"
     t.string   "name"
@@ -265,6 +283,40 @@ ActiveRecord::Schema.define(version: 20150308013417) do
     t.string   "erli_mav_email"
     t.boolean  "erli_mav_email_active"
     t.string   "erli_admin_email"
+    t.integer  "building_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "unpaid_alarms", force: true do |t|
+    t.text     "body"
+    t.integer  "days",        default: 0
+    t.integer  "building_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "unpaid_email_attachments", force: true do |t|
+    t.integer  "unpaid_email_id"
+    t.string   "document"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "unpaid_emails", force: true do |t|
+    t.text     "body"
+    t.integer  "days",        default: 0
+    t.integer  "frequency",   default: 0
+    t.integer  "building_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "unpaid_warnings", force: true do |t|
+    t.text     "text"
+    t.integer  "days",        default: 0
+    t.string   "background"
+    t.boolean  "flashing",    default: false
     t.integer  "building_id"
     t.datetime "created_at"
     t.datetime "updated_at"

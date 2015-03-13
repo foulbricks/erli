@@ -20,7 +20,7 @@
 				<tbody>
 					<% @alarms.each do |alarm| %>
 						<tr>
-							<td><%= truncate(alarm.body, 50) %></td>
+							<td><%= truncate(alarm.body,:length => 50) %></td>
 							<td><%= alarm.days %></td>
 							<td><%= link_to "Modificare", edit_unpaid_alarm_path(alarm.id) %></td>
 							<td><%= link_to "Cancellare", unpaid_alarm_path(alarm.id), :"data-confirm" => "Sei securo?", method: :delete %></td>

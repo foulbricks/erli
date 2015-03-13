@@ -46,7 +46,7 @@ class UnpaidWarningsController < ApplicationController
   
   private
   
-  def unpaid_alarm_params
-    params.require(:unpaid_alarm).permit(:text, :days, :background, :flashing, :building_id)
+  def unpaid_warning_params
+    params.require(:unpaid_warning).permit(:text, :days, :background, :flashing, :building_id)
   end
 end

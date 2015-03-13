@@ -12,6 +12,9 @@ it:
       user: "Utente"
       invoice: "Fattura"
       ad: "Annuncio"
+      unpaid_email: "Email non Pagato"
+      unpaid_alarm: "Allarme non Pagato"
+      unpaid_warning: "Avvertimento non Pagato"
     attributes:
       building:
         name: "Nome"
@@ -73,6 +76,13 @@ it:
         amount: "Prezzo"
         description: "Descrizione"
         contact: "Contatto"
+      unpaid_email:
+        days: "Dopo numero di giorni"
+        frequency: "Frequenza"
+      unpaid_alarm:
+        days: "Dopo numero di giorni"
+      unpaid_warning:
+        days: "Dopo numero di giorni"
   date:
     abbr_day_names:
     - dom

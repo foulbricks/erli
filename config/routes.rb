@@ -103,6 +103,15 @@ Rails.application.routes.draw do
   resources :unpaid_alarms
   resources :unpaid_warnings
   
+  resources :mavs do
+    collection do
+      get "csvs"
+    end
+    member do
+      get "generate_csv"
+    end
+  end
+  
   resources :setup, path_names: {edit: "setup"}, only: [:edit, :update]
                        
   root "home#index"

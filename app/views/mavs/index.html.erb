@@ -1,0 +1,40 @@
+<div class="row">
+	<div class="col-sm-12">
+		<% if flash[:notice] %>
+			<div class="alert alert-success"><%= flash[:notice] %></div>
+		<% elsif flash[:alert] %>
+			<div class="alert alert-danger"><%= flash[:alert] %></div>
+		<% end %>
+		
+		<h3>MAVs</h3>
+		<% if @mavs.length > 0 %>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Nome</th>
+						<th>Numero di Fattura</th>
+						<th>Totale</th>
+						<th colspan="2">Azioni</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @mavs.each do |mav| %>
+						<tr>
+							<td><%= mav.user.name %></td>
+							<td><%= mav.invoice.number %></td>
+							<td><%= number_to_currency(mav.amount) %></td>
+							<td><%= link_to "Caricare MAV", "#" %>
+							<td><% if mav.document.present? %>
+								<%= link_to "Scaricare MAV", "#" %>
+								<% end %>
+							</td>
+						</tr>
+					<% end %>
+					
+				</tbody>
+			</table>
+		<% else %>
+			<p>Attualmente non ci sono csvs per mav disponibili</p>
+		<% end %>
+	</div>
+</div>

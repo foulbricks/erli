@@ -63,6 +63,6 @@ class UnpaidEmailsController < ApplicationController
   
   def unpaid_email_params
     params.require(:unpaid_email).permit(:body, :days, :frequency, :building_id,
-                                         :unpaid_email_attachments => [:id, :document, :_destroy])
+                                         :unpaid_email_attachments_attributes => [:id, :document, :_destroy])
   end
 end

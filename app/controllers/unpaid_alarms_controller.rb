@@ -26,7 +26,7 @@ class UnpaidAlarmsController < ApplicationController
   end
   
   def update
-    @alarm = UnpaidEmail.find(params[:id])
+    @alarm = UnpaidAlarm.find(params[:id])
     
     if @alarm.update(unpaid_alarm_params)
       flash[:notice] = "Allarme non pagato aggiornato con successo"
