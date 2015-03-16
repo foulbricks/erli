@@ -1,0 +1,51 @@
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+		<div class="modal-content" ng-controller="mavUploadFormController" ng-init="bindHideModalFunction($hide)" id="mav-upload">
+			<div class="modal-header">
+				<h4>MAV per <%= @user.name %></h4>
+			</div>
+
+			<div class="modal-body">
+				<%= form_for @mav, html: {:novalidate => "novalidate", name: "attachmentForm", class: "form-horizontal", :multipart => true, :target => "iframe" } do |f| %>
+
+					<div class="form-group">
+						<%= f.label :document, "Documente", :class => "col-sm-3 control-label" %>	
+						<div class="col-sm-9">
+							<p><%= f.file_field :document, :placeholder => "Documente" %></p>
+						</div>
+					</div>
+	
+					<div class="form-group">
+						<div class="col-sm-9 col-sm-offset-3">
+							<%= f.submit "Salva", :class => "btn btn-primary" %>
+							<button type="button" class="btn btn-default" ng-click="$hide()" id="chiudere">Chiudere</button>
+						</div>
+					</div>
+				<% end %>
+			</div>
+			<div class="modal-footer">
+				<iframe name="iframe" id="iframe" style="display:none" ></iframe>
+				<script type="text/javascript">
+				$("#iframe").on("load", function(e){
+					var iframeContent = $(this).contents().find("body").text();
+					if(iframeContent && !(/success/.test(iframeContent))){
+						var errs = JSON.parse(iframeContent);
+						var errorsList = $(".leaseFormErrors").html("");
+						errs.forEach(function(err){
+							errorsList.append("<li>" + err + "</li>");
+						});
+					}
+					else if (iframeContent && /success/.test(iframeContent)){
+						var success = iframeContent.replace(/^success\=/, "");
+						var data = JSON.parse(success);
+						$(".download-link-" + data[0]).html("<a href='" + data[1] + "' >Scaricare</a>");
+						$("#chiudere").click();
+					}
+				});
+				</script>
+				<ul class="danger leaseFormErrors">
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

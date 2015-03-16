@@ -3,15 +3,28 @@ class MavsController < ApplicationController
   
   def index
     @mavs = Mav.where("building_id = ?", cookies[:building]).order("created_at DESC").all
+    @users = User.where("secondary = false AND admin = false AND building_id = ?", cookies[:building]).all
+    @invoices = Invoice.where("building_id = ?", cookies[:building]).all
+    @apartments = Apartment.where("building_id = ?", cookies[:building]).all
+  end
+  
+  def edit
+    @mav = Mav.find(params[:id])
+    @user = @mav.user
+    render :template => "mavs/mav_upload", :layout => false
   end
   
   def update
     @mav = Mav.find(params[:id])
     
-    if @mav.update(mav_params)
-      format.js { render :json => { :success => download_mav_path(@mav.id) } }
-    else
-      format.js { render :json => { :error => @mav.errors.full_messages.join(", ") }}
+    respond_to do |format|
+      if @mav.update(mav_params)
+        format.js { render :json => { :success => download_mav_path(@mav.id) } }
+        format.html { render :text => "success=" + [@mav.id, download_mav_path(@mav.id)].to_s }
+      else
+        format.js { render :json => { :error => @mav.errors.full_messages.join(", ") }}
+        format.html { render :text => @mav.errors.full_messages }
+      end
     end
   end
   

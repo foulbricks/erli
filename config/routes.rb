@@ -109,6 +109,7 @@ Rails.application.routes.draw do
     end
     member do
       get "generate_csv"
+      get "download"
     end
   end
   

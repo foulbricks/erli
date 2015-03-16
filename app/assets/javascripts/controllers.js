@@ -213,6 +213,25 @@ controller("unpaidWarningFormController", [
 	}
 ]).
 
+controller("mavTableController", [
+	"$scope", "$modal",
+	function($scope, $modal){
+		$scope.openModal = function(event, url){
+			event.preventDefault();
+			$modal({
+				scope: $scope,
+				template: url
+			});
+		}
+	}
+]).
+
+controller("mavUploadFormController", [
+	"$scope",
+	function($scope){
+	}
+]).
+
 controller("eventFormController", [
 	"$scope", "$http", "$rootScope", "$templateCache",
 	function($scope, $http, $rootScope, $templateCache){
@@ -306,7 +325,6 @@ controller("CalendarController", [
 		
 		$rootScope.reloadCalendar = function(date){
 			var d = date || new Date($scope.calendarDay);
-			console.log(d)
 			$scope.calendarDay = d;
 		}
 		
