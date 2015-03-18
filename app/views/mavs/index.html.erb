@@ -8,15 +8,23 @@
 		
 		<h3>MAVs</h3>
 		<div class="row">
-			<div class="form-group col-xs-4">
-				
-			</div>
-			<div class="form-group col-xs-4">
-				
-			</div>
-			<div class="form-group col-xs-4">
-				
-			</div>
+			<%= form_tag "/mavs", :method => :post do %>
+				<div class="form-group col-sm-3">
+					<label for="apartment" class="control-label">Apartamento</label>
+					<%= select_tag "apartment", options_from_collection_for_select(@apartments, "id", "name"), { :prompt => "Seleziona", :class => "form-control" } %>
+				</div>
+				<div class="form-group col-sm-3">
+					<label for="user" class="control-label">Utente</label>
+					<%= select_tag "user", options_from_collection_for_select(@users, "id", "name"), { :prompt => "Seleziona", :class => "form-control" } %>
+				</div>
+				<div class="form-group col-sm-3">
+					<label for="invoice" class="control-label">Fattura</label>
+					<%= select_tag "invoice", options_from_collection_for_select(@invoices, "id", "number"), { :prompt => "Seleziona", :class => "form-control" } %>
+				</div>
+				<div class="form-group col-sm-3" style="margin-top:20px;">
+					<%= submit_tag "Filtrare", :class => "btn btn-primary" %>
+				</div>
+			<% end %>
 		</div>
 		
 		
@@ -53,7 +61,7 @@
 				</tbody>
 			</table>
 		<% else %>
-			<p>Attualmente non ci sono csvs per mav disponibili</p>
+			<p>Non ci sono mav disponibili</p>
 		<% end %>
 	</div>
 </div>

@@ -103,7 +103,7 @@ Rails.application.routes.draw do
   resources :unpaid_alarms
   resources :unpaid_warnings
   
-  resources :mavs do
+  resources :mavs, :except => [:create] do
     collection do
       get "csvs"
     end
@@ -117,6 +117,7 @@ Rails.application.routes.draw do
                        
   root "home#index"
   get "apartment_expenses" => "apartment_expenses#index", as: :apartment_expenses
+  post "/mavs" => "mavs#index"
   
   get "users/reset-password/:pw_code" => "users#reset_password"
   post "users/reset-password/:pw_code" => "users#reset_password"

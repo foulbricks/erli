@@ -2,10 +2,16 @@ class MavsController < ApplicationController
   before_filter :check_admin, :check_building_cookie
   
   def index
-    @mavs = Mav.where("building_id = ?", cookies[:building]).order("created_at DESC").all
-    @users = User.where("secondary = false AND admin = false AND building_id = ?", cookies[:building]).all
-    @invoices = Invoice.where("building_id = ?", cookies[:building]).all
-    @apartments = Apartment.where("building_id = ?", cookies[:building]).all
+    @mavs = Mav.joins("LEFT OUTER JOIN users ON users.id = mavs.user_id").
+                joins("LEFT OUTER JOIN leases ON leases.id = users.lease_id").
+                where(*get_query_array(params)).
+                order("created_at DESC").
+                paginate(:per_page => 50, :page => params[:page])
+    
+    @users = User.where("secondary = false OR secondary IS NULL AND admin = false AND building_id = ?", cookies[:building]).
+                  order("first_name ASC, last_name ASC").all
+    @invoices = Invoice.where("building_id = ?", cookies[:building]).order("number ASC").all
+    @apartments = Apartment.where("building_id = ?", cookies[:building]).order("name ASC").all
   end
   
   def edit
@@ -61,5 +67,28 @@ class MavsController < ApplicationController
   
   def mav_params
     params.require(:mav).permit(:id, :document)
+  end
+  
+  def get_query_array(params)
+    query = [ [ "mavs.building_id = ?" ], cookies[:building] ]
+    
+    if params[:user].present?
+      query[0].push "mavs.user_id = ?"
+      query.push    params[:user]
+    end
+    
+    if params[:invoice].present?
+      query[0].push "mavs.invoice_id = ?"
+      query.push    params[:invoice]
+    end
+    
+    if params[:apartment].present?
+      query[0].push "leases.apartment_id = ?"
+      query.push    params[:apartment]
+    end
+    
+    query[0] = query[0].join(" AND ")
+    
+    query
   end
 end
