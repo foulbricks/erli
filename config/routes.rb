@@ -106,6 +106,8 @@ Rails.application.routes.draw do
   resources :mavs, :except => [:create] do
     collection do
       get "csvs"
+      get "unpaid"
+      post "report_paid"
     end
     member do
       get "generate_csv"

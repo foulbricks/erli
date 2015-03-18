@@ -63,6 +63,14 @@ class MavsController < ApplicationController
     end
   end
   
+  def unpaid
+    
+  end
+  
+  def report_paid
+    
+  end
+  
   private
   
   def mav_params

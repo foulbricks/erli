@@ -15,36 +15,11 @@
 			<div class="col-xs-12 border-left">
 				<% if logged_in? && cookies[:building].present? %>
 					<div id="wrapper" style="background:url(<%= @main_building.background.opaque.url %>) left top;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;">				
-						<% if logged_user.admin? %>
-						    <div id="sidebar-wrapper">
-						        <ul class="sidebar-nav">
-						            <li><%= link_to "Inizio", root_path %></li>
-									<li><%= link_to "Locazioni", leases_path %></li>
-									<li><%= link_to "Spese di Condominio", apartment_expenses_path %></li>
-									<li><%= link_to "Spese Genreale", building_building_expenses_path(cookies[:building]) %></li>
-									<li><%= link_to "Fatture", invoices_path %></li>
-									<li><%= link_to "CSV per MAVs", csvs_mavs_path %></li>
-									<li><%= link_to "MAVs", mavs_path %>
-									<li><a href="#">Situazione Insolventi</a></li>
-									<li><%= link_to "Email non Pagati", unpaid_emails_path %></li>
-									<li><%= link_to "Allarmi non Pagati", unpaid_alarms_path %></li>
-									<li><%= link_to "Avvertenze non Pagati", unpaid_warnings_path %></li>
-									<li><%= link_to "Approvare Annunci", administration_ads_path %></li>
-						        </ul>
-						    </div>
-						<% else %>
-						    <div id="sidebar-wrapper">
-						        <ul class="sidebar-nav">
-									<li><%= link_to "Inizio", root_path %></li>
-									<li><%= link_to "Documenti di Locazione", contract_users_path %></li>
-									<li><%= link_to "Fatture", invoices_users_path %></li>
-									<li><%= link_to "MAV", mavs_users_path %></li>
-									<li><%= link_to "I Tuoi Annunci", personal_ads_ads_path %></li>
-									<li><%= link_to "Annunci", ads_path %></li>
-									<li><%= mail_to Setup.where("building_id = ?", cookies[:building]).first.try(:erli_admin_email), "Contattare" %></li>
-								</ul>
-							</div>
-						<% end %>
+					    <div id="sidebar-wrapper">
+					        <ul class="sidebar-nav">
+								<%= render :partial => "layouts/navigation_links" %>
+					        </ul>
+					    </div>
 						
 					    <div id="page-content-wrapper">
 					        <div class="container-fluid">
