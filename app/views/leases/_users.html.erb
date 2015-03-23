@@ -18,10 +18,10 @@
 						<p><strong><%= t.partita_iva? ? "Partita IVA" : "Codice Fiscale:" %></strong> <%= t.codice_fiscale %></p>
 					</div>
 					<div class="col-sm-4">
-						<p><strong><%= link_to "Modificare", "#", :"ng-click" => "openModal($event,'#{edit_lease_tenant_path(lease.id, t.id)}')" %></strong></p>
+						<p><strong><%= link_to "Modifica", "#", :"ng-click" => "openModal($event,'#{edit_lease_tenant_path(lease.id, t.id)}')" %></strong></p>
 						<p><strong><%= link_to "Nuovo Utente Secondario", "#", :"ng-click" => "openModal($event,'#{new_lease_tenant_path(lease.id)}')" %></strong></p>
 						<% if lease.registration_date.blank? %>
-						<p><strong><%= link_to "Cancellare", lease_tenant_path(lease.id, t.id), :"data-confirm" => "Sei securo?", method: :delete %></strong></p>
+						<p><strong><%= link_to "Rimuovi", lease_tenant_path(lease.id, t.id), :"data-confirm" => "Sei securo?", method: :delete %></strong></p>
 						<% end %>
 					</div>
 				</div>
@@ -41,7 +41,7 @@
 							<p><strong>Email:</strong> <%= f.email %></p>
 						</div>
 						<div class="col-sm-4">
-							<p><strong><%= link_to "Modificare", "#", :"ng-click" => "openModal($event,'#{edit_lease_tenant_path(lease.id, f.id)}')" %> | <%= link_to "Cancellare", lease_tenant_path(lease.id, f.id), :"data-confirm" => "Sei securo?", method: :delete %> </strong></p>
+							<p><strong><%= link_to "Modifica", "#", :"ng-click" => "openModal($event,'#{edit_lease_tenant_path(lease.id, f.id)}')" %> | <%= link_to "Rimuovi", lease_tenant_path(lease.id, f.id), :"data-confirm" => "Sei securo?", method: :delete %> </strong></p>
 						</div>
 					</div>
 				<% end %>

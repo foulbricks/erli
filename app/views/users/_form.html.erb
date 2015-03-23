@@ -1,6 +1,6 @@
 <% if @user.errors.any? %>
 	<div class="alert alert-danger">
-		<strong>Form is invalid.</strong><br />
+		<strong>La forma è invalida.</strong><br />
 		<ul>
 			<% for message in @user.errors.full_messages %>
 				<li><%= message %></li>
@@ -13,16 +13,16 @@
 	<div class="form-group" ng-class="{'has-error':newUserForm['user[first_name]'].$dirty && newUserForm['user[first_name]'].$invalid }">
 		<%= f.label :first_name, :class => "col-sm-3 control-label" %>
 		<div class="col-sm-9">
-			<%= f.text_field :first_name, :class => "form-control", :placeholder => "First name", :"ng-model" => "firstName", :"ng-required" => true %>
-			<span class="error-message" ng-show="newUserForm['user[first_name]'].$dirty && newUserForm['user[first_name]'].$invalid">First name is required.</span>
+			<%= f.text_field :first_name, :class => "form-control", :placeholder => "Nome", :"ng-model" => "firstName", :"ng-required" => true %>
+			<span class="error-message" ng-show="newUserForm['user[first_name]'].$dirty && newUserForm['user[first_name]'].$invalid">Nome è richiesto.</span>
 		</div>
 	</div>
 	
 	<div class="form-group" ng-class="{'has-error':newUserForm['user[last_name]'].$dirty && newUserForm['user[last_name]'].$invalid }">
 		<%= f.label :last_name, :class => "col-sm-3 control-label"  %>
 		<div class="col-sm-9">
-			<%= f.text_field :last_name, :class => "form-control", :placeholder => "Last name", :"ng-model" => "lastName", :"ng-required" => true %>
-			<span class="error-message" ng-show="newUserForm['user[last_name]'].$dirty && newUserForm['user[last_name]'].$invalid">Last name is required.</span>
+			<%= f.text_field :last_name, :class => "form-control", :placeholder => "Cognome", :"ng-model" => "lastName", :"ng-required" => true %>
+			<span class="error-message" ng-show="newUserForm['user[last_name]'].$dirty && newUserForm['user[last_name]'].$invalid">Cognome è richiesto.</span>
 		</div>
 	</div>
 	
@@ -30,7 +30,7 @@
 		<%= f.label :email, :class => "col-sm-3 control-label" %>
 		<div class="col-sm-9">
 			<%= f.email_field :email, :class => "form-control", :placeholder => "Email", :"ng-model" => "email", :"ng-required" => true, :"ng-model-options" => "{updateOn: 'blur mousedown'}" %>
-			<span class="error-message" ng-show="newUserForm['user[email]'].$dirty && newUserForm['user[email]'].$invalid">Email must be valid.</span>
+			<span class="error-message" ng-show="newUserForm['user[email]'].$dirty && newUserForm['user[email]'].$invalid">Email è richiesto.</span>
 		</div>
 	</div>
 	<% pw_required = @user.new_record? ? true : false %>
@@ -38,25 +38,18 @@
 		<%= f.label :passwd, "Password", :class => "col-sm-3 control-label" %>
 		<div class="col-sm-9">
 			<%= f.password_field :passwd, :class => "form-control", :placeholder => "Password", :"ng-model" => "user.password", :"ng-required" => pw_required %>
-			<span class="error-message" ng-show="newUserForm['user[passwd]'].$dirty && newUserForm['user[passwd]'].$invalid">Password is required.</span>
+			<span class="error-message" ng-show="newUserForm['user[passwd]'].$dirty && newUserForm['user[passwd]'].$invalid">Password è richiesto.</span>
 		</div>
 	</div>
 	<div class="form-group" ng-class="{'has-error':newUserForm['user[passwd_confirmation]'].$dirty && newUserForm['user[passwd_confirmation]'].$invalid }">
-		<%= f.label :passwd_confirmation, "Password confirmation", :class => "col-sm-3 control-label" %>
+		<%= f.label :passwd_confirmation, "Conferma Password", :class => "col-sm-3 control-label" %>
 		<div class="col-sm-9">
-			<%= f.password_field :passwd_confirmation, :class => "form-control", :placeholder => "Password confirmation", :"ng-model" => "user.password_confirmation", :"ng-required" => pw_required, :"compare-to" => "user.password" %>
-			<span class="error-message" ng-show="newUserForm['user[passwd_confirmation]'].$dirty && newUserForm['user[passwd_confirmation]'].$invalid">Password confirmation should match password.</span>
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="control-label col-sm-3">
-			Active 
-		</label>
-		<div class="col-sm-9">
-			<p style="margin-top: 5px;"><%= f.check_box :active %></p>
+			<%= f.password_field :passwd_confirmation, :class => "form-control", :placeholder => "Conferma Password", :"ng-model" => "user.password_confirmation", :"ng-required" => pw_required, :"compare-to" => "user.password" %>
+			<span class="error-message" ng-show="newUserForm['user[passwd_confirmation]'].$dirty && newUserForm['user[passwd_confirmation]'].$invalid">Conferma password deve corrispondere la password.</span>
 		</div>
 	</div>
 	<div class="col-sm-9 col-sm-offset-3">
+		<%= f.hidden_field :active, :value => true %>
 		<%= f.submit :class => "btn btn-lg btn-primary", :"ng-disabled" => "newUserForm.$invalid"%>
 	</div>
 <% end %>

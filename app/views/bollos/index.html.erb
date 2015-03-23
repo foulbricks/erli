@@ -7,7 +7,7 @@
 		<% end %>
 		
 		<h3>Bollos</h3>
-		<p class="text-right"><%= link_to "Creare Bollos", new_bollo_range_path %></p>
+		<p class="text-right"><%= link_to "Inserisci marche da bollo", new_bollo_range_path %></p>
 		<% if @ranges.length > 0 %>
 			<table class="table table-striped table-collapsed">
 				<thead>
@@ -30,8 +30,8 @@
 									<td><%= bollos.first.identifier %> - <%= bollos.last.identifier %></td>
 									<td><%= number_to_currency(range.price) %></td>
 									<td><%= bollos.first.invoice_id.present? ? "Fatture disponibili" : "Fatture non disponibili" %></td>
-									<td><%= bollos.first.invoice_id.blank? ? link_to("Modificare", edit_bollo_range_path(range.id)) : "" %></td>
-									<td><%= bollos.first.invoice_id.blank? ? link_to("Cancellare", bollo_range_path(range.id), :"data-confirm" => "Sei securo?", method: :delete) : "" %></td>
+									<td><%= bollos.first.invoice_id.blank? ? link_to("Modifica", edit_bollo_range_path(range.id)) : "" %></td>
+									<td><%= bollos.first.invoice_id.blank? ? link_to("Rimuovi", bollo_range_path(range.id), :"data-confirm" => "Sei securo?", method: :delete) : "" %></td>
 								</tr>
 								<tr class="child-table">
 									<td colspan="6">
@@ -50,8 +50,8 @@
 														<td><%= bollo.identifier %></td>
 														<td><%= number_to_currency(bollo.price) %></td>
 														<td><%= bollo.invoice.present? ? link_to("Fattura Link", download_invoice_path(bollo.invoice.id)) : "Fattura non disponibile" %></td>
-														<td><%= link_to "Modificare", edit_bollo_bollo_range_path(bollo.id) %></td>
-														<td><%= link_to "Cancellare", destroy_bollo_bollo_range_path(bollo.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
+														<td><%= link_to "Modifica", edit_bollo_bollo_range_path(bollo.id) %></td>
+														<td><%= link_to "Rimuovi", destroy_bollo_bollo_range_path(bollo.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
 													</tr>
 												<% end %>
 											</tbody>

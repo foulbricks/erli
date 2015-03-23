@@ -22,8 +22,8 @@
 						<tr>
 							<td><%= contract.name %></td>
 							<td><%= number_to_percentage(contract.istat) %></td>
-							<td><%= link_to "Modificare", edit_contract_path(contract.id) %></td>
-							<td><%= link_to "Cancellare", contract_path(contract.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
+							<td><%= link_to "Modifica", edit_contract_path(contract.id) %></td>
+							<td><%= link_to "Rimuovi", contract_path(contract.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
 						</tr>
 					<% end %>
 					

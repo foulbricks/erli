@@ -24,8 +24,8 @@
 							<td><%= table.name %></td>
 							<td><%= table.updated_at.strftime("%d-%m-%Y") %></td>
 							<td><%= table.created_at.strftime("%d-%m-%Y") %></td>
-							<td><%= link_to "Modificare", edit_repartition_table_path(table.id) %></td>
-							<td><%= link_to "Cancellare", repartition_table_path(table.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
+							<td><%= link_to "Modifica", edit_repartition_table_path(table.id) %></td>
+							<td><%= link_to "Rimuovi", repartition_table_path(table.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
 						</tr>
 					<% end %>
 					

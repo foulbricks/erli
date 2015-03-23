@@ -18,7 +18,7 @@
 						<p class="text-right"><% unless ad.approved? %>
 							<%= link_to "Aggiornare", edit_ad_path(ad.id) %> | 
 							<% end %>
-							<%= link_to "Cancellare", ad_path(ad.id), :"data-confirm" => "Sei securo?", method: :delete %>
+							<%= link_to "Rimuovi", ad_path(ad.id), :"data-confirm" => "Sei securo?", method: :delete %>
 						</p>
 						<% if ad.ad_attachments.length > 0 %>
 						    <div id="slider<%= ad.id %>_container" style="position: relative; top: 0px; left: 0px; width: 720px; height: 405px; overflow: hidden; margin: 0 auto 20px;" class="ad-images">

@@ -103,7 +103,7 @@ Rails.application.routes.draw do
   resources :unpaid_alarms
   resources :unpaid_warnings
   
-  resources :mavs, :except => [:create] do
+  resources :mavs do
     collection do
       get "csvs"
       get "unpaid"

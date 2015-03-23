@@ -22,8 +22,8 @@
 						<tr>
 							<td><%= building.name %></td>
 							<td><%= building.created_at.strftime("%d-%m-%Y") %></td>
-							<td><%= link_to "Modificare", edit_building_path(building.id) %></td>
-							<td><%= link_to "Cancellare", building_path(building.id), :"data-confirm" => "Sei sicuro?", method: :delete %></td>
+							<td><%= link_to "Modifica", edit_building_path(building.id) %></td>
+							<td><%= link_to "Rimuovi", building_path(building.id), :"data-confirm" => "Sei sicuro?", method: :delete %></td>
 						</tr>
 					<% end %>
 					

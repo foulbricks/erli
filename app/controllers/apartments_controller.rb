@@ -3,7 +3,7 @@ class ApartmentsController < ApplicationController
   before_filter :check_building_cookie, :except => [:tenants]
   
   def index
-    @apartments = Apartment.where(:building_id => cookies[:building]).order(:name).all
+    @apartments = Apartment.where(:building_id => cookies[:building]).order("floor ASC, name ASC").all
   end
   
   def new

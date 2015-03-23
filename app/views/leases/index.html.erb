@@ -80,8 +80,8 @@
 													<% unless lease.users.empty? %>
 													<p><%= link_to "Registrare", "#", :"ng-click" => "openModal($event,'#{registration_lease_path(lease.id)}')", :class => "btn btn-info btn-block" %></p>
 													<% end %>
-													<p><%= link_to "Modificare locazione", "#", :"ng-click" => "openModal($event,'#{edit_lease_path(lease.id)}')", :class => "btn btn-info btn-block" %> </p>
-													<p><%= link_to "Cancellare", lease_path(lease.id), :class => "btn btn-danger btn-block", :"data-confirm" => "Sei securo?", method: :delete %></p>
+													<p><%= link_to "Modifica locazione", "#", :"ng-click" => "openModal($event,'#{edit_lease_path(lease.id)}')", :class => "btn btn-info btn-block" %> </p>
+													<p><%= link_to "Rimuovi", lease_path(lease.id), :class => "btn btn-danger btn-block", :"data-confirm" => "Sei securo?", method: :delete %></p>
 												<% else %>
 													<p><%= link_to "Chiudere locazione", close_lease_path(lease.id), :class => "btn btn-danger btn-block" %></p>
 												<% end %>

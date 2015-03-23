@@ -49,7 +49,7 @@
 													<td><%= number_to_currency(e.amount) %></td>
 													<td><%= e.updated_at.strftime("%d-%m-%Y")%></td>
 													<td><%= link_to "Aggiornare", "#", :placement => "bottom-right", :"tooltip-url" => edit_building_building_expense_path(@building.id, e.id)  + "?expense_id=#{expense.id}", :title => "Aggiornare spesa per #{@building.name}", :"erli-tooltip" => "popover" %>
-													<td><%= link_to "Cancellare", building_building_expense_path(@building.id, e.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
+													<td><%= link_to "Rimuovi", building_building_expense_path(@building.id, e.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
 													<td><% if e.expense_attachment.present? %>
 															<a href="#" data-placement="left" title="" data-animation="am-flip-x" data-auto-close="1" data-template="expense<%= e.id %>" bs-popover><span class="glyphicon glyphicon-file" style="font-size:16px;"></span></a>
 															<script type="text/ng-template" id="expense<%= e.id %>">
@@ -61,7 +61,7 @@
 																	<div class="popover-content">
 																		<div class="text-center">
 																			<a class="btn btn-success" href="<%= download_attachment_building_building_expense_path(@building.id, e.expense_attachment.id) %>">Scaricare</a>
-																			<a class="btn btn-danger" href="<%= delete_attachment_building_building_expense_path(@building.id, e.expense_attachment.id) %>">Cancellare</a>
+																			<a class="btn btn-danger" href="<%= delete_attachment_building_building_expense_path(@building.id, e.expense_attachment.id) %>">Rimuovi</a>
 																		</div>
 																	</div>
 																</div>	

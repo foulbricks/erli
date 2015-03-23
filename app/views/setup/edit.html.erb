@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-xs-12">
-		<h3><%= Building.find(cookies[:building]).name %> Configurazione Generale</h3>
+		<h3><%= Building.find(cookies[:building]).name %>: Configurazione Generale</h3>
 		<hr />
 	</div>
 </div>
@@ -44,26 +44,26 @@
 			</div>
 			
 			<div class="form-group" ng-class="{'has-error':setupForm['setup[mav_expiration]'].$dirty && setupForm['setup[mav_expiration]'].$invalid }">
-				<%= f.label :mav_expiration, "Giorno di scadenza del MAV", :class => "col-sm-3 control-label" %>
+				<%= f.label :mav_expiration, "Giorno di scadenza MAV", :class => "col-sm-3 control-label" %>
 				<div class="col-sm-3">
-					<%= f.select :mav_expiration, options_for_select((1..28)), {}, {:class => "form-control"} %>
-					<span class="error-message" ng-show="setupForm['setup[mav_expiration]'].$dirty && setupForm['setup[mav_expiration]'].$invalid">Giorno di scadenza del MAV è richiesta.</span>
+					<%= f.select :mav_expiration, options_for_select((1..28), @setup.mav_expiration), {}, {:class => "form-control"} %>
+					<span class="error-message" ng-show="setupForm['setup[mav_expiration]'].$dirty && setupForm['setup[mav_expiration]'].$invalid">Giorno di scadenza MAV è richiesto.</span>
 				</div>
 			</div>
 			
 			<div class="form-group" ng-class="{'has-error':setupForm['setup[invoice_generation]'].$dirty && setupForm['setup[invoice_generation]'].$invalid }">
-				<%= f.label :invoice_generation, "Giorno di generazione della fattura", :class => "col-sm-3 control-label" %>
+				<%= f.label :invoice_generation, "Giorno di generazione fattura", :class => "col-sm-3 control-label" %>
 				<div class="col-sm-3">
-					<%= f.select :invoice_generation, options_for_select((1..28)), {}, {:class => "form-control"} %>
-					<span class="error-message" ng-show="setupForm['setup[invoice_generation]'].$dirty && setupForm['setup[invoice_generation]'].$invalid">Giorno di generazione della fattura è richiesta.</span>
+					<%= f.select :invoice_generation, options_for_select((1..28), @setup.invoice_generation), {}, {:class => "form-control"} %>
+					<span class="error-message" ng-show="setupForm['setup[invoice_generation]'].$dirty && setupForm['setup[invoice_generation]'].$invalid">Giorno di generazione fattura è richiesto.</span>
 				</div>
 			</div>
 			
 			<div class="form-group" ng-class="{'has-error':setupForm['setup[invoice_delivery]'].$dirty && setupForm['setup[invoice_delivery]'].$invalid }">
-				<%= f.label :invoice_delivery, "Giorno di consegna della fattura", :class => "col-sm-3 control-label" %>
+				<%= f.label :invoice_delivery, "Giorno di scadenza fattura", :class => "col-sm-3 control-label" %>
 				<div class="col-sm-3">
-					<%= f.select :invoice_delivery, options_for_select((1..28)), {}, {:class => "form-control"} %>
-					<span class="error-message" ng-show="setupForm['setup[invoice_delivery]'].$dirty && setupForm['setup[invoice_delivery]'].$invalid">Giorno di consegna della fattura è richiesta.</span>
+					<%= f.select :invoice_delivery, options_for_select((1..28), @setup.invoice_delivery), {}, {:class => "form-control"} %>
+					<span class="error-message" ng-show="setupForm['setup[invoice_delivery]'].$dirty && setupForm['setup[invoice_delivery]'].$invalid">Giorno di scadenza fattura è richiesto.</span>
 				</div>
 			</div>
 			

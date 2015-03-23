@@ -18,8 +18,9 @@
 							<li>
 								<a href="#" class="navbar-link dropdown-toggle" data-toggle="dropdown" role="button" arial-expanded="false">Configurazione Edifici<span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
-									<li><%= link_to "Appartamenti", apartments_path%></li>
-									<li><%= link_to "Configurazione Generale", edit_setup_path(1) %></li>
+									<li><%= link_to "Configurazione", edit_setup_path(1) %></li>
+									<li><%= link_to "Configurazione Nuova Unità Immobiliare", new_apartment_path %>
+									<li><%= link_to "Unità Immobiliari", apartments_path%></li>
 									<li><%= link_to "Date Conguaglio", balance_dates_path%></li>
 									<li><%= link_to "Spese", expenses_path %></li>
 									<li><%= link_to "Tabelle di ripartizione", repartition_tables_path %></li>
@@ -46,11 +47,11 @@
 						<li>
 							<a href="#" class="navbar-link dropdown-toggle" data-toggle="dropdown" role="button" arial-expanded="false">Amministrazione <span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
+								<li><%= link_to "Dati Aziendali", edit_company_path(1) %></li>
 								<li><%= link_to "Amministratori", users_path %></li>
 								<li><%= link_to "Bollos", bollo_ranges_path %></li>
 								<li><%= link_to "Edifici", buildings_path %></li>
-								<li><%= link_to "Informazione Aziendali", edit_company_path(1) %></li>
-								<li><%= link_to "Tipi di contratti", contracts_path %></li>
+								<li><%= link_to "Tipi di contratto", contracts_path %></li>
 							</ul>
 						</li>
 					<% else %>

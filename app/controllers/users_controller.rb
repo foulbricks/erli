@@ -18,7 +18,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.save
         format.html { 
-          flash[:notice] = "User successfully saved"
+          flash[:notice] = "Utente salvato con successo"
           redirect_to users_path
         }
       else
@@ -39,7 +39,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.update_attributes(user_params)
         format.html {
-          flash[:notice] = "User successfully updated"
+          flash[:notice] = "Utente modificato con successo"
           redirect_to users_path
         }
       else
@@ -54,9 +54,9 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     if User.count > 1
       @user.destroy
-      flash[:notice] = "User successfully deleted"
+      flash[:notice] = "Utente cancellato con successo"
     else
-      flash[:alert] = "Could not delete administrator because there would be none left!"
+      flash[:alert] = "Impossibile eliminare amministratore perche non ci sarebbe nessuno a sinistra!"
     end
     
     respond_to do |format|

@@ -6,8 +6,8 @@
 			<div class="alert alert-danger"><%= flash[:alert] %></div>
 		<% end %>
 		
-		<h3><%= Building.find(cookies[:building]).name %> Configurazione Appartamenti</h3>
-		<p class="text-right"><%= link_to "Creare Appartamento", new_apartment_path %></p>
+		<h3><%= Building.find(cookies[:building]).name %>: Unità Immobiliari</h3>
+		<p class="text-right"><%= link_to "Aggiungi Unità Immobiliare", new_apartment_path %></p>
 		<% if @apartments.length > 0 %>
 			<table class="table table-striped">
 				<thead>
@@ -28,8 +28,8 @@
 							<td><%= apartment.rooms %></td>
 							<td><%= apartment.dimension %> (m<sup>2</sup>)</td>
 							<td><%= apartment.updated_at.strftime("%d-%m-%Y") %></td>
-							<td><%= link_to "Modificare", edit_apartment_path(apartment.id) %></td>
-							<td><%= link_to "Cancellare", apartment_path(apartment.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
+							<td><%= link_to "Modifica", edit_apartment_path(apartment.id) %></td>
+							<td><%= link_to "Rimuovi", apartment_path(apartment.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
 						</tr>
 					<% end %>
 					

@@ -22,8 +22,8 @@
 						<tr>
 							<td><%= truncate(alarm.body,:length => 50) %></td>
 							<td><%= alarm.days %></td>
-							<td><%= link_to "Modificare", edit_unpaid_alarm_path(alarm.id) %></td>
-							<td><%= link_to "Cancellare", unpaid_alarm_path(alarm.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
+							<td><%= link_to "Modifica", edit_unpaid_alarm_path(alarm.id) %></td>
+							<td><%= link_to "Rimuovi", unpaid_alarm_path(alarm.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
 						</tr>
 					<% end %>
 					

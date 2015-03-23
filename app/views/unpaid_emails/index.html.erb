@@ -24,8 +24,8 @@
 							<td><%= truncate(email.body, :length => 50) %></td>
 							<td><%= email.days %></td>
 							<td><%= email.frequency %></td>
-							<td><%= link_to "Modificare", edit_unpaid_email_path(email.id) %></td>
-							<td><%= link_to "Cancellare", unpaid_email_path(email.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
+							<td><%= link_to "Modifica", edit_unpaid_email_path(email.id) %></td>
+							<td><%= link_to "Rimuovi", unpaid_email_path(email.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
 						</tr>
 					<% end %>
 					

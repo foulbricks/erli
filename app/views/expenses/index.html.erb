@@ -26,8 +26,8 @@
 							<td><%= expense.kind %></td>
 							<td><%= expense.repartition_table.present? ? expense.repartition_table.name : "" %></td>
 							<td><%= expense.add_to_invoice ? "Si" : "No" %></td>
-							<td><%= link_to "Modificare", edit_expense_path(expense.id) %></td>
-							<td><%= link_to "Cancellare", expense_path(expense.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
+							<td><%= link_to "Modifica", edit_expense_path(expense.id) %></td>
+							<td><%= link_to "Rimuovi", expense_path(expense.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
 						</tr>
 					<% end %>
 					

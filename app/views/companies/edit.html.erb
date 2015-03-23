@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-xs-12">
-		<h3>Informazione Aziendali</h3>
+		<h3>Data Aziendali</h3>
 		<hr />
 	</div>
 	<div class="row" ng-controller="companyFormController">
@@ -81,6 +81,22 @@
 					</div>
 				</div>
 				
+				<div class="form-group" ng-class="{'has-error':companyForm['company[email]'].$dirty && companyForm['company[email]'].$invalid }" ng-init="email='<%= @company.email %>'">
+					<%= f.label :email, :class => "col-sm-3 control-label" %>
+					<div class="col-sm-9">
+						<%= f.text_field :email, :class => "form-control", :placeholder => "Email", :"ng-model" => "email", :"ng-required" => true %>
+						<span class="error-message" ng-show="companyForm['company[email]'].$dirty && companyForm['company[email]'].$invalid">Email e richiesto.</span>
+					</div>
+				</div>
+				
+				<div class="form-group" ng-class="{'has-error':companyForm['company[iban]'].$dirty && companyForm['company[iban]'].$invalid }" ng-init="iban='<%= @company.iban %>'">
+					<%= f.label :iban, "IBAN", :class => "col-sm-3 control-label" %>
+					<div class="col-sm-9">
+						<%= f.text_field :iban, :class => "form-control", :placeholder => "IBAN", :"ng-model" => "iban", :"ng-required" => true %>
+						<span class="error-message" ng-show="companyForm['company[iban]'].$dirty && companyForm['company[iban]'].$invalid">IBAN e richiesto.</span>
+					</div>
+				</div>
+				
 				<div class="form-group">
 					<%= f.label :welcome_text, "Testo per Benvenuto Email", :class => "col-sm-3 control-label" %>
 					<div class="col-sm-9">
@@ -89,9 +105,9 @@
 				</div>
 				
 				<div class="form-group">
-					<%= f.label :reset_password_text, "Testo per Password Dimeticato Email", :class => "col-sm-3 control-label" %>
+					<%= f.label :reset_password_text, "Testo per Password Dimeticata Email", :class => "col-sm-3 control-label" %>
 					<div class="col-sm-9">
-						<%= f.text_area :reset_password_text, :class => "form-control", :placeholder => "Testo per il messagio di password dimenticato", :rows => 5 %>
+						<%= f.text_area :reset_password_text, :class => "form-control", :placeholder => "Testo per il messagio di password dimenticata", :rows => 5 %>
 					</div>
 				</div>
 				

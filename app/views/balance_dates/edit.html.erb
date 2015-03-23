@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-xs-12">
-		<h3>Modificare data conguaglio: <%= Building.find(cookies[:building]).name %></h3>
+		<h3>Modifica data conguaglio: <%= Building.find(cookies[:building]).name %></h3>
 		<hr />
 	</div>
 </div>
@@ -9,7 +9,7 @@
 		<%= render :partial => "form" %>
 		<p class="text-right">
 			<%= link_to balance_dates_path, {} do %> 
-			<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>  Tornare alla lista
+			<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>  Torna alla lista
 			<% end %>
 		</p>
 	</div>

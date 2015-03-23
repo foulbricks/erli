@@ -11,7 +11,7 @@ module ApplicationHelper
   end
   
   def buildings
-    Building.all
+    Building.order("name ASC").all
   end
   
   def lease_row_class(status)

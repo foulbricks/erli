@@ -1,12 +1,16 @@
 <div class="row">
 	<div class="col-xs-12">
-		<h3>New Administrator</h3>
+		<h3>Nuovo Amministratore</h3>
 		<hr />
 	</div>
 </div>
 <div class="row" ng-controller="userFormController">
 	<div class="col-xs-12">
 		<%= render :partial => "form" %>
-		<p class="text-right"><%= link_to " << Back to list", users_path %></p>
+		<p class="text-right">
+			<%= link_to users_path, {} do %> 
+			<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>  Torna alla lista
+			<% end %>
+		</p>
 	</div>
 </div>

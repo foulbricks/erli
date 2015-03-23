@@ -1,0 +1,66 @@
+<div class="row" ng-controller="mavTableController">
+	<div class="col-sm-12">
+		<% if flash[:notice] %>
+			<div class="alert alert-success"><%= flash[:notice] %></div>
+		<% elsif flash[:alert] %>
+			<div class="alert alert-danger"><%= flash[:alert] %></div>
+		<% end %>
+		
+		<h3>MAVs</h3>
+		<div class="row">
+			<%= form_tag "/unpaid", :method => :get do %>
+				<div class="form-group col-sm-3">
+					<label for="apartment" class="control-label">Apartamento</label>
+					<%= select_tag "apartment", options_from_collection_for_select(@apartments, "id", "name"), { :prompt => "Seleziona", :class => "form-control" } %>
+				</div>
+				<div class="form-group col-sm-3">
+					<label for="user" class="control-label">Utente</label>
+					<%= select_tag "user", options_from_collection_for_select(@users, "id", "name"), { :prompt => "Seleziona", :class => "form-control" } %>
+				</div>
+				<div class="form-group col-sm-3">
+					<label for="invoice" class="control-label">Data</label>
+				</div>
+				<div class="form-group col-sm-3" style="margin-top:20px;">
+					<%= submit_tag "Filtrare", :class => "btn btn-primary" %>
+				</div>
+			<% end %>
+		</div>
+		
+		
+		<% if @mavs.length > 0 %>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Nome</th>
+						<th>Apartamento</th>
+						<th>Numero di Fattura</th>
+						<th>Totale</th>
+						<th>Data</th>
+						<th>Stato</th>
+						<th colspan="2">Azioni</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @mavs.each do |mav| %>
+						<tr>
+							<td><%= mav.user.name %></td>
+							<td><%= mav.user.lease.apartment.name %></td>
+							<td><%= mav.invoice.number %></td>
+							<td><%= number_to_currency(mav.amount) %></td>
+							<td><%= mav.created_at.strftime("%d-%m-%Y") %></td>
+							<td><%= mav.status %></td>
+							<td><%= link_to "Caricare MAV", "#", :"ng-click" => "openModal($event,'#{edit_mav_path(mav.id)}')" %>
+							<td class="download-link-<%= mav.id %>"><% if mav.document.present? %>
+								<%= link_to "Scaricare MAV", "#" %>
+								<% end %>
+							</td>
+						</tr>
+					<% end %>
+					
+				</tbody>
+			</table>
+		<% else %>
+			<p>Non ci sono mav disponibili</p>
+		<% end %>
+	</div>
+</div>

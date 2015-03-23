@@ -1,16 +1,18 @@
-<div class="row">
-	<div class="col-xs-12">
-		<h3>Modificare Edificio <%= @building.name %></h3>
-		<hr />
+<div style="background:url(<%= @building.background.opaque.url %>) left top;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;" id="edit-building">
+	<div class="row">
+		<div class="col-xs-12">
+			<h3>Modifica <%= @building.name %></h3>
+			<hr />
+		</div>
 	</div>
-</div>
-<div class="row" ng-controller="buildingFormController">
-	<div class="col-xs-12">
-		<%= render :partial => "form" %>
-		<p class="text-right">
-			<%= link_to buildings_path, {} do %> 
-			<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>  Tornare alla lista
-			<% end %>
-		</p>
+	<div class="row" ng-controller="buildingFormController">
+		<div class="col-xs-12">
+			<%= render :partial => "form" %>
+			<p class="text-right">
+				<%= link_to buildings_path, {} do %> 
+				<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>  Torna alla lista
+				<% end %>
+			</p>
+		</div>
 	</div>
 </div>
