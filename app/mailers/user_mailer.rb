@@ -13,7 +13,7 @@ class UserMailer < ActionMailer::Base
     
     mail(
       :to     => user.email,
-      :from   => "noreply@erli.com",
+      :from   => "ERLIimmobiliare@gmail.com",
       :subject => "Reimpostazione Password Dell'Account",
       :template_path => "/mailers/user_mailer"
     )
@@ -41,7 +41,7 @@ class UserMailer < ActionMailer::Base
     
     mail(
       :to     => user.email,
-      :from   => "noreply@erli.com",
+      :from   => "ERLIimmobiliare@gmail.com",
       :subject => "Si prega di attivare il tuo account per #{@building.name}",
       :template_path => "/mailers/user_mailer"
     )

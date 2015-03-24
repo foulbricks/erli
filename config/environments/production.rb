@@ -66,12 +66,12 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    :address => 'smtp.gmail.com',
+    :address => "smtp.gmail.com",
     :authentication => :plain,
     :user_name => ENV["SMTP_USERNAME"],
     :password => ENV["SMTP_PASSWORD"],
     :enable_starttls_auto => true,
-    :port => 587,
+    :port => 465,
     :domain => "erli-env-ptdjt3gwkb.elasticbeanstalk.com"
   }
 
