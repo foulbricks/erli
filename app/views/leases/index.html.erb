@@ -6,13 +6,13 @@
 			<div class="alert alert-danger"><%= flash[:alert] %></div>
 		<% end %>
 		
-		<h3>Locazioni</h3>
+		<h3>Contratti</h3>
 		<% if @apartments.length > 0 %>
 			<table class="table table-collapsed">
 				<thead>
 					<tr>
 						<th></th>
-						<th>Numero</th>
+						<th>Interno</th>
 						<th>Stato</th>
 						<th>Occupazione</th>
 						<th></th>
@@ -32,9 +32,9 @@
 							<td>
 								<% if apartment.active_leases.size < 1 %>
 									<% path = new_lease_path + '?apartment_id=' + apartment.id.to_s %>
-									<%= link_to "Registrati Locazione", "#", :"ng-click" => "openModal($event,'#{path}')"  %>
+									<%= link_to "Aggiungi Contratto", "#", :"ng-click" => "openModal($event,'#{path}')"  %>
 								<% elsif apartment.active_leases.first.registration_date.blank? %>
-									<%= link_to "Aggiungere Inquilino", "#", :"ng-click" => "openModal($event,'#{tenant_lease_path(apartment.active_leases.first.id)}')" %>
+									<%= link_to "Aggiungi Inquilino", "#", :"ng-click" => "openModal($event,'#{tenant_lease_path(apartment.active_leases.first.id)}')" %>
 								<% end %>
 							</td>
 							<td>
@@ -75,15 +75,15 @@
 												<% end %>
 											</div>
 											<div class="col-sm-4">
-												<p><%= link_to "Aggiungere documente", "javascript:;", :"ng-click" => "openModal($event,'#{lease_attachment_lease_path(lease.id)}')", :class => "btn btn-info btn-block" %></p>
+												<p><%= link_to "Aggiungi Documento", "javascript:;", :"ng-click" => "openModal($event,'#{lease_attachment_lease_path(lease.id)}')", :class => "btn btn-info btn-block" %></p>
 												<% if lease.registration_date.blank? %>
 													<% unless lease.users.empty? %>
 													<p><%= link_to "Registrare", "#", :"ng-click" => "openModal($event,'#{registration_lease_path(lease.id)}')", :class => "btn btn-info btn-block" %></p>
 													<% end %>
-													<p><%= link_to "Modifica locazione", "#", :"ng-click" => "openModal($event,'#{edit_lease_path(lease.id)}')", :class => "btn btn-info btn-block" %> </p>
-													<p><%= link_to "Rimuovi", lease_path(lease.id), :class => "btn btn-danger btn-block", :"data-confirm" => "Sei securo?", method: :delete %></p>
+													<p><%= link_to "Modifica Contratto", "#", :"ng-click" => "openModal($event,'#{edit_lease_path(lease.id)}')", :class => "btn btn-info btn-block" %> </p>
+													<p><%= link_to "Cancella Contratto", lease_path(lease.id), :class => "btn btn-danger btn-block", :"data-confirm" => "Sei securo?", method: :delete %></p>
 												<% else %>
-													<p><%= link_to "Chiudere locazione", close_lease_path(lease.id), :class => "btn btn-danger btn-block" %></p>
+													<p><%= link_to "Chiudi Contratto", close_lease_path(lease.id), :class => "btn btn-danger btn-block" %></p>
 												<% end %>
 											</div>
 											<%= render :partial => "users", :locals => {:lease => lease } %>
@@ -99,7 +99,7 @@
 				</tbody>
 			</table>
 		<% else %>
-			<p>Attualmente non ci sono locazioni disponibili</p>
+			<p>Attualmente non ci sono contratti disponibili</p>
 		<% end %>
 	</div>
 </div>

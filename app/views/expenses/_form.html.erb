@@ -24,9 +24,16 @@
 			<%= f.select :kind, options_for_select(["Edificio", "Appartamento"]), {}, {:class => "form-control", :"ng-model" => "kind" } %>
 		</div>
 	</div>
+	
+	<div class="form-group" ng-init="invoice = <%= @expense.add_to_invoice %>">
+		<%= f.label :add_to_invoice, "Spesa a Carico dell'Inquilino", :class => "control-label col-sm-3" %>
+		<div class="col-sm-9">
+			<p style="margin-top: 5px;"><%= f.check_box :add_to_invoice, :"ng-model" => "invoice" %></p>
+		</div>
+	</div>
 
 	<% if @dates.present? %>
-	   	<div class="form-group" ng-if="kind == 'Edificio'">
+	   	<div class="form-group" ng-if="(invoice == 1 || invoice == true)">
 	   		<%= f.label :balance_date_id, "Data Conguaglio", :class => "col-sm-3 control-label" %>
 	   		<div class="col-sm-4">
 	   			<%= f.select :balance_date_id, options_from_collection_for_select(@dates, "id", "value_it_locale", @expense.balance_date_id), {:prompt => "Seleziona"}, {:class => "form-control"} %> 
@@ -35,20 +42,13 @@
 	<% end %>
 	
 	<% if @tables.present? %>
-	   	<div class="form-group" ng-if="kind == 'Edificio'">
-	   		<%= f.label :repartition_table_id, "Tavolo di Ripartizione", :class => "col-sm-3 control-label" %>
+	   	<div class="form-group" ng-if="kind == 'Edificio' && (invoice == 1 || invoice == true)">
+	   		<%= f.label :repartition_table_id, "Tabella di Ripartizione", :class => "col-sm-3 control-label" %>
 	   		<div class="col-sm-4">
 	   			<%= f.select :repartition_table_id, options_from_collection_for_select(@tables, "id", "name", @expense.repartition_table_id), {}, {:class => "form-control"} %>
 	   		</div>
 	   	</div>
 	<% end %>
-	
-	<div class="form-group" ng-if="kind == 'Edificio'">
-		<%= f.label :add_to_invoice, "Aggiungere alla fattura?", :class => "control-label col-sm-3" %>
-		<div class="col-sm-9">
-			<p style="margin-top: 5px;"><%= f.check_box :add_to_invoice %></p>
-		</div>
-	</div>
 	
 	<div class="form-group">
 		<%= f.label :iva_exempt, "Esente IVA?", :class => "control-label col-sm-3" %>

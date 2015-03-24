@@ -2,6 +2,7 @@ class RepartitionTablesController < ApplicationController
   before_filter :check_admin, :check_building_cookie
   
   def index
+    @event = Event.where("kind ~ 'repartition' AND building_id = ? AND active = true", cookies[:building]).first
     @tables = RepartitionTable.where(:building_id => cookies[:building]).all
   end
   
@@ -17,7 +18,7 @@ class RepartitionTablesController < ApplicationController
     @table = RepartitionTable.new(repartition_table_params)
     
     if @table.save
-      flash[:notice] = "Tavolo di ripartizione salvata con successo"
+      flash[:notice] = "Tabella di ripartizione salvata con successo"
       redirect_to repartition_tables_path
     else
       render "new"
@@ -28,7 +29,7 @@ class RepartitionTablesController < ApplicationController
     @table = RepartitionTable.find(params[:id])
     
     if @table.update(repartition_table_params)
-      flash[:notice] = "Tavolo di ripartizone modificata con successo"
+      flash[:notice] = "Tabella di ripartizone modificata con successo"
       redirect_to repartition_tables_path
     else
       render "edit"
@@ -39,7 +40,7 @@ class RepartitionTablesController < ApplicationController
     @table = RepartitionTable.find(params[:id])
     @table.destroy
     
-    flash[:notice] = "Tavolo di ripartizione cancellata con successo"
+    flash[:notice] = "Tabella di ripartizione cancellata con successo"
     redirect_to repartition_tables_path
   end
   

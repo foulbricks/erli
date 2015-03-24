@@ -19,7 +19,7 @@ class LeasesController < ApplicationController
     
     respond_to do |format|
       if @lease.save
-        flash[:notice] = "Locazione salvata con successo"
+        flash[:notice] = "Contratto salvato con successo"
         format.json { render :json => {:success => true } }
         format.html { render :text => "success" }
       else
@@ -46,7 +46,7 @@ class LeasesController < ApplicationController
         if registration.blank? && @lease.registration_date.present?
           @lease.users.each { |user| user.send_signup_notification! }
         end
-        flash[:notice] = "Locazione modificata con successo"
+        flash[:notice] = "Contratto modificato con successo"
         format.json { render :json => { :success => true } }
         format.html { render :text => "success" }
       else
@@ -61,7 +61,7 @@ class LeasesController < ApplicationController
   def destroy
     @lease = Lease.find(params[:id])
     @lease.destroy
-    flash[:notice] = "Locazione cancellata con successo"
+    flash[:notice] = "Contratto cancellato con successo"
     redirect_to leases_path
   end
   
@@ -106,7 +106,7 @@ class LeasesController < ApplicationController
   def delete_attachment
     @file = LeaseAttachment.find(params[:id])
     @file.destroy
-    flash[:notice] = "Documente cancellato con successo"
+    flash[:notice] = "Documento cancellato con successo"
     redirect_to leases_path
   end
   
@@ -115,7 +115,7 @@ class LeasesController < ApplicationController
     @lease.update_columns(:active => false, :inactive_date => Date.today)
     @lease.cache_users
     @lease.users.each {|u| u.destroy }
-    flash[:notice] = "Locazione chiusa con successo"
+    flash[:notice] = "Contratto chiuso con successo"
     redirect_to leases_path
   end
   

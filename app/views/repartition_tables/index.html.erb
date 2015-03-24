@@ -7,7 +7,7 @@
 		<% end %>
 		
 		<h3>Tabelle di Ripartizione</h3>
-		<p class="text-right"><%= link_to "Creare tavolo di repartizione", new_repartition_table_path %></p>
+		<p class="text-right"><%= link_to "Aggiungi Tabella di Ripartizione", new_repartition_table_path %></p>
 		<% if @tables.length > 0 %>
 			<table class="table table-striped">
 				<thead>
@@ -20,11 +20,14 @@
 				</thead>
 				<tbody>
 					<% @tables.each do |table| %>
-						<tr>
+						<% in_event = @event.present? && @event.description.split(", ").include?(table.name) %>
+						<% update_text = in_event ? "Aggiungi" : "Modifica" %>
+						<% bg_color = in_event ? "#f2dede" : "#ffffff" %>
+						<tr style="background-color: <%= bg_color %>">
 							<td><%= table.name %></td>
 							<td><%= table.updated_at.strftime("%d-%m-%Y") %></td>
 							<td><%= table.created_at.strftime("%d-%m-%Y") %></td>
-							<td><%= link_to "Modifica", edit_repartition_table_path(table.id) %></td>
+							<td><%= link_to update_text, edit_repartition_table_path(table.id) %></td>
 							<td><%= link_to "Rimuovi", repartition_table_path(table.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
 						</tr>
 					<% end %>

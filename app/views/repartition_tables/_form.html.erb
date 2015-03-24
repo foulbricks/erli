@@ -11,24 +11,24 @@
 
 <%= form_for @table, html: {:novalidate => "novalidate", name: "tableForm", class: "form-horizontal" } do |f| %>
 	<div class="form-group" ng-class="{'has-error':tableForm['repartition_table[name]'].$dirty && tableForm['repartition_table[name]'].$invalid }">
-		<%= f.label :name, "Nome", :class => "col-sm-4 control-label" %>
-		<div class="col-sm-8">
+		<%= f.label :name, "Nome", :class => "col-sm-3 control-label" %>
+		<div class="col-sm-9">
 			<%= f.text_field :name, :class => "form-control", :placeholder => "Name", :"ng-model" => "name", :"ng-required" => true %>
 			<span class="error-message" ng-show="tableForm['repartition_table[name]'].$dirty && tableForm['repartition_table[name]'].$invalid">Nome è richiesto.</span>
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="col-sm-8 col-sm-offset-4 text-left">Percentuale di appartamenti</label>
+		<label class="col-sm-9 col-sm-offset-3 text-left">Ppercentuali per Unità Immobiliare</label>
 	</div>
 	<% floor = nil %>
 	<%= f.fields_for :apartment_repartition_tables do |rt| %>
 		<% if floor != rt.object.floor %>
 			<div class="form-group">
-				<label class="col-sm-8 col-sm-offset-4 text-left">Piano <%= floor = rt.object.floor %></label>
+				<label class="col-sm-9 col-sm-offset-3 text-left">Piano <%= floor = rt.object.floor %></label>
 			</div>
 		<% end %>
 		<div class="form-group" ng-class="{'has-error':tableForm['repartition_table[apartment_repartition_tables_attributes][<%= rt.index %>][percentage]'].$dirty && tableForm['repartition_table[apartment_repartition_tables_attributes][<%= rt.index %>][percentage]'].$invalid }">
-			<%= rt.label :percentage, "Appartamento " + rt.object.apartment.name, :class => "col-sm-3 col-sm-offset-4 control-label" %>
+			<%= rt.label :percentage, rt.object.apartment.name, :class => "col-sm-3 col-sm-offset-3 control-label" %>
 			<div class="col-sm-3">
 				<%= rt.text_field :percentage, :class => "form-control", :placeholder => "Percentuale", :"ng-model" => "percentage" +  rt.index.to_s, :"ng-required" => true %>
 				<span class="error-message" ng-show="tableForm['repartition_table[apartment_repartition_tables_attributes][<%= rt.index %>][percentage]'].$dirty && tableForm['repartition_table[apartment_repartition_tables_attributes][<%= rt.index %>][percentage]'].$invalid">Percentuale è richiesto.</span>
@@ -39,8 +39,9 @@
 		</div>
 	<% end %>
 	
-	<div class="col-sm-8 col-sm-offset-4">
+	<div class="col-sm-9 col-sm-offset-3">
+		<% submit_text = @table.new_record? ? "Aggiungi" : "Aggiorna" %>
 		<%= f.hidden_field :building_id, :value => cookies[:building] %>
-		<%= f.submit :class => "btn btn-lg btn-primary", :"ng-disabled" => "tableForm.$invalid"%>
+		<%= f.submit submit_text, :class => "btn btn-lg btn-primary", :"ng-disabled" => "tableForm.$invalid"%>
 	</div>
 <% end %>
