@@ -66,12 +66,13 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    :address => 'email-smtp.us-east-1.amazonaws.com',
-    :authentication => :login,
+    :address => 'smtp.gmail.com',
+    :authentication => :plain,
     :user_name => ENV["SMTP_USERNAME"],
     :password => ENV["SMTP_PASSWORD"],
     :enable_starttls_auto => true,
-    :port => 465
+    :port => 587,
+    :domain => "erli-env-ptdjt3gwkb.elasticbeanstalk.com"
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
