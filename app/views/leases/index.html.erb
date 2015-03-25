@@ -79,6 +79,9 @@
 												<% if lease.registration_date.blank? %>
 													<% unless lease.users.empty? %>
 													<p><%= link_to "Registrare", "#", :"ng-click" => "openModal($event,'#{registration_lease_path(lease.id)}')", :class => "btn btn-info btn-block" %></p>
+													<% confirm_text = lease.confirmed? ? "Confermato" : "Conferma" %>
+													<% disabled_attr = lease.confirmed? ? {:disabled => "disabled"} : {} %>
+													<p><%= link_to confirm_text, confirm_lease_path(lease.id), {:class => "btn btn-info btn-block"}.merge(disabled_attr) %></p>
 													<% end %>
 													<p><%= link_to "Modifica Contratto", "#", :"ng-click" => "openModal($event,'#{edit_lease_path(lease.id)}')", :class => "btn btn-info btn-block" %> </p>
 													<p><%= link_to "Cancella Contratto", lease_path(lease.id), :class => "btn btn-danger btn-block", :"data-confirm" => "Sei securo?", method: :delete %></p>

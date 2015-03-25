@@ -5,7 +5,7 @@ class CreateSetups < ActiveRecord::Migration
       t.decimal :iva, :precision => 15, :scale => 2
       t.decimal :istat, :precision => 15, :scale => 2
       t.integer :mav_expiration
-      t.integer :invoice_generation
+      t.integer :invoice_generation, :default => 25
       t.integer :invoice_delivery
       t.text :unpaid_sentence
       t.string :erli_mav_email

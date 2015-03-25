@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150323215036) do
+ActiveRecord::Schema.define(version: 20150325060519) do
 
   create_table "ad_attachments", force: true do |t|
     t.integer  "ad_id"
@@ -248,12 +248,15 @@ ActiveRecord::Schema.define(version: 20150323215036) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "home_number"
+    t.boolean  "confirmed",                                    default: false
+    t.boolean  "fully_charged",                                default: true
   end
 
   create_table "mav_csvs", force: true do |t|
     t.integer  "building_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "generated"
   end
 
   create_table "mavs", force: true do |t|

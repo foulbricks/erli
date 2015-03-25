@@ -96,6 +96,7 @@ Rails.application.routes.draw do
       post "history"
       get "delete_attachment"
       get "tenant"
+      get "confirm"
     end
   end
   

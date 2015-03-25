@@ -3,6 +3,10 @@ class MavCsv < ActiveRecord::Base
   
   validates :building_id, :presence => true
   
+  def value_it_locale
+    generated.strftime("%d-%m-%Y")
+  end
+  
   def generate_csv
     CSV.generate(col_sep: ";", :quote_char => "$") do |csv|
       csv << ["IMPORTO IN CENTESIMI", "CAUSALE PAGAMENTO", "SCADENZA PAGAMENTO", "COD DEBITORE",

@@ -131,12 +131,19 @@ class LeasesController < ApplicationController
     end
   end
   
+  def confirm
+    @lease = Lease.find(params[:id])
+    @lease.update_column(:confirmed, true)
+    flash[:notice] = "Contratto confermato con successo"
+    redirect_to leases_path
+  end
+  
   private
   def lease_params
     params.require(:lease)
     .permit(:percentage, :contract_id, :apartment_id, :invoice_address, :start_date, :end_date, :amount,
             :payment_frequency, :deposit, :registration_date, :registration_number, :registration_agency,
-            :cap, :localita, :provincia,
+            :cap, :localita, :provincia, :fully_charged,
             :users_attributes => [:id, :first_name, :last_name, :email, :codice_fiscale, :secondary, 
               :percentage, :partita_iva, :building_id],
             :lease_attachments_attributes => [:document, :lease_document],

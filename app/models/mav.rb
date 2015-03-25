@@ -10,7 +10,7 @@ class Mav < ActiveRecord::Base
   validates :user_id, :building_id, :invoice_id, :presence => true
   
   def amount
-    ((invoice.total * user.percentage / 100) * 100).round / 100.0
+    ((invoice.total * user.real_percentage / 100) * 100).round / 100.0
   end
   
   def status

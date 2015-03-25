@@ -21,6 +21,8 @@ class InvoicesController < ApplicationController
   
   def new
     @invoice = Invoice.new
+    @csvs = MavCsv.where("building_id = ? AND generated IS NOT NULL", cookies[:building]).
+                   order("generated DESC").all
     (1..10).each do 
       @invoice.invoice_charges.build(:kind => "custom_expense")
     end
@@ -53,12 +55,16 @@ class InvoicesController < ApplicationController
       flash[:notice] = "Fattura salvata con successo"
       redirect_to invoices_path
     else
+      @csvs = MavCsv.where("building_id = ? AND generated IS NOT NULL", cookies[:building]).
+                     order("generated DESC").all
       render "new"
     end
   end
   
   def edit
     @invoice = Invoice.find(params[:id])
+    @csvs = MavCsv.where("building_id = ? AND generated IS NOT NULL", cookies[:building]).
+                   order("generated DESC").all
   end
   
   def update
@@ -72,6 +78,8 @@ class InvoicesController < ApplicationController
       flash[:notice] = "Fattura modificata con successo"
       redirect_to invoices_path
     else
+      @csvs = MavCsv.where("building_id = ? AND generated IS NOT NULL", cookies[:building]).
+                     order("generated DESC").all
       render "edit"
     end
   end
@@ -111,7 +119,7 @@ class InvoicesController < ApplicationController
   private
   
   def invoice_params
-    params.require(:invoice).permit(:lease_id, :building_id, :start_date, :end_date,
+    params.require(:invoice).permit(:lease_id, :building_id, :start_date, :end_date, :mav_csv_id,
       :invoice_charges_attributes => [:id, :amount, :start_date, :end_date, :kind, :asset_expense_id, :lease_id, :iva_exempt, :name])
   end
 end

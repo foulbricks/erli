@@ -93,6 +93,14 @@ class Lease < ActiveRecord::Base
     ((start_date.year * 12 + start_date.month) - (end_date.year * 12 + end_date.month)).abs
   end
   
+  def ratio
+    if fully_charged?
+      1
+    else
+      percentage / 100.0
+    end
+  end
+  
   private
   
   def percentage_maximum

@@ -98,6 +98,18 @@ class User < ActiveRecord::Base
     secure_digest(Time.now, (1..5).map { rand.to_s })
   end
   
+  def real_percentage
+    if self.lease
+      if lease.percentage < 100
+        ratio = percentage/lease.percentage
+        ratio = 1 if ratio == 0.0
+        ratio * 100.0
+      else
+        self.percentage
+      end 
+    end
+  end
+  
   private
     def secure_digest(*args)
       Digest::SHA1.hexdigest(args.flatten.join("--"))

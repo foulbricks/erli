@@ -40,7 +40,9 @@ class Invoice < ActiveRecord::Base
   end
   
   def self.generate(building_id, invoice_date=Date.today)
-    csv = MavCsv.create!(:building_id => building_id, :created_at => invoice_date)
+    csv = MavCsv.where("generated = ?", Date.today).first
+    csv = MavCsv.create!(:building_id => building_id, :generated => invoice_date) unless csv
+    
     registered_leases(building_id, invoice_date).each do |lease|
       invoice = self.new(:building_id => building_id, :number => get_invoice_number(lease, invoice_date),
                          :lease_id => lease.id, :start_date => invoice_date.at_beginning_of_month,
@@ -71,8 +73,8 @@ class Invoice < ActiveRecord::Base
   
   def self.registered_leases(building_id, invoice_date=Date.today)
     apartment_ids = Apartment.where(:building_id => building_id).all.map(&:id)
-    Lease.where("active = ? AND apartment_id IN (?) AND registration_date IS NOT NULL",
-                true, apartment_ids).all
+    Lease.where("active = ? AND apartment_id IN (?) AND (registration_date IS NOT NULL OR confirmed = ?)",
+                true, apartment_ids, true).all
   end
   
   def self.charge_rent(lease, invoice, invoice_date=Date.today)
@@ -80,7 +82,7 @@ class Invoice < ActiveRecord::Base
       rent = invoice.invoice_charges.build(:kind => "rent", :lease_id => lease.id)
       period = charge_period(lease, invoice_date)
       rent.start_date, rent.end_date = period.first, period.last
-      rent.amount = charge_amount_with_istat(lease, invoice_date)
+      rent.amount = (charge_amount_with_istat(lease, invoice_date) * lease.ratio)
     end
   end
   

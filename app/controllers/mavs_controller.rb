@@ -35,7 +35,8 @@ class MavsController < ApplicationController
   end
   
   def csvs
-    @files = MavCsv.where("building_id = ?", cookies[:building]).order("created_at DESC").all
+    @files = MavCsv.where("building_id = ? AND generated IS NOT NULL", cookies[:building]).
+                    order("created_at DESC").all
   end
   
   def generate_csv
