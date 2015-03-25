@@ -28,15 +28,46 @@ class Invoice < ActiveRecord::Base
   end
   
   def create_mavs
+    setup = Setup.where("building_id = ?", self.building_id).first
     lease.users(:secondary => false).each do |user|
       if !user.secondary? && !mavs.where("user_id = ?", user.id).first
         m = Mav.new
         m.user_id = user.id
         m.building_id = building_id
         m.invoice_id = id
+        m.expiration = Mav.calculate_expiration(setup, self)
         m.save
       end
     end
+  end
+  
+  def populate(building_id)
+    if self.valid?
+      self.start_date = Date.today.at_beginning_of_month
+      self.end_date = Date.today.end_of_month
+      self.building_id = building_id
+      self.number = Invoice.get_invoice_number(self.lease)
+      
+      self.invoice_charges.each do |ic|
+        ic.start_date = Date.today.at_beginning_of_month
+        ic.end_date = Date.today.end_of_month
+        ic.lease_id = self.lease_id
+      end
+      
+      self.temporary_bollo = Invoice.get_available_bollo(self)
+      
+      temp = Invoice.tempfile(Invoice.render_pdf(self.lease, self, Date.today))
+      self.document = File.open temp.path
+      temp.unlink
+    end
+  end
+  
+  def post_save
+    self.temporary_bollo.update_column(:invoice_id, self.id) if self.temporary_bollo
+    self.invoice_charges.where(:kind => "apartment_expense").all.each do |i|
+      i.asset_expense.update_column(:invoice_id, self.id)
+    end
+    self.create_mavs
   end
   
   def self.generate(building_id, invoice_date=Date.today)
@@ -58,11 +89,7 @@ class Invoice < ActiveRecord::Base
       temp.unlink
       
       if invoice.save
-        invoice.temporary_bollo.update_column(:invoice_id, invoice.id) if invoice.temporary_bollo
-        invoice.invoice_charges.where(:kind => "apartment_expense").all.each do |i|
-          i.asset_expense.update_column(:invoice_id, invoice.id)
-        end
-        invoice.create_mavs
+        invoice.post_save
       end
     end
   end

@@ -40,6 +40,7 @@ gem 'wkhtmltopdf-binary', '~> 0.9.9.3'
 gem 'wicked_pdf'
 #gem "rmagick"
 gem "mini_magick", "~> 3.7.0"
+gem "roo"
 
 # Use unicorn as the app server
 # gem 'unicorn'

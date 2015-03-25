@@ -21,7 +21,7 @@ class MavCsv < ActiveRecord::Base
         invoice.mavs.each do |mav|
           csv << [  (mav.amount * 100).to_i, 
                     '"' + invoice_text + '"',
-                    mav_expiration(setup, invoice).strftime("%Y-%m-%d"),
+                    mav.expiration ? mav.expiration.strftime("%Y-%m-%d") : nil,
                     mav.user.codice_fiscale,
                     mav.user.codice_fiscale,
                     '"' + mav.user.last_name + '"',
@@ -30,28 +30,17 @@ class MavCsv < ActiveRecord::Base
                     '"' + mav.user.lease.localita + '"',
                     mav.user.lease.provincia,
                     nil,
-                    setup.erli_mav_email_active? ? setup.erli_mav_email_active : nil,
+                    setup && setup.erli_mav_email_active? ? setup.erli_mav_email_active : nil,
                     nil,
                     nil,
                     '"' + mav.user.first_name + '"',
                     '"DISABILITATO"',
-                    setup.erli_mav_email_active? ? '"ABILITATO"' : '"DISABILITATO"',
+                    setup && setup.erli_mav_email_active? ? '"ABILITATO"' : '"DISABILITATO"',
                     '"DISABILITATO"',
                     '"DISABILITATO"' ]
         end
       end
     end
-  end
-  
-  private
-  def mav_expiration(setup, invoice)
-    if setup.mav_expiration.present?
-      expire = invoice.created_at.change(:day => setup.mav_expiration)
-    else
-      expire = invoice.created_at.end_of_month
-    end
-    expire = expire.next_month if expire <= invoice.created_at
-    expire
   end
   
 end

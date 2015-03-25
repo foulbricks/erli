@@ -1,0 +1,24 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h3>Avvertimento Predefinito</h3>
+		<hr />
+	</div>
+	
+	<div class="row" ng-controller="setupFormController">
+		<div class="col-xs-12">
+			<%= form_tag default_warning_warning_path, :class => "form-horizontal" do %>
+				<div class="form-group">
+					<%= label_tag :default_warning, "Avvertimento Predefinito", :class => "col-sm-3 control-label" %>
+					<div class="col-sm-9">
+						<%= text_field_tag :default_warning, :class => "form-control", :placeholder => "Avvertimento Predefinito", :value => @setup.default_warning %>
+					</div>
+				</div>
+			<% end %>
+			<p class="text-right" style="margin:20px;">
+				<%= link_to unpaid_warnings_path, {} do %> 
+				<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>  Torna alla lista
+				<% end %>
+			</p>
+		</div>
+	</div>
+</div>

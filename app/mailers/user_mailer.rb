@@ -19,12 +19,17 @@ class UserMailer < ActionMailer::Base
     )
   end
   
-  def new_user(member)
+  def unpaid_mav(mav, unpaid_email)
+    unpaid_email.unpaid_email_attachments.each do |a|
+      f = a.document
+      attachments[f.file.filename] = File.read(f.file.path)
+    end
+    
     mail(
-      :to     => member.email,
-      :from   => "noreply@erli.com",
-      :subject => "A New Account Has Been Created",
-      :template_path => "/mailers/user_mailer"
+      :to     => mav.user.email,
+      :from   => "ERLIimmobiliare@gmail.com",
+      :subject => "MAV Scaduto " + mav.expiration_value_it,
+      :body => unpaid_email.body
     )
   end
   

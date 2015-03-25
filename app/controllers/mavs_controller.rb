@@ -65,11 +65,22 @@ class MavsController < ApplicationController
   end
   
   def unpaid
-    
+    @users = User.where("secondary = false OR secondary IS NULL AND admin = false AND building_id = ?", cookies[:building]).
+                  order("first_name ASC, last_name ASC").all
+    @apartments = Apartment.where("building_id = ?", cookies[:building]).order("name ASC").all
+    @dates  = Mav.select("DISTINCT(expiration::date), *").
+                  where("expiration IS NOT NULL").order("expiration DESC").all
+                  
+    @mavs = Mav.joins("LEFT OUTER JOIN users ON users.id = mavs.user_id").
+                joins("LEFT OUTER JOIN leases ON leases.id = users.lease_id").
+                where(*get_query_array(params, true)).
+                order("created_at DESC").
+                paginate(:per_page => 50, :page => params[:page])
   end
   
   def report_paid
-    
+    Mav.import(params[:file])
+    redirect_to unpaid_mavs_path
   end
   
   private
@@ -78,8 +89,13 @@ class MavsController < ApplicationController
     params.require(:mav).permit(:id, :document)
   end
   
-  def get_query_array(params)
+  def get_query_array(params, unpaid=false)
     query = [ [ "mavs.building_id = ?" ], cookies[:building] ]
+    if unpaid
+      query[0].push "status ~ 'Da Pagare'"
+      query[0].push "expiration < ?"
+      query.push Date.today
+    end
     
     if params[:user].present?
       query[0].push "mavs.user_id = ?"
@@ -94,6 +110,11 @@ class MavsController < ApplicationController
     if params[:apartment].present?
       query[0].push "leases.apartment_id = ?"
       query.push    params[:apartment]
+    end
+    
+    if params[:expiration].present?
+      query[0].push "mavs.expiration = ?"
+      query.push Date.parse(params[:expiration])
     end
     
     query[0] = query[0].join(" AND ")

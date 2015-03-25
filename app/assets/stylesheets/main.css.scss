@@ -208,3 +208,27 @@ body.invoice {
 	background-color:#fff;
 	border-radius: 4px;
 }
+
+@-webkit-keyframes blinky {
+	0%   { opacity: 0; }
+	100% { opacity: 1; }
+}
+@-moz-keyframes blinky {
+	0%   { opacity: 0; }
+	100% { opacity: 1; }
+}
+@-o-keyframes blinky {
+	0%   { opacity: 0; }
+	100% { opacity: 1; }
+}
+@keyframes blinky {
+	0%   { opacity: 0; }
+	100% { opacity: 1; }
+}
+
+.blink {
+	-webkit-animation: blinky 1s  infinite;
+	-moz-animation: blinky 1s  infinite;
+	-o-animation: blinky 1s  infinite;
+	animation: blinky 1s  infinite;
+}

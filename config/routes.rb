@@ -102,7 +102,12 @@ Rails.application.routes.draw do
   
   resources :unpaid_emails
   resources :unpaid_alarms
-  resources :unpaid_warnings
+  resources :unpaid_warnings do
+    collection do
+      get "default_warning"
+      post "default_warning"
+    end
+  end
   
   resources :mavs do
     collection do

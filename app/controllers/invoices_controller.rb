@@ -30,28 +30,10 @@ class InvoicesController < ApplicationController
   
   def create
     @invoice = Invoice.new(invoice_params)
-    
-    if @invoice.valid?
-      @invoice.start_date = Date.today.at_beginning_of_month
-      @invoice.end_date = Date.today.end_of_month
-      @invoice.building_id = cookies[:building]
-      @invoice.number = Invoice.get_invoice_number(@invoice.lease)
-      
-      @invoice.invoice_charges.each do |ic|
-        ic.start_date = Date.today.at_beginning_of_month
-        ic.end_date = Date.today.end_of_month
-        ic.lease_id = @invoice.lease_id
-      end
-      
-      @invoice.temporary_bollo = Invoice.get_available_bollo(@invoice)
-      
-      temp = Invoice.tempfile(Invoice.render_pdf(@invoice.lease, @invoice, Date.today))
-      @invoice.document = File.open temp.path
-      temp.unlink
-    end
-    
+    @invoice.populate(cookies[:building])
+
     if @invoice.save
-      @invoice.temporary_bollo.update_column(:invoice_id, @invoice.id) if @invoice.temporary_bollo
+      @invoice.post_save
       flash[:notice] = "Fattura salvata con successo"
       redirect_to invoices_path
     else

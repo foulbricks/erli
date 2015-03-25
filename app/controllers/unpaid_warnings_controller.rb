@@ -44,6 +44,16 @@ class UnpaidWarningsController < ApplicationController
     redirect_to unpaid_warnings_path
   end
   
+  def default_warning
+    @setup = Setup.where("building_id = ?", cookies[:building]).first || Setup.create!(:building_id => cookies[:building])
+    if request.post?
+      @setup.default_warning = params[:default_warning]
+      @setup.save
+      flash[:notice] = "Avviso predefinito salvato con successo"
+      redirect_to unpaid_warnings_path
+    end
+  end
+  
   private
   
   def unpaid_warning_params

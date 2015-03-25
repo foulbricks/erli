@@ -7,7 +7,8 @@
 		<% end %>
 		
 		<h3>Avvertenze non Pagati</h3>
-		<p class="text-right"><%= link_to "Creare Allarme non Pagato", new_unpaid_warning_path %></p>
+		<p class="text-right"><%= link_to "Creare Avvertimento non Pagato", new_unpaid_warning_path %></p>
+		<p class="text-right"><%= link_to "Cambia Avvertimento Predefinito", default_warning_warning_path %></p>
 		<% if @warnings.length > 0 %>
 			<table class="table table-striped">
 				<thead>
