@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150325181206) do
+ActiveRecord::Schema.define(version: 20150326153532) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -213,8 +213,9 @@ ActiveRecord::Schema.define(version: 20150325181206) do
     t.integer  "building_id"
     t.date     "start_date"
     t.date     "end_date"
-    t.decimal  "total",       precision: 15, scale: 2, default: 0.0
+    t.decimal  "total",         precision: 15, scale: 2, default: 0.0
     t.integer  "mav_csv_id"
+    t.date     "delivery_date"
   end
 
   create_table "lease_attachments", force: true do |t|

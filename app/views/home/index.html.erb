@@ -67,15 +67,21 @@
 			<% end %>
 
 			<h3>Avvertenze</h3>
+			<% count = 0 %>
 			<% if @unpaid_mavs.size > 0 && @warnings.size > 0 %>
 				<% @unpaid_mavs.each do |mav| %>
 					<p><strong>MAV scaduto <%= mav.expiration_value_it %></strong></p>
 					<% warning = UnpaidWarning.closest_to_expiration_day(mav, @warnings) %>
-					<% cl = warning.flashing? ? "class = 'blink'" : '' %>
-					<% color = warning.flashing? ? "#000" : "#FFF" %>
-					<p style="color: <%= color %>; background-color: <%= warning.background %>" <%= cl %> ><strong><%= warning.text %></strong></p>
+					<% if mav.days_since_expired >= warning.days %>
+						<% cl = warning.flashing? ? "class = 'blink'" : '' %>
+						<% color = warning.flashing? ? "#000" : "#FFF" %>
+						<p style="color: <%= color %>; background-color: <%= warning.background %>" <%= cl %> ><strong><%= warning.text %></strong></p>
+						<% count += 1 %>
+					<% end %>
 				<% end %>
-			<% else %>
+			<% end %>
+			
+			<% if @unpaid_mavs.size < 1 || @warnings.size < 1 || count < 1 %>
 				<% if @setup && @setup.default_warning.present? %>
 					<p><%= @setup.default_warning %></p>
 				<% else %>

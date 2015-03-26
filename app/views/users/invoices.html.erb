@@ -1,0 +1,27 @@
+<div class="row">
+	<div class="col-sm-12">
+		<h3>Fatture</h3>
+		<hr />
+	</div>
+	<div class="col-sm-12">
+		<% if @invoices.size > 0 %>
+			<% @invoices.in_groups_of(4) do |g| %>
+				<div class="row" style="margin:10px;">
+					<% g.compact.each do |invoice| %>
+						<div class="col-sm-3 text-center">
+							<p>
+								<%= link_to download_invoice_path(invoice.id) do %>
+									<i class="fa fa-file-pdf-o fa-4x"></i>
+								<% end %>
+								<br /><br />
+								<strong>Fattura Numero <%= invoice.number %> del <%= invoice.created_at.strftime('%d-%m-%Y') %></strong>
+							</p>
+						</div>
+					<% end %>
+				</div>
+			<% end %>
+		<% else %>
+			<p>Attualmente non ci sono fatture disponibili</p>
+		<% end %>
+	</div>
+</div>

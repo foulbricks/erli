@@ -1,5 +1,6 @@
 class MavsController < ApplicationController
-  before_filter :check_admin, :check_building_cookie
+  before_filter :check_admin, :except => [:download]
+  before_filter :check_building_cookie
   
   def index
     @mavs = Mav.joins("LEFT OUTER JOIN users ON users.id = mavs.user_id").
@@ -49,8 +50,9 @@ class MavsController < ApplicationController
   def download
     mav = Mav.find(params[:id])
     user = User.find(session[:user_id])
+    main_user = user.secondary? ? user.tenant : user
 
-    if user.admin? || (user.lease == mav.lease)
+    if user.admin? || (main_user == mav.user)
       @file = mav.document
     
       send_file(@file.file.path,

@@ -23,6 +23,10 @@ class Invoice < ActiveRecord::Base
     self.total = Invoice.calculate_total(self.lease, self)
   end
   
+  before_create do |i|
+    self.calculate_delivery_date
+  end
+  
   def approved?
     approved #or Date.today >= (start_date + 1.month)
   end
@@ -68,6 +72,17 @@ class Invoice < ActiveRecord::Base
       i.asset_expense.update_column(:invoice_id, self.id)
     end
     self.create_mavs
+  end
+  
+  def calculate_delivery_date
+    setup = Setup.where(:building_id => self.building_id).first
+    if setup && setup.invoice_delivery.present?
+      deliver = self.created_at.change(:day => setup.invoice_delivery)
+    else
+      deliver = self.created_at.end_of_month
+    end
+    deliver = deliver.next_month if deliver <= self.created_at
+    self.delivery_date = deliver
   end
   
   def self.generate(building_id, invoice_date=Date.today)

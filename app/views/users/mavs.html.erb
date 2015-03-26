@@ -1,0 +1,27 @@
+<div class="row">
+	<div class="col-sm-12">
+		<h3>MAVs non Pagato</h3>
+		<hr />
+	</div>
+	<div class="col-sm-12">
+		<% if @mav.size > 0 %>
+			<% @mav.in_groups_of(3) do |g| %>
+				<div class="row" style="margin:10px;">
+					<% g.compact.each do |mav| %>
+						<div class="col-sm-4 text-center">
+							<p>
+								<%= link_to download_mav_path(mav.id) do %>
+									<i class="fa fa-file-pdf-o fa-4x"></i>
+								<% end %>
+								<br /><br />
+								<strong>Data Scadenza: <%= mav.expiration_value_it %></strong>
+							</p>
+						</div>
+					<% end %>
+				</div>
+			<% end %>
+		<% else %>
+			<p>Attualmente non ci sono MAVs non Pagato disponibili</p>
+		<% end %>
+	</div>
+</div>

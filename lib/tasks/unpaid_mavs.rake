@@ -24,8 +24,8 @@ namespace :unpaid_mavs do
               Event.create(:title => alarm.body,
                            :description => "",
                            :building_id => building.id,
-                           :apartment_id => mav.user.lease.apartment.id
-                           :user_id => mav.user.id
+                           :apartment_id => mav.user.lease.apartment.id,
+                           :user_id => mav.user.id,
                            :color => "#d9534f",
                            :start => Date.today,
                            :finish => Date.today,

@@ -131,11 +131,15 @@ class UsersController < ApplicationController
   end
   
   def invoices
-    
+    @user = User.find(session[:user_id])
+    @invoices = Invoice.where("lease_id = ? AND delivery_date >= ?", @user.lease_id, Date.today).all
   end
   
   def mavs
-    
+    user = User.find(session[:user_id])
+    main_user = user.secondary? ? user.tenant : user
+    @mavs = Mav.where("user_id = ? AND status = 'Da Pagare' AND document IS NOT NULL", 
+                      main_user.id, Date.today).all 
   end
   
   def profile

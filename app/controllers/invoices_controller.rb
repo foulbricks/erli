@@ -1,5 +1,5 @@
 class InvoicesController < ApplicationController
-  before_filter :check_admin
+  before_filter :check_admin, :except => [:download]
   before_filter :check_building_cookie, :except => [:download]
   
   def index
@@ -83,13 +83,20 @@ class InvoicesController < ApplicationController
   end
   
   def download
-    @file = Invoice.find(params[:id]).document
-    send_file(@file.file.path,
-      :filename => @file.file.filename,
-      :type => @file.file.content_type,
-      :disposition => "attachment",
-      :url_based_filename => true
-    )
+    user = User.find(session[:user_id])
+    invoice = Invoice.find(params[:id])
+    
+    if user.admin? || (user.lease == invoice.lease)
+      @file = invoice.document
+      send_file(@file.file.path,
+        :filename => @file.file.filename,
+        :type => @file.file.content_type,
+        :disposition => "attachment",
+        :url_based_filename => true
+      )
+    else
+      redirect_to root_path
+    end
   end
   
   def approve
