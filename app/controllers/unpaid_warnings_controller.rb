@@ -3,7 +3,7 @@ class UnpaidWarningsController < ApplicationController
   before_filter :check_admin
   
   def index
-    @warnings = UnpaidWarning.where("building_id = ?", cookies[:building]).all
+    @warnings = UnpaidWarning.where("building_id = ?", cookies[:building]).order("days ASC").all
   end
   
   def new

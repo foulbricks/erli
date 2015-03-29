@@ -8,6 +8,7 @@
 			<div class="modal-body">
 				<%= form_for @lease, html: {:novalidate => "novalidate", name: "leaseForm", class: "form-horizontal", :target => "iframe" } do |f| %>
 					<%= f.fields_for :users, @user do |u| %>
+						<%= u.hidden_field :building_id, :value => cookies[:building] %>
 						<div class="user">
 							<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][0][first_name]'].$dirty && leaseForm['lease[users_attributes][0][first_name]'].$invalid }" ng-init="first_name='<%= @user.first_name %>'">
 								<%= u.label :first_name, "Nome", :class => "col-sm-3 control-label" %>	
@@ -76,6 +77,7 @@
 										<%= u.email_field :email, :class => "form-control", :placeholder => "Email", :"ng-model" => "email#{u.index}", :"ng-required" => true %>
 										<span class="error-message" ng-show="leaseForm['lease[users_attributes][<%= u.index %>][email]'].$dirty && leaseForm['lease[users_attributes][<%= u.index %>][email]'].$invalid">Email non è valido.</span>
 									</div>
+									<%= u.hidden_field :building_id, :value => cookies[:building] %>
 									<%= u.hidden_field :secondary, :value => true %>
 								</div>
 							</div>

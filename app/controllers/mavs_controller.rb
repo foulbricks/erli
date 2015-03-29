@@ -88,7 +88,7 @@ class MavsController < ApplicationController
   private
   
   def mav_params
-    params.require(:mav).permit(:id, :document)
+    params.require(:mav).permit(:id, :document, :expiration, :mav_rid)
   end
   
   def get_query_array(params, unpaid=false)

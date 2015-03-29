@@ -7,6 +7,27 @@
 
 			<div class="modal-body">
 				<%= form_for @mav, html: {:novalidate => "novalidate", name: "attachmentForm", class: "form-horizontal", :multipart => true, :target => "iframe" } do |f| %>
+				
+					<div class="form-group" ng-class="{'has-error':attachmentForm['mav[mav_rid]'].$dirty && attachmentForm['mav[mav_rid]'].$invalid }", ng-init="mav_rid='<%= @mav.mav_rid %>'">
+						<%= f.label :mav_rid, "MAV RID", :class => "col-sm-3 control-label" %>
+						<div class="col-sm-9">
+							<%= f.text_field :mav_rid, :class => "form-control", :placeholder => "MAV RID", :"ng-model" => "mav_rid", :"ng-required" => true %>
+							<span class="error-message" ng-show="attachmentForm['mav[mav_rid]'].$dirty && attachmentForm['mav[mav_rid]'].$invalid">MAV RID e richiesto.</span>
+						</div>
+					</div>
+					
+					<div class="form-group" ng-class="{'has-error':attachmentForm['mav[expiration]'].$dirty && attachmentForm['mav[expiration]'].$invalid }" ng-init="expiration='<%= @mav.expiration_value_it %>'">
+						<%= f.label :expiration, "Scadenza", :class => "col-sm-3 control-label" %>
+						<div class="col-sm-4">
+							<div class="input-group">
+								<%= f.text_field :expiration, :class => "form-control", :"bs-datepicker" => "dd/MM/yyyy", :"data-date-format" => "dd-MM-yyyy", :"data-autoclose" => "1", :placeholder => "Scadenza", :"ng-model" => "expiration", :"ng-required" => true, :"date-type" => "string" %>
+				                <span class="input-group-btn">
+				                  <label for="mav_expiration" class="btn btn-default"><i class="glyphicon glyphicon-calendar"></i></label>
+				                </span>
+							</div>
+							<span class="error-message" ng-show="attachmentForm['mav[expiration]'].$dirty && attachmentForm['mav[expiration]'].$invalid">Data scadenza è richiesta.</span>
+						</div>
+					</div>
 
 					<div class="form-group">
 						<%= f.label :document, "Documente", :class => "col-sm-3 control-label" %>	
@@ -17,7 +38,7 @@
 	
 					<div class="form-group">
 						<div class="col-sm-9 col-sm-offset-3">
-							<%= f.submit "Salva", :class => "btn btn-primary" %>
+							<%= f.submit "Salva", :class => "btn btn-primary", :"ng-disabled" => "attachmentForm.$invalid"%>
 							<button type="button" class="btn btn-default" ng-click="$hide()" id="chiudere">Chiudere</button>
 						</div>
 					</div>

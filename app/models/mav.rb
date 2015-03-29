@@ -14,11 +14,11 @@ class Mav < ActiveRecord::Base
   end
   
   def expiration_value_it
-    expiration.strftime("%d-%m-%Y")
+    expiration ? expiration.strftime("%d-%m-%Y") : nil
   end
   
   def days_since_expired
-    (Date.today - expired).to_i
+    (Date.today - expiration).to_i
   end
   
   def self.import(file)
@@ -26,7 +26,8 @@ class Mav < ActiveRecord::Base
     header = spreadsheet.row(1)
     (2..spreadsheet.last_row).each do |i|
       row = Hash[[header, spreadsheet.row(i)].transpose]
-      mav = find_by_mav_rid(row["CODICE MAV RID"])
+      puts "@@@@@@", row["CODICE MAV RID"].to_s
+      mav = find_by_mav_rid(row["CODICE MAV RID"].to_i.to_s)
       if mav
         if row["STATO"] =~ /Pagato/i
           mav.status = "Pagato"

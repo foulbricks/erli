@@ -138,8 +138,7 @@ class UsersController < ApplicationController
   def mavs
     user = User.find(session[:user_id])
     main_user = user.secondary? ? user.tenant : user
-    @mavs = Mav.where("user_id = ? AND status = 'Da Pagare' AND document IS NOT NULL", 
-                      main_user.id, Date.today).all 
+    @mavs = Mav.where("user_id = ? AND status = 'Da Pagare' AND document IS NOT NULL", main_user.id).all 
   end
   
   def profile

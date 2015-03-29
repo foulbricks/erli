@@ -7,16 +7,23 @@
 		<% end %>
 		
 		<h3>MAVs</h3>
+		<hr />
 		<div class="row">
-			<%= form_tag report_paid_mavs_path, multipart: true do %>
-				<div class="form-group col-sm-4 col-sm-offset-6">
-					<label for="file" class="control-label">File</label>
-					<%= file_field_tag :file %>
+			<div class="col-sm-6">
+				<div class="row" style="background-color:#fff;padding:10px;border-radius:2px;border:1px solid #fff; margin-bottom:20px;margin-left:5px;">
+					<%= form_tag report_paid_mavs_path, multipart: true do %>
+						<div>
+							<div class="form-group col-sm-8">
+								<label for="file" class="control-label">File Resoconto MAV Pagati</label><br /><br/>
+								<%= file_field_tag :file %>
+							</div>
+							<div class="form-group col-sm-4" style="margin-top:20px;">
+								<%= submit_tag "Caricare", :class => "btn btn-primary" %>
+							</div>
+						</div>
+					<% end %>
 				</div>
-				<div class="form-group col-sm-2">
-					<%= submit_tag "Caricare", :class => "btn btn-primary" %>
-				</div>
-			<% end %>
+			</div>
 		</div>
 		<div class="row">
 			<%= form_tag "/unpaid", :method => :get do %>
@@ -38,38 +45,39 @@
 			<% end %>
 		</div>
 		
-		
-		<% if @mavs.length > 0 %>
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th>Nome</th>
-						<th>Apartamento</th>
-						<th>Numero di Fattura</th>
-						<th>Totale</th>
-						<th>Scadenza</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					<% @mavs.each do |mav| %>
+		<div class="row">
+			<% if @mavs.length > 0 %>
+				<table class="table table-striped">
+					<thead>
 						<tr>
-							<td><%= mav.user.name %></td>
-							<td><%= mav.user.lease.apartment.name %></td>
-							<td><%= mav.invoice.number %></td>
-							<td><%= number_to_currency(mav.amount) %></td>
-							<td><%= mav.expiration.strftime("%d-%m-%Y") %></td>
-							<td class="download-link-<%= mav.id %>"><% if mav.document.present? %>
-								<%= link_to "Scaricare MAV", "#" %>
-								<% end %>
-							</td>
+							<th>Nome</th>
+							<th>Apartamento</th>
+							<th>Numero di Fattura</th>
+							<th>Totale</th>
+							<th>Scadenza</th>
+							<th></th>
 						</tr>
-					<% end %>
+					</thead>
+					<tbody>
+						<% @mavs.each do |mav| %>
+							<tr>
+								<td><%= mav.user.name %></td>
+								<td><%= mav.user.lease.apartment.name %></td>
+								<td><%= mav.invoice.number %></td>
+								<td><%= number_to_currency(mav.amount) %></td>
+								<td><%= mav.expiration.strftime("%d-%m-%Y") %></td>
+								<td class="download-link-<%= mav.id %>"><% if mav.document.present? %>
+									<%= link_to "Scaricare MAV", "#" %>
+									<% end %>
+								</td>
+							</tr>
+						<% end %>
 					
-				</tbody>
-			</table>
-		<% else %>
-			<p>Non ci sono mav disponibili</p>
-		<% end %>
+					</tbody>
+				</table>
+			<% else %>
+				<p>Non ci sono mav disponibili</p>
+			<% end %>
+		</div>
 	</div>
 </div>

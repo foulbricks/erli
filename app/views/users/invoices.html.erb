@@ -9,12 +9,12 @@
 				<div class="row" style="margin:10px;">
 					<% g.compact.each do |invoice| %>
 						<div class="col-sm-3 text-center">
-							<p>
+							<p class="user-file">
 								<%= link_to download_invoice_path(invoice.id) do %>
 									<i class="fa fa-file-pdf-o fa-4x"></i>
+									<br /><br />
+									<strong>Fattura Numero <%= invoice.number %> del <%= invoice.created_at.strftime('%d-%m-%Y') %></strong>
 								<% end %>
-								<br /><br />
-								<strong>Fattura Numero <%= invoice.number %> del <%= invoice.created_at.strftime('%d-%m-%Y') %></strong>
 							</p>
 						</div>
 					<% end %>

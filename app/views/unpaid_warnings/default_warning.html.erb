@@ -6,11 +6,16 @@
 	
 	<div class="row" ng-controller="setupFormController">
 		<div class="col-xs-12">
-			<%= form_tag default_warning_warning_path, :class => "form-horizontal" do %>
-				<div class="form-group">
+			<%= form_tag default_warning_unpaid_warnings_path, :class => "form-horizontal", :name => "setupForm" do %>
+				<div class="form-group" ng-init="defaultWarning='<%= @setup.default_warning %>'">
 					<%= label_tag :default_warning, "Avvertimento Predefinito", :class => "col-sm-3 control-label" %>
 					<div class="col-sm-9">
-						<%= text_field_tag :default_warning, :class => "form-control", :placeholder => "Avvertimento Predefinito", :value => @setup.default_warning %>
+						<%= text_field_tag :default_warning, nil, :class => "form-control", :placeholder => "Avvertimento Predefinito", :value => @setup.default_warning, :"ng-model" => "defaultWarning", :"ng-required" => true %>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-9 col-sm-offset-3">
+						<%= submit_tag "Aggiorna", :class => "btn btn-lg btn-primary", :"ng-disabled" => "setupForm.$invalid"%>
 					</div>
 				</div>
 			<% end %>

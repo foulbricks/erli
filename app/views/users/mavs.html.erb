@@ -4,17 +4,17 @@
 		<hr />
 	</div>
 	<div class="col-sm-12">
-		<% if @mav.size > 0 %>
-			<% @mav.in_groups_of(3) do |g| %>
+		<% if @mavs.size > 0 %>
+			<% @mavs.in_groups_of(3) do |g| %>
 				<div class="row" style="margin:10px;">
 					<% g.compact.each do |mav| %>
 						<div class="col-sm-4 text-center">
-							<p>
+							<p class="user-file">
 								<%= link_to download_mav_path(mav.id) do %>
 									<i class="fa fa-file-pdf-o fa-4x"></i>
+									<br /><br />
+									<strong>Data Scadenza: <%= mav.expiration_value_it %></strong>
 								<% end %>
-								<br /><br />
-								<strong>Data Scadenza: <%= mav.expiration_value_it %></strong>
 							</p>
 						</div>
 					<% end %>

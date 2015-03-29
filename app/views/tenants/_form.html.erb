@@ -50,6 +50,7 @@
 	<% end %>
 	<div class="form-group">
 		<div class="col-sm-9 col-sm-offset-3">
+			<%= u.hidden_field :building_id, :value => cookies[:building] %>
 			<%= u.submit "Salva", :class => "btn btn-primary", :"ng-disabled" => "userForm.$invalid" %>
 			<button type="button" class="btn btn-default" ng-click="$hide()">Chiudere</button>
 		</div>
