@@ -49,8 +49,8 @@ class Lease < ActiveRecord::Base
   end
   
   def build_expenses(building_id)
-    expenses = Expense.where("building_id = ? and kind = ? and balance_date_id IS NOT NULL and add_to_invoice = ?",
-                             building_id, "Edificio", true).all
+    expenses = Expense.where("building_id = ? and balance_date_id IS NOT NULL and add_to_invoice = ?",
+                             building_id, true).all
     if new_record?
       expenses.each {|e| asset_expenses.build(:expense_id => e.id, :amount => 0) }
     else

@@ -3,16 +3,12 @@ class InvoicesController < ApplicationController
   before_filter :check_building_cookie, :except => [:download]
   
   def index
-    if request.post?
-      if params[:apartment_id].present?
-        apartment = Apartment.find(params[:apartment_id])
-        ids = apartment.leases.map(&:id)
-        @invoices = Invoice.where("lease_id IN (?)", ids).
-                      paginate(:per_page => 50, :page => params[:page]).order("number DESC")
-      else
-        @invoices = Invoice.where(building_id: cookies[:building]).
-                          paginate(:per_page => 50, :page => params[:page]).order("number DESC")
-      end
+    @apartments = Apartment.where("building_id = ?", cookies[:building]).order("name ASC").all
+    if params[:apartment_id].present?
+      apartment = Apartment.find(params[:apartment_id])
+      ids = apartment.leases.map(&:id)
+      @invoices = Invoice.where("lease_id IN (?)", ids).
+                    paginate(:per_page => 50, :page => params[:page]).order("number DESC")
     else
       @invoices = Invoice.where(building_id: cookies[:building]).
                         paginate(:per_page => 50, :page => params[:page]).order("number DESC")

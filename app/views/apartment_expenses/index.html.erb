@@ -14,7 +14,6 @@
 						<th></th>
 						<th>Numero di Appartamento</th>
 						<th>Numero di Inquilini</th>
-						<th>Stato</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -28,7 +27,6 @@
 							</td>
 							<td><%= apartment.name %></td>
 							<td><%= apartment.active_leases.first.try(:users).try(:size) || 0 %></td>
-							<td>Pagato</h2>
 							<td><%= link_to "Nuova spesa", "#", :placement => "left", :"tooltip-url" => new_apartment_apartment_expense_path(apartment.id), :title => "Nuova spesa per #{apartment.name}", :"erli-tooltip" => "popover" %></td>
 						</tr>
 						<% if apartment_expenses.size > 0%>
@@ -40,6 +38,7 @@
 												<th>Nome</th>
 												<th>Quantita</th>
 												<th>Aggiornata</th>
+												<th>Data Conguaglio</th>
 												<th colspan="2">Azioni</th>
 												<th></th>
 											</tr>
@@ -51,6 +50,9 @@
 														<td><%= expense.expense.name %></td>
 														<td><%= number_to_currency(expense.amount) %></td>
 														<td><%= expense.updated_at.strftime("%d-%m-%Y")%></td>
+														<td><% if expense.expense.balance_date %>
+															<%= expense.expense.balance_date.value.strftime("%d-%m-%Y") %>
+														<% end %></td>
 														<td><%= link_to "Aggiornare", "#", :placement => "left", :"tooltip-url" => edit_apartment_apartment_expense_path(apartment.id, expense.id), :title => "Aggiornare spesa per #{apartment.name}", :"erli-tooltip" => "popover" %>
 														<td><%= link_to "Rimuovi", apartment_apartment_expense_path(apartment.id, expense.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
 														<td><% if expense.expense_attachment.present? %>

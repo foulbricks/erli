@@ -7,11 +7,10 @@
 		<% end %>
 		
 		<h3>Fatture</h3>
-		<% leases = Invoice.registered_leases(cookies[:building]).all %>
-		<%= form_tag("/invoices", :method => "post", :class => "form-inline") do %>
+		<%= form_tag("/invoices", :method => "get", :class => "form-inline") do %>
 			<div class="form-group">
 				<%= label_tag :apartment_id, "Appartamento", :class => "control-label" %>
-				<%= select_tag :apartment_id, options_for_select(leases.map{|l| [l.apartment.name, l.apartment.id]}), {:class => "form-control" } %>
+				<%= select_tag :apartment_id, options_from_collection_for_select(@apartments, "id", "name", params[:apartment_id]), {:class => "form-control", :prompt => "Seleziona" } %>
 			</div>
 			<button type="submit" class="btn btn-warning">Filtrare per Appartamento</button>
 		<% end %>
@@ -61,7 +60,7 @@
 				</tbody>
 			</table>
 		<% else %>
-			<p>Attualmente non ci sono fatture disponibili</p>
+			<p>Non ci sono fatture disponibili</p>
 		<% end %>
 	</div>
 </div>
