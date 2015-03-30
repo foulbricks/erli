@@ -100,9 +100,9 @@ class User < ActiveRecord::Base
   
   def real_percentage
     if self.lease
-      if lease.percentage < 100
+      if !lease.fully_charged?
         ratio = percentage/lease.percentage
-        ratio = 1 if ratio == 0.0
+        #ratio = 1 if ratio == 0.0
         ratio * 100.0
       else
         self.percentage
