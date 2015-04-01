@@ -64,9 +64,8 @@ class Invoice < ActiveRecord::Base
       end
       
       self.temporary_bollo = Invoice.get_available_bollo(self)
-      desc = self.get_month_description(lease, Date.today)
       
-      temp = Invoice.tempfile(Invoice.render_pdf(self.lease, self, Date.today,desc))
+      temp = Invoice.tempfile(Invoice.render_pdf(self.lease, self, Date.today))
       self.document = File.open temp.path
       temp.unlink
     end
@@ -109,9 +108,8 @@ class Invoice < ActiveRecord::Base
       
       unless calculate_total(lease, invoice) == 0
         invoice.temporary_bollo = get_available_bollo(invoice)
-        desc = get_month_description(lease, invoice_date)
     
-        temp = Invoice.tempfile(Invoice.render_pdf(invoice.lease, invoice, invoice_date, desc))
+        temp = Invoice.tempfile(Invoice.render_pdf(invoice.lease, invoice, invoice_date))
         invoice.document = File.open temp.path
         temp.unlink
     

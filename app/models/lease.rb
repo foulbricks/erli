@@ -90,7 +90,16 @@ class Lease < ActiveRecord::Base
   end
   
   def lease_months
-    ((start_date.year * 12 + start_date.month) - (end_date.year * 12 + end_date.month)).abs
+    if end_date == end_date.end_of_month
+      from, count = start_date, 0
+      while from < end_date
+        count += 1
+        from = from.next_month
+      end
+      count
+    else
+      ((start_date.year * 12 + start_date.month) - (end_date.year * 12 + end_date.month)).abs
+    end
   end
   
   def ratio

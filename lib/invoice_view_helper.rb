@@ -27,15 +27,14 @@ module InvoiceViewHelper
       tempfile
     end
   
-    def render_pdf(lease, invoice, invoice_date, month_description)
+    def render_pdf(lease, invoice, invoice_date)
       building_id = lease.apartment.building.id
       setup = Setup.where(:building_id => building_id).first || Setup.new
       company = Company.first || Company.new
       
       pdf_html = renderer.render :template => "layouts/invoice.html.erb", :layout => nil, encoding: 'utf8',
                                  :locals => {:company => company, :lease => lease, :invoice => invoice, 
-                                             :invoice_date => invoice_date, :month_description => month_description,
-                                             :setup => setup }
+                                             :invoice_date => invoice_date, :setup => setup }
                                              
       WickedPdf.new.pdf_from_string(pdf_html, :page_size => "Letter")
     end

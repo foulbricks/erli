@@ -85,7 +85,7 @@
 						<% if rent = invoice.invoice_charges.select {|i| i.kind == "rent" }.first %>
 							<div class="row">
 								<p class="col-xs-9">CANONE DI LOCAZIONE PER LOCALE SITO IN <%= [building.address, building.home_number, building.cap, building.localita, building.provincia].join(" ") %><br />
-									<%= month_description %>
+									<%= rent.name %>
 								</p>
 								<p class="col-xs-2 text-right"><%= number_to_currency(rent.amount) %></p>
 							</div>
