@@ -91,33 +91,43 @@ class Invoice < ActiveRecord::Base
   end
   
   def self.generate(building_id, invoice_date=Date.today)
-    csv = MavCsv.where("generated = ?", Date.today).first
-    csv = MavCsv.create!(:building_id => building_id, :generated => invoice_date) unless csv
+    runner = InvoiceRunner.where("building_id = ? AND BETWEEN ? AND ?", building_id, 
+            invoice_date.at_beginning_of_month, invoice_date.end_of_month).first
+    last_runner = InvoiceRunner.where("building_id = ? AND BETWEEN ? AND ?", building_id, 
+            invoice_date.prev_month.at_beginning_of_month, invoice_date.prev_month.end_of_month).first
+            
+    if runner.nil?
+      csv = MavCsv.where("generated = ?", Date.today).first
+      csv = MavCsv.create!(:building_id => building_id, :generated => invoice_date) unless csv
+      setup = Setup.where(:building_id => building.id).first || Setup.new
+      last_generated = last_runner.generated_date if last_runner
     
-    registered_leases(building_id, invoice_date).each do |lease|
-      invoice = self.new(:building_id => building_id, :number => get_invoice_number(lease, invoice_date),
-                         :lease_id => lease.id, :start_date => invoice_date.at_beginning_of_month,
-                         :end_date => invoice_date.end_of_month, :mav_csv_id => csv.id)
+      registered_leases(building_id, invoice_date).each do |lease|
+        invoice = self.new(:building_id => building_id, :number => get_invoice_number(lease, invoice_date),
+                           :lease_id => lease.id, :start_date => invoice_date.at_beginning_of_month,
+                           :end_date => invoice_date.end_of_month, :mav_csv_id => csv.id)
       
-      charge_rent(lease, invoice, invoice_date)
+        charge_rent(lease, invoice, invoice_date, setup, last_generated)
       
-      unless (lease.start_date..lease.end_date).include?(invoice_date)
-        charge_lease_expenses(lease, invoice, invoice_date)
-        charge_apartment_expenses(lease, invoice, invoice_date)
-      end
-      
-      unless calculate_total(lease, invoice) == 0
-        invoice.temporary_bollo = get_available_bollo(invoice)
-    
-        temp = Invoice.tempfile(Invoice.render_pdf(invoice.lease, invoice, invoice_date))
-        invoice.document = File.open temp.path
-        temp.unlink
-    
-        if invoice.save
-          invoice.post_save
+        unless (lease.start_date..lease.end_date).include?(invoice_date)
+          charge_lease_expenses(lease, invoice, invoice_date)
+          charge_apartment_expenses(lease, invoice, invoice_date)
         end
-      end
       
+        unless calculate_total(lease, invoice) == 0
+          invoice.temporary_bollo = get_available_bollo(invoice)
+    
+          temp = Invoice.tempfile(Invoice.render_pdf(invoice.lease, invoice, invoice_date))
+          invoice.document = File.open temp.path
+          temp.unlink
+    
+          if invoice.save
+            invoice.post_save
+          end
+        end
+      
+      end
+      InvoiceRunner.create(:building_id => building_id, :generated_date => invoice_date)
     end
   end
   

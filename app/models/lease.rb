@@ -90,7 +90,7 @@ class Lease < ActiveRecord::Base
   end
   
   def lease_months
-    if end_date == end_date.end_of_month
+    if end_date == end_date.end_of_month || payment_frequency > 1
       from, count = start_date, 0
       while from < end_date
         count += 1

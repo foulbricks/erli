@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150326153532) do
+ActiveRecord::Schema.define(version: 20150402010100) do
 
   create_table "ad_attachments", force: true do |t|
     t.integer  "ad_id"
@@ -201,6 +201,13 @@ ActiveRecord::Schema.define(version: 20150326153532) do
     t.integer  "lease_id"
     t.boolean  "iva_exempt",                                default: false
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "invoice_runners", force: true do |t|
+    t.date     "generated_date"
+    t.integer  "building_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

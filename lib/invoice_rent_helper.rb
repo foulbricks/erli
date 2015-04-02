@@ -11,11 +11,11 @@ module InvoiceRentHelper
       ranges = date_tables(lease.start_date, lease.end_date, lease.payment_frequency)
       period = charge_range(lease, ranges, charge_date, last_generated)
       puts period.inspect
-      amount = charge_amount_with_istat(lease, charge_date, ranges, period, last_generated, setup) #* lease.ratio
+      amount = charge_amount_with_istat(lease, charge_date, ranges, period, last_generated, setup) * lease.ratio
 
       if amount != 0
-        invoice.invoice_charges.build(:kind => "rent", #:lease_id => lease.id, 
-          :start_date => period.first, :end_date => period.last, :amount => amount)#, :name => month_description(period))
+        invoice.invoice_charges.build(:kind => "rent", :lease_id => lease.id, 
+          :start_date => period.first, :end_date => period.last, :amount => amount), :name => month_description(period))
       end
     end
 
@@ -58,6 +58,16 @@ module InvoiceRentHelper
             (Date.same_month?(lease.start_date, charge_date.prev_month) && lease.start_date > last_generated)
             if ranges.size == 1 or (from == ranges[0].first && to == ranges[1].last)
               return lease.amount
+            else
+              if ranges.last.last == to
+                sum = 0.0
+                ranges.pop
+                ranges.each {|r| sum += calculated_amount_multiple_frequency(lease, r) }
+                puts sum
+                return lease.amount - sum
+              else
+                return calculated_amount_multiple_frequency(lease, period)
+              end
             end
           else
             # If it starts on this period and there is only one range to charge, charge
@@ -99,6 +109,16 @@ module InvoiceRentHelper
           amount += partial_charge(lease, from, to) # start is 1 and end is partial
         end
         from = (from + 1.month).at_beginning_of_month
+      end
+      (amount * 100).round / 100.0
+    end
+    
+    def calculated_amount_multiple_frequency(lease, period)
+      from, to = period.first, period.last
+      if from.mday == 1 && ((to + 1.day) == from + lease.payment_frequency.months)
+        amount = lease.monthly_charge * lease.payment_frequency
+      else
+        amount = lease.daily_charge * (from..to).count
       end
       (amount * 100).round / 100.0
     end
