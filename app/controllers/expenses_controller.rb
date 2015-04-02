@@ -41,14 +41,23 @@ class ExpensesController < ApplicationController
   
   def destroy
     @expense = Expense.find(params[:id])
-    @expense.destroy
+    if @expense.destroy
+      flash[:notice] = "Tipo di spesa cancellata con successo"
+    else
+      flash[:alert] = "Tipo di spesa non puo essere eliminata perche ha gia spese!"
+    end
     
-    flash[:notice] = "Spesa cancellata con successo"
     redirect_to expenses_path
   end
   
   def show
     @expense = Expense.find(params[:id])
+  end
+  
+  def check_balance_date
+    expense = Expense.find(params[:id])
+    conguaglio = @expense.balance_date_id.present? ? true : false
+    render :json => conguaglio
   end
   
   private

@@ -22,7 +22,7 @@ class BuildingExpensesController < ApplicationController
       if @asset_expense.save
         flash[:notice] = "Spesa salvata con successo"
         format.json { render :json => {:success => true } }
-        format.html { render :text => "" }
+        format.html { render :text => "success" }
       else
         format.json { render :json => {:errors => @asset_expense.errors.full_messages} }
         format.html { render :text => @asset_expense.errors.full_messages }
@@ -47,7 +47,7 @@ class BuildingExpensesController < ApplicationController
         
         flash[:notice] = "Spesa aggiornata con successo"
         format.json { render :json => {:success => true } }
-        format.html { render :text => "" }
+        format.html { render :text => "success" }
       else
         format.json { render :json => {:errors => @asset_expense.errors.full_messages} }
         format.html { render :text => @asset_expense.errors.full_messages }

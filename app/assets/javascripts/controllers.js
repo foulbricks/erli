@@ -135,7 +135,18 @@ controller("leaseAttachmentFormController", [
 controller("apartmentExpensesController", [
 	"$scope", "$http",
 	function($scope, $http){
+		$scope.conguaglio = false;
 		
+		$scope.$watch("expense", function(){
+			if($scope.expense){
+				$http({
+					method: "GET",
+					url: "/expense/" + $scope.expense + "/check_balance_date"
+				}).success(function(result){
+					$scope.conguaglio = result;
+				});
+			}
+		});
 	}
 ]).
 

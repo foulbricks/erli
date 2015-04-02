@@ -69,7 +69,7 @@
 							<%= lease.cap %> <%= lease.localita.upcase %></p>
 						</div>
 						<div class="col-xs-6">
-							<p><% if lease.home_number.present? %> N.<%= lease.home_number %><br /><% end %>
+							<p><% if lease.home_number.present? %> N.<%= lease.home_number %><% end %> &nbsp;<br />
 								Prov. <%= lease.provincia %></p>
 						</div>
 					</div>
@@ -98,18 +98,28 @@
 						<% expenses_with_iva_names = expenses_with_iva.map {|i| i.asset_expense.expense.try(:name) }.join(", ") %>
 						<% expenses_without_iva_names = expenses_without_iva.map {|i| i.asset_expense.expense.try(:name).try(:upcase) }.join(", ") %>
 						
-						<% if expenses_with_iva_total > 0 %>
-							<div class="row">
-								<p class="col-xs-9">CONTO SPESE <%= expenses_with_iva_names %> SALVO CONGUAGLIO</p>
-								<p class="col-xs-2 text-right"><%= number_to_currency(expenses_with_iva_total) %></p>
-							</div>
-						<% end %>
+						<% unless setup.itemized_expenses %>
+							<% if expenses_with_iva_total > 0 %>
+								<div class="row">
+									<p class="col-xs-9">CONTO SPESE <%= expenses_with_iva_names %> SALVO CONGUAGLIO</p>
+									<p class="col-xs-2 text-right"><%= number_to_currency(expenses_with_iva_total) %></p>
+								</div>
+							<% end %>
 						
-						<% if expenses_without_iva_total > 0 %>
-							<div class="row">
-								<p class="col-xs-9">CONTO SPESE <%= expenses_without_iva_names %> SALVO CONGUAGLIO</p>
-								<p class="col-xs-2 text-right"><%= number_to_currency(expenses_without_iva_total) %></p>
-							</div>
+							<% if expenses_without_iva_total > 0 %>
+								<div class="row">
+									<p class="col-xs-9">CONTO SPESE <%= expenses_without_iva_names %> SALVO CONGUAGLIO</p>
+									<p class="col-xs-2 text-right"><%= number_to_currency(expenses_without_iva_total) %></p>
+								</div>
+							<% end %>
+						<% else %>
+							<% building_expenses = invoice.invoice_charges.select {|i| i.kind == "building_expense" } %>
+							<% building_expenses.each do |b| %>
+								<div class="row">
+									<p class="col-xs-9">CONTO SPESE <%= b.asset_expense.expense.try(:name).try(:upcase) %> SALVO CONGUAGLIO</p>
+									<p class="col-xs-2 text-right"><%= number_to_currency(b.amount) %></p>
+								</div>
+							<% end %>
 						<% end %>
 						
 						<% apartment_expenses = invoice.invoice_charges.select {|i| i.kind == "apartment_expense" } %>

@@ -20,7 +20,7 @@ class AssetExpense < ActiveRecord::Base
   validates :amount, :numericality => true
   validate :lease_presence
   
-  before_save :cache_apartment_expenses
+  before_save :cache_apartment_expenses, :cache_balance_date
   
   private
   
@@ -48,6 +48,14 @@ class AssetExpense < ActiveRecord::Base
           rescue
           end
         end
+      end
+    end
+  end
+  
+  def cache_balance_date
+    if asset_type == "Apartment" and apartment_expense_id.nil?
+      if b = self.expense.try(:balance_date)
+        self.balance_date = b.value
       end
     end
   end

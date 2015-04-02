@@ -37,9 +37,11 @@ class ContractsController < ApplicationController
   
   def destroy
     @contract = Contract.find(params[:id])
-    @contract.destroy
-    
-    flash[:notice] = "Tipo di contratto cancellato con successo"
+    if @contract.destroy
+      flash[:notice] = "Tipo di contratto cancellato con successo"
+    else
+      flash[:alert] = "Tipo di contratto non puo essere eliminato perche ha gia locazioni!"
+    end
     redirect_to contracts_path
   end
   

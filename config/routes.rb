@@ -62,7 +62,12 @@ Rails.application.routes.draw do
     end
   end
   
-  resources :expenses
+  resources :expenses do
+    member do
+      get "check_balance_date"
+    end
+  end
+  
   resources :repartition_tables
   resources :contracts
   resources :balance_dates
