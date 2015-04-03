@@ -10,7 +10,6 @@ module InvoiceRentHelper
       last_generated = charge_date - 1.month unless last_generated
       ranges = date_tables(lease.start_date, lease.end_date, lease.payment_frequency)
       period = charge_range(lease, ranges, charge_date, last_generated)
-      puts period.inspect
       amount = charge_amount_with_istat(lease, charge_date, ranges, period, last_generated, setup) * lease.ratio
 
       if amount != 0
@@ -29,7 +28,6 @@ module InvoiceRentHelper
         setup_ratio = setup_istat > 0 ? setup_istat/100.0 : 1
 
         if period.first >= istat_date
-          puts "@@@@", amount, contract_ratio
           a = amount + (amount * contract_ratio * setup_ratio)
         else
           num_days = (istat_date..period.last).count
@@ -64,7 +62,6 @@ module InvoiceRentHelper
                 sum = 0.0
                 ranges.pop
                 ranges.each {|r| sum += calculated_amount_multiple_frequency(lease, r) }
-                puts sum
                 return lease.amount - sum
               else
                 return calculated_amount_multiple_frequency(lease, period)
@@ -136,7 +133,6 @@ module InvoiceRentHelper
         ranges << (from..to)
         from = (from + months.months).at_beginning_of_month
       end
-      puts ranges
       ranges
     end
 

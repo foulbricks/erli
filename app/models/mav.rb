@@ -1,4 +1,5 @@
 require "csv"
+require 'zip'
 
 class Mav < ActiveRecord::Base
   belongs_to :invoice
@@ -8,6 +9,8 @@ class Mav < ActiveRecord::Base
   mount_uploader :document, DocumentUploader
   
   validates :user_id, :building_id, :invoice_id, :presence => true
+  
+  MAV_PROCESSING_PATH = File.join(Rails.root, "public", "mavprocessing")
   
   def amount
     ((invoice.total * user.real_percentage / 100) * 100).round / 100.0
@@ -22,11 +25,11 @@ class Mav < ActiveRecord::Base
   end
   
   def self.import(file)
+    count = 0
     spreadsheet = open_spreadsheet(file)
     header = spreadsheet.row(1)
     (2..spreadsheet.last_row).each do |i|
       row = Hash[[header, spreadsheet.row(i)].transpose]
-      puts "@@@@@@", row["CODICE MAV RID"].to_s
       mav = find_by_mav_rid(row["CODICE MAV RID"].to_i.to_s)
       if mav
         if row["STATO"] =~ /Pagato/i
@@ -34,9 +37,81 @@ class Mav < ActiveRecord::Base
           mav.last_paid_on = Date.today
           mav.amount_paid = row["IMPORTO"]
           mav.save
+          count += 1
         end
       end
     end
+    count
+  end
+  
+  def self.upload_batch(file)
+    count = 0
+    if File.extname(file.original_filename) == ".zip"
+      Zip::File.open(file.path) do |zip_file|
+        zip_file.each do |entry|
+          begin
+            entry.extract(File.join(MAV_PROCESSING_PATH, entry.name.gsub(/\s+/, "_")))
+          rescue
+          end
+        end
+      end
+      
+      Dir.glob(File.join(MAV_PROCESSING_PATH, "*.pdf")) do |file_path|
+        File.open(file_path, "rb") do |file| 
+          reader = PDF::Reader.new(file)
+        
+          page = reader.pages[0]
+          text = page.text 
+          text =~ /codice debitore\s*\n(\w+)\s+/im
+          codice = $1
+          text =~ /scadenza\s*\n\s*(\d+\/\d+\/\d+)/im
+          due_date = $1
+          text =~ /(\d+)\s*\n\s*timbro/im
+          mav_id = $1
+          
+          if mav_id && due_date && codice
+            user = User.find_by_codice_fiscale(codice)
+            begin
+              expiration = Date.parse(due_date)
+            rescue
+            end
+
+            if user && expiration
+              mav = Mav.where("user_id = ? AND expiration = ?", user.id, expiration).first
+              if mav
+                mav.mav_rid = mav_id
+                mav.document = file
+                mav.save
+                count += 1
+              end
+            end
+          end
+        end
+        File.delete(file_path)
+        
+        # name = filename.gsub(/\.pdf$/, "")
+        # codice, mavid, due_date = name.split("_")
+        # if due_date
+        #   user = User.find_by_codice_fiscale(codice)
+        #   begin
+        #     expiration = Date.parse(due_date)
+        #   rescue
+        #   end
+        #   
+        #   if user && expiration
+        #     mav = Mav.where("user_id = ? AND expiration = ?", user.id, expiration).first
+        #     mav.mav_rid = mavid
+        #     File.open(filename) do |f|
+        #       mav.document = f
+        #     end
+        #     mav.save
+        #   end
+        # end
+        # File.delete(file_path)
+      end
+      
+    end
+    count
   end
 
   def self.open_spreadsheet(file)

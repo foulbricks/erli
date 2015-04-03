@@ -1,5 +1,5 @@
 class BalanceDate < ActiveRecord::Base
-  has_many :expenses
+  has_many :expenses, :dependent => :nullify
   belongs_to :building
   
   validates :value, :building_id, :presence => true

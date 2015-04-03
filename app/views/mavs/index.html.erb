@@ -7,6 +7,24 @@
 		<% end %>
 		
 		<h3>MAVs</h3>
+		<hr />
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="row" style="background-color:#fff;padding:10px;border-radius:2px;border:1px solid #fff; margin-bottom:20px;margin-left:5px;">
+					<%= form_tag upload_batch_mavs_path, multipart: true do %>
+						<div>
+							<div class="form-group col-sm-8">
+								<label for="file" class="control-label">Carica MAVs Zip</label><br /><br/>
+								<%= file_field_tag :file %>
+							</div>
+							<div class="form-group col-sm-4" style="margin-top:20px;">
+								<%= submit_tag "Caricare", :class => "btn btn-primary" %>
+							</div>
+						</div>
+					<% end %>
+				</div>
+			</div>
+		</div>
 		<div class="row">
 			<%= form_tag "/mavs", :method => :get do %>
 				<div class="form-group col-sm-3">
@@ -50,9 +68,14 @@
 							<td><%= number_to_currency(mav.amount) %></td>
 							<td><%= mav.created_at.strftime("%d-%m-%Y") %></td>
 							<td><%= mav.status %></td>
-							<td><%= link_to "Caricare MAV", "#", :"ng-click" => "openModal($event,'#{edit_mav_path(mav.id)}')" %>
+							<td>
+								<% unless mav.document.present? %>
+									<%= link_to "Caricare MAV", "#", :"ng-click" => "openModal($event,'#{edit_mav_path(mav.id)}')" %>
+								<% end %>
+							</td>
+									
 							<td class="download-link-<%= mav.id %>"><% if mav.document.present? %>
-								<%= link_to "Scaricare MAV", "#" %>
+								<%= link_to "Scaricare MAV", download_mav_path(mav.id) %>
 								<% end %>
 							</td>
 						</tr>

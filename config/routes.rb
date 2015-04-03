@@ -117,6 +117,7 @@ Rails.application.routes.draw do
       get "csvs"
       get "unpaid"
       post "report_paid"
+      post "upload_batch"
     end
     member do
       get "generate_csv"

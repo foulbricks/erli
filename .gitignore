@@ -15,7 +15,9 @@
 /log/*.log
 /tmp
 /public/uploads
+/public/mavprocessing
 .elasticbeanstalk/
+.DS_Store
 Capfile
 bin/cap
 bin/capify

@@ -26,11 +26,11 @@ module InvoiceExpenseHelper
             
             conguaglio_expenses = lease.apartment.asset_expenses.where("balance_date = ? AND expense_id = ? AND " +
              "start_date <= ?::date AND end_date >= ?::date", balance_date, lease_expense.expense.id, lease.end_date, 
-             lease.start_date).all
+             lease.start_date).order("start_date ASC").all
              
             if conguaglio_expenses.size > 0
-              expense_calc = expense_total_charge(conguaglio_expenses, lease, lease_expense)
-              total =  expense_calc + lease_expense.amount - total_expense_charges(lease_expense)
+              expense_calc = expense_total_charge(conguaglio_expenses, lease)
+              total =  expense_calc + lease_expense.amount - total_expense_charges(lease_expense, conguaglio_expenses)
               invoice.invoice_charges.build(:kind => kind, :lease_id => lease.id,
                 :iva_exempt => lease_expense.expense.iva_exempt, :amount => total, :start_date => charge_start,
                 :end_date => charge_end, :asset_expense_id => lease_expense.id, :balanced => true)
@@ -58,13 +58,9 @@ module InvoiceExpenseHelper
     end
 
     # Calculates all expenses that fall between the lease date (used for conguaglio expenses)
-    def expense_total_charge(expenses, lease, lease_expense)
+    def expense_total_charge(expenses, lease)
       charges_start = lease.start_date
       charges_end = lease.end_date
-      first_charge = lease_expense.invoice_charges.order("created_at ASC").first
-      if first_charge && (lease.start_date + 1.month).end_of_month < first_charge.start_date
-        charges_start = first_charge.start_date
-      end
       
       total = 0.0
       expenses.each do |expense|
@@ -89,14 +85,21 @@ module InvoiceExpenseHelper
     end
 
     # Adds all the invoice charges related to a lease expense, after a balanced expense
-    def total_expense_charges(lease_expense)
-      last_balanced = lease_expense.invoice_charges.where(:balanced => true).order("created_at DESC").first
-      if last_balanced
-        charges = lease_expense.invoice_charges.where("end_date > ?", last_balanced.end_date).all
-      else
-        charges = lease_expense.invoice_charges.all
+    def total_expense_charges(lease_expense, conguaglio_expenses)
+      calculation_starts = conguaglio_expenses.first.start_date
+      calculation_ends = conguaglio_expenses.last.end_date
+      total = 0.0
+      from = calculation_starts
+      while from.end_of_month <= calculation_ends.end_of_month
+        to = Date.same_month?(from, calculation_ends) ? calculation_ends : from.end_of_month
+        if from.mday == 1 and to.end_of_month == from.end_of_month
+          total += lease_expense.amount
+        else
+          total += ( (from..to).count/to.mday.to_f ) * lease_expense.amount
+        end
+        from = from.next_month.at_beginning_of_month
       end
-      charges.map(&:amount).sum
+      total
     end
     
     def apartment_expenses(lease)

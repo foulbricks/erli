@@ -81,8 +81,15 @@ class MavsController < ApplicationController
   end
   
   def report_paid
-    Mav.import(params[:file])
+    count = Mav.import(params[:file])
+    flash[:notice] = "#{count} MAV contrassegnati come pagati"
     redirect_to unpaid_mavs_path
+  end
+  
+  def upload_batch
+    count = Mav.upload_batch(params[:file])
+    flash[:notice] = "Caricati #{count} file"
+    redirect_to mavs_path
   end
   
   private

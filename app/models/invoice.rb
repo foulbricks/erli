@@ -10,18 +10,13 @@ class Invoice < ActiveRecord::Base
   has_many :asset_expenses, :dependent => :nullify
   has_many :mavs, :dependent => :destroy
   has_one :bollo, :dependent => :nullify
+  has_many :invoice_runners, :dependent => :destroy
   belongs_to :lease
   belongs_to :mav_csv
   
   validates_presence_of :lease_id
   
   accepts_nested_attributes_for :invoice_charges, reject_if: proc { |attributes| attributes['amount'].blank? }
-  
-  # before_destroy do |i|
-  #   i.asset_expenses.all.each do |e|
-  #     e.update_column(:invoice_id, nil)
-  #   end
-  # end
   
   before_save do |i|
     self.total = Invoice.calculate_total(self.lease, self)
@@ -51,7 +46,6 @@ class Invoice < ActiveRecord::Base
   
   # For manually entered invoices
   def populate(building_id)
-    puts "@@@@@@@@@@", self.valid?
     if self.valid?
       self.start_date = Date.today.at_beginning_of_month
       self.end_date = Date.today.end_of_month
@@ -65,10 +59,7 @@ class Invoice < ActiveRecord::Base
       end
       
       self.temporary_bollo = Invoice.get_available_bollo(self)
-      
-      temp = Invoice.tempfile(Invoice.render_pdf(self.lease, self, Date.today))
-      self.document = File.open temp.path
-      temp.unlink
+      self.create_pdf
     end
   end
   
@@ -90,6 +81,13 @@ class Invoice < ActiveRecord::Base
     deliver = deliver.next_month if deliver <= self.created_at
     self.delivery_date = deliver
   end
+  
+  def create_pdf
+    temp = Invoice.tempfile(Invoice.render_pdf(self.lease, self, Date.today))
+    self.document = File.open temp.path
+    temp.unlink
+  end
+  
   
   def self.generate(building_id, invoice_date=Date.today)  
     csv = MavCsv.where("generated = ?", Date.today).first
@@ -117,19 +115,17 @@ class Invoice < ActiveRecord::Base
     
         unless calculate_total(lease, invoice) == 0
           invoice.temporary_bollo = get_available_bollo(invoice)
-  
-          temp = Invoice.tempfile(Invoice.render_pdf(invoice.lease, invoice, invoice_date))
-          invoice.document = File.open temp.path
-          temp.unlink
+          invoice.create_pdf
   
           if invoice.save
             invoice.post_save
           end
         end
-      end
-      
-      unless invoice.lease.contract && invoice.lease.contract.iva_exempt? && invoice.bollo.nil?
-        InvoiceRunner.create(:lease_id => lease.id, :generated_date => invoice_date)
+        
+        unless (invoice.lease.contract && invoice.lease.contract.iva_exempt? && invoice.bollo.nil?) || invoice.new_record?
+          InvoiceRunner.create(:lease_id => lease.id, :invoice_id => invoice.id, :generated_date => invoice_date)
+        end
+        
       end
     end
   end

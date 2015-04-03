@@ -6,7 +6,7 @@
 			<div class="alert alert-danger"><%= flash[:alert] %></div>
 		<% end %>
 		
-		<h3>MAVs</h3>
+		<h3>Situazione Insolventi</h3>
 		<hr />
 		<div class="row">
 			<div class="col-sm-6">
@@ -67,7 +67,7 @@
 								<td><%= number_to_currency(mav.amount) %></td>
 								<td><%= mav.expiration.strftime("%d-%m-%Y") %></td>
 								<td class="download-link-<%= mav.id %>"><% if mav.document.present? %>
-									<%= link_to "Scaricare MAV", "#" %>
+									<%= link_to "Scaricare MAV", download_mav_path(mav.id) %>
 									<% end %>
 								</td>
 							</tr>
