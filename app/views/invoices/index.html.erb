@@ -45,7 +45,7 @@
 							<td><%= invoice.number %></td>
 							<td><%= invoice.lease.apartment.name %></td>
 							<td><%= number_to_currency(invoice.total) %></td>
-							<td><%= invoice.start_date.strftime("%d/%m/%Y") %> - <%= invoice.end_date.strftime("%d/%m/%Y") %></td>
+							<td><%= I18n.t("date.month_names")[invoice.start_date.month].titleize %>, <%= invoice.start_date.year %></td>
 							<% unless invoice.approved? %>
 							<td><%= link_to "Approvare", approve_invoice_path(invoice.id) %></td>
 							<% else %>

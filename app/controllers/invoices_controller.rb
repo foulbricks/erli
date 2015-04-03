@@ -8,10 +8,10 @@ class InvoicesController < ApplicationController
       apartment = Apartment.find(params[:apartment_id])
       ids = apartment.leases.map(&:id)
       @invoices = Invoice.where("lease_id IN (?)", ids).
-                    paginate(:per_page => 50, :page => params[:page]).order("number DESC")
+                    paginate(:per_page => 50, :page => params[:page]).order("start_date DESC, number DESC")
     else
       @invoices = Invoice.where(building_id: cookies[:building]).
-                        paginate(:per_page => 50, :page => params[:page]).order("number DESC")
+                        paginate(:per_page => 50, :page => params[:page]).order("start_date DESC, number DESC")
     end
   end
   

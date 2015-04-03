@@ -79,7 +79,7 @@ class ApartmentExpensesController < ApplicationController
   private
   
   def apartment_expense_params
-    params.require(:asset_expense).permit(:expense_id, :amount, :asset_id, :asset_type,
+    params.require(:asset_expense).permit(:expense_id, :amount, :asset_id, :asset_type, :start_date, :end_date,
                   :expense_attachment_attributes => [:document, :id] )
   end
 end

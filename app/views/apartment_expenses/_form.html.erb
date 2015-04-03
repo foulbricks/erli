@@ -1,7 +1,7 @@
 <% url = @expense.new_record? ? apartment_apartment_expenses_path(@apartment.id) : apartment_apartment_expense_path(@apartment.id, @expense.id) %>
 <% method = @expense.new_record? ? :post : :put %>
 <%= form_for @expense, url: url, method: method, html: {:novalidate => "novalidate", name: "apartmentExpenseForm", :multipart => true, :target => "iframe" } do |f| %>
-	<div class="form-group" ng-init="expense=<%= @expense.asset_id || "\'\'" %>">
+	<div class="form-group" ng-init="expense=<%= @expense.expense_id || "\'\'" %>">
 		<%= f.label :expense_id, "Nome di Spesa" %>
 		<%= f.select :expense_id, options_from_collection_for_select(@expenses, "id", "name", @expense.expense_id), {:prompt => "Seleziona"}, {:class => "form-control", :"ng-model" => "expense", :"ng-required" => true } %>
 	</div>
@@ -40,10 +40,8 @@
 			<p><%= a.file_field :document, :placeholder => "Documente" %></p>
 		</div>
 	<% end %>
-	<div class="form-group"
-		<div class="col-sm-9 col-sm-offset-3">
-			<%= f.submit "Salva Spesa di Appartamento", :class => "btn btn-primary", :"ng-disabled" => "apartmentExpenseForm.$invalid"%>
-		</div>
+	<div class="form-group">
+		<%= f.submit "Salva Spesa di Appartamento", :class => "btn btn-primary", :"ng-disabled" => "apartmentExpenseForm.$invalid"%>
 		<ul class="danger leaseFormErrors">
 		</ul>
 		<iframe name="iframe" id="iframe" style="display:none" ></iframe>

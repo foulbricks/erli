@@ -13,9 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20150402210819) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "ad_attachments", force: true do |t|
     t.integer  "ad_id"
     t.string   "image"
@@ -38,7 +35,7 @@ ActiveRecord::Schema.define(version: 20150402210819) do
   create_table "apartment_repartition_tables", force: true do |t|
     t.integer  "apartment_id"
     t.integer  "repartition_table_id"
-    t.decimal  "percentage",           precision: 15, scale: 2
+    t.decimal  "percentage"
     t.integer  "floor"
     t.string   "name"
     t.datetime "created_at"
@@ -62,7 +59,7 @@ ActiveRecord::Schema.define(version: 20150402210819) do
     t.integer  "asset_id"
     t.string   "asset_type"
     t.integer  "expense_id"
-    t.decimal  "amount",               precision: 15, scale: 2
+    t.decimal  "amount"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "start_date"
@@ -70,6 +67,7 @@ ActiveRecord::Schema.define(version: 20150402210819) do
     t.integer  "invoice_id"
     t.integer  "lease_id"
     t.date     "paid_on"
+    t.boolean  "paid"
     t.integer  "apartment_expense_id"
     t.date     "balance_date"
   end
@@ -84,14 +82,14 @@ ActiveRecord::Schema.define(version: 20150402210819) do
   create_table "bollo_ranges", force: true do |t|
     t.integer  "from"
     t.integer  "to"
-    t.decimal  "price",      precision: 15, scale: 2
+    t.decimal  "price"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "bollos", force: true do |t|
     t.integer  "identifier"
-    t.decimal  "price",          precision: 15, scale: 2
+    t.decimal  "price"
     t.integer  "invoice_id"
     t.integer  "bollo_range_id"
     t.datetime "created_at"
@@ -141,10 +139,10 @@ ActiveRecord::Schema.define(version: 20150402210819) do
 
   create_table "contracts", force: true do |t|
     t.string   "name"
-    t.decimal  "istat",      precision: 15, scale: 2
+    t.decimal  "istat"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "iva_exempt",                          default: false
+    t.boolean  "iva_exempt", default: false
   end
 
   create_table "events", force: true do |t|
@@ -173,8 +171,8 @@ ActiveRecord::Schema.define(version: 20150402210819) do
   create_table "expenses", force: true do |t|
     t.string   "name"
     t.string   "kind"
-    t.boolean  "add_to_invoice",       default: false
-    t.boolean  "add_to_conguaglio",    default: false
+    t.boolean  "add_to_invoice"
+    t.boolean  "add_to_conguaglio"
     t.integer  "building_id"
     t.integer  "repartition_table_id"
     t.datetime "created_at"
@@ -200,6 +198,9 @@ ActiveRecord::Schema.define(version: 20150402210819) do
     t.boolean  "paid",                                      default: false
     t.string   "kind"
     t.integer  "asset_expense_id"
+    t.integer  "lease_id"
+    t.boolean  "iva_exempt",                                default: false
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "balanced",                                  default: false
@@ -222,6 +223,7 @@ ActiveRecord::Schema.define(version: 20150402210819) do
     t.date     "start_date"
     t.date     "end_date"
     t.decimal  "total",         precision: 15, scale: 2, default: 0.0
+    t.boolean  "approved"
     t.integer  "mav_csv_id"
     t.date     "delivery_date"
   end
@@ -289,20 +291,20 @@ ActiveRecord::Schema.define(version: 20150402210819) do
 
   create_table "setups", force: true do |t|
     t.date     "balance_expenses"
-    t.decimal  "iva",                   precision: 15, scale: 2
-    t.decimal  "istat",                 precision: 15, scale: 2
+    t.decimal  "iva"
+    t.decimal  "istat"
     t.integer  "mav_expiration"
     t.integer  "invoice_generation"
     t.integer  "invoice_delivery"
     t.text     "unpaid_sentence"
     t.string   "erli_mav_email"
-    t.boolean  "erli_mav_email_active",                          default: false
+    t.boolean  "erli_mav_email_active"
     t.string   "erli_admin_email"
     t.integer  "building_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "default_warning"
-    t.boolean  "itemized_expenses",                              default: false
+    t.boolean  "itemized_expenses",     default: false
   end
 
   create_table "unpaid_alarms", force: true do |t|
@@ -353,7 +355,6 @@ ActiveRecord::Schema.define(version: 20150402210819) do
     t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "codice_salt"
     t.string   "codice_fiscale"
     t.boolean  "secondary",                                       default: false
     t.integer  "lease_id"

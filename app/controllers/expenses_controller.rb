@@ -56,7 +56,7 @@ class ExpensesController < ApplicationController
   
   def check_balance_date
     expense = Expense.find(params[:id])
-    conguaglio = @expense.balance_date_id.present? ? true : false
+    conguaglio = expense.balance_date_id.present? ? true : false
     render :json => conguaglio
   end
   

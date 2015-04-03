@@ -29,7 +29,7 @@ module InvoiceExpenseHelper
              lease.start_date).all
              
             if conguaglio_expenses.size > 0
-              expense_calc = expense_total_charge(conguaglio_expenses, lease)
+              expense_calc = expense_total_charge(conguaglio_expenses, lease, lease_expense)
               total =  expense_calc + lease_expense.amount - total_expense_charges(lease_expense)
               invoice.invoice_charges.build(:kind => kind, :lease_id => lease.id,
                 :iva_exempt => lease_expense.expense.iva_exempt, :amount => total, :start_date => charge_start,
@@ -51,26 +51,33 @@ module InvoiceExpenseHelper
     def charge_apartment_expenses(lease, invoice, invoice_date=Date.today)
       apartment_expenses(lease).each do |e|
         if e.expense && e.expense.add_to_invoice?
-          invoice.invoice_charges.build(:kind => "apartment_expense", :lease_id => lease.id, :iva_exempt => false,
+          invoice.invoice_charges.build(:kind => "apartment_expense", :lease_id => lease.id, :iva_exempt => e.expense.iva_exempt,
             :amount => e.amount, :start_date => invoice.start_date, :end_date => invoice.end_date, :asset_expense_id => e.id)
         end
       end
     end
 
     # Calculates all expenses that fall between the lease date (used for conguaglio expenses)
-    def expense_total_charge(expenses, lease)
+    def expense_total_charge(expenses, lease, lease_expense)
+      charges_start = lease.start_date
+      charges_end = lease.end_date
+      first_charge = lease_expense.invoice_charges.order("created_at ASC").first
+      if first_charge && (lease.start_date + 1.month).end_of_month < first_charge.start_date
+        charges_start = first_charge.start_date
+      end
+      
       total = 0.0
       expenses.each do |expense|
         # Complete charge. Expense falls inside lease duration completely
-        if lease.start_date <= expense.start_date && lease.end_date >= expense.end_date
+        if charges_start <= expense.start_date && charges_end >= expense.end_date
           total += expense.amount
         else
           # Expense started after lease started, but lease ended before expense ended
-          if lease.start_date <= expense.start_date && lease.end_date <= expense.end_date
-            num_days = (expense.start_date..lease.end_date).count
+          if charges_start <= expense.start_date && charges_end <= expense.end_date
+            num_days = (expense.start_date..charges_end).count
           # Expense started before lease started, but expense ended before lease ended
-          elsif lease.start_date >= expense.start_date && lease.end_date >= expense.end_date 
-            num_days = (lease.start_date..expense.end_date).count
+          elsif charges_start >= expense.start_date && charges_end >= expense.end_date 
+            num_days = (charges_start..expense.end_date).count
           else
             num_days = 0
           end

@@ -51,6 +51,7 @@ class Invoice < ActiveRecord::Base
   
   # For manually entered invoices
   def populate(building_id)
+    puts "@@@@@@@@@@", self.valid?
     if self.valid?
       self.start_date = Date.today.at_beginning_of_month
       self.end_date = Date.today.end_of_month
@@ -93,12 +94,12 @@ class Invoice < ActiveRecord::Base
   def self.generate(building_id, invoice_date=Date.today)  
     csv = MavCsv.where("generated = ?", Date.today).first
     csv = MavCsv.create!(:building_id => building_id, :generated => invoice_date) unless csv
-    setup = Setup.where(:building_id => building.id).first || Setup.new
+    setup = Setup.where(:building_id => building_id).first || Setup.new
   
     registered_leases(building_id, invoice_date).each do |lease|
-      runner = InvoiceRunner.where("lease_id = ? AND BETWEEN ? AND ?", lease.id, 
+      runner = InvoiceRunner.where("lease_id = ? AND created_at BETWEEN ? AND ?", lease.id, 
               invoice_date.at_beginning_of_month, invoice_date.end_of_month).first
-      last_runner = InvoiceRunner.where("lease_id = ? AND BETWEEN ? AND ?", lease.id, 
+      last_runner = InvoiceRunner.where("lease_id = ? AND created_at BETWEEN ? AND ?", lease.id, 
               invoice_date.prev_month.at_beginning_of_month, invoice_date.prev_month.end_of_month).first
       
       if runner.nil?
@@ -109,7 +110,7 @@ class Invoice < ActiveRecord::Base
         last_generated = last_runner.generated_date if last_runner
         charge_rent(lease, invoice, invoice_date, setup, last_generated)
     
-        unless (lease.start_date..lease.end_date).include?(invoice_date)
+        if (lease.start_date..lease.end_date).include?(invoice_date)
           charge_conguaglio_expenses(lease, invoice, last_generated, invoice_date)
           charge_apartment_expenses(lease, invoice, invoice_date)
         end
@@ -126,7 +127,10 @@ class Invoice < ActiveRecord::Base
           end
         end
       end
-      InvoiceRunner.create(:lease_id => lease.id, :generated_date => invoice_date)
+      
+      unless invoice.lease.contract && invoice.lease.contract.iva_exempt? && invoice.bollo.nil?
+        InvoiceRunner.create(:lease_id => lease.id, :generated_date => invoice_date)
+      end
     end
   end
   
@@ -158,7 +162,18 @@ class Invoice < ActiveRecord::Base
   
   def self.get_available_bollo(invoice)
     if invoice.lease.contract && invoice.lease.contract.iva_exempt?
-      Bollo.where("invoice_id IS NULL").order("identifier ASC").first
+      bollo = Bollo.where("invoice_id IS NULL").order("identifier ASC").first
+      unless bollo
+        Event.create(:title => "Bollo Non Trovato",
+                     :description => "Si Prega di comprare di piu. Fattura Numero #{ invoice.number }",
+                     :building_id => invoice.building_id,
+                     :color => "#d9534f",
+                     :start => Date.today,
+                     :finish => Date.today,
+                     :kind => "bollo",
+                     :active => true)
+      end
+      bollo
     end
   end
   

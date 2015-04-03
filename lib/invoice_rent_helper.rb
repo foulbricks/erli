@@ -15,7 +15,7 @@ module InvoiceRentHelper
 
       if amount != 0
         invoice.invoice_charges.build(:kind => "rent", :lease_id => lease.id, 
-          :start_date => period.first, :end_date => period.last, :amount => amount), :name => month_description(period))
+          :start_date => period.first, :end_date => period.last, :amount => amount, :name => month_description(period))
       end
     end
 
@@ -29,6 +29,7 @@ module InvoiceRentHelper
         setup_ratio = setup_istat > 0 ? setup_istat/100.0 : 1
 
         if period.first >= istat_date
+          puts "@@@@", amount, contract_ratio
           a = amount + (amount * contract_ratio * setup_ratio)
         else
           num_days = (istat_date..period.last).count

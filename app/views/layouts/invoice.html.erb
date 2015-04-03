@@ -123,8 +123,15 @@
 						<% end %>
 						
 						<% apartment_expenses = invoice.invoice_charges.select {|i| i.kind == "apartment_expense" } %>
+						<% apartment_with_iva = invoice.invoice_charges.select {|i| i.kind == "apartment_expense" && !i.iva_exempt} %>
+						<% apartment_without_iva = invoice.invoice_charges.select {|i| i.kind == "apartment_expense" && i.iva_exempt} %>
+						<% apartment_expenses_iva_total = apartment_with_iva.map(&:amount).sum %>
+						<% apartment_expenses_no_iva_total = apartment_without_iva.map(&:amount).sum %>
+						
+						
 						<% unique = {} %>
 						<% apartment_expenses.each {|a| unique[a.asset_expense.expense.try(:name)] ||= []; unique[a.asset_expense.expense.try(:name)] << a;}%>
+						
 						<% apartment_expenses_total = apartment_expenses.map(&:amount).sum %>
 						
 						<% unique.each do |k, v| %>
@@ -183,7 +190,7 @@
 						<div class="row">
 							<% setup_iva = setup.iva || 0 %>
 							<% rent_amount = rent ? rent.amount : 0 %>
-							<% total_iva = [rent_amount,expenses_with_iva_total,apartment_expenses_total,custom_expenses_iva_total,bollo_total].sum %>
+							<% total_iva = [rent_amount,expenses_with_iva_total,apartment_expenses_iva_total,custom_expenses_iva_total,bollo_total].sum %>
 							<p class="col-xs-9">Imponibile:</p>
 							<p class="col-xs-2 text-right amount"><%= number_to_currency(total_iva) %></p>
 						</div>
@@ -202,7 +209,7 @@
 								<p class="col-xs-1 percentage"><%= number_to_percentage(setup_iva) %></p>
 							<% end %>
 						</div>
-						<% total_no_iva = [expenses_without_iva_total, custom_expenses_no_iva_total].sum %>
+						<% total_no_iva = [expenses_without_iva_total, apartment_expenses_no_iva_total, custom_expenses_no_iva_total].sum %>
 						<div class="row">
 							<p class="col-xs-9">Imponibile Essente IVA:</p>
 							<p class="col-xs-2 text-right amount"><%= number_to_currency(total_no_iva) %></p>

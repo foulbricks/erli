@@ -13,14 +13,15 @@
 							<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][0][first_name]'].$dirty && leaseForm['lease[users_attributes][0][first_name]'].$invalid }" ng-init="first_name='<%= @user.first_name %>'">
 								<%= u.label :first_name, "Nome", :class => "col-sm-3 control-label" %>	
 								<div class="col-sm-9">
-									<%= u.text_field :first_name, :class => "form-control", :placeholder => "Nome", :"ng-model" => "first_name", :"ng-required" => true %>
+									<%= u.text_field :first_name, :class => "form-control", :placeholder => "Nome", :"ng-model" => "first_name" %>
 									<span class="error-message" ng-show="leaseForm['lease[users_attributes][0][first_name]'].$dirty && leaseForm['lease[users_attributes][0][first_name]'].$invalid">Nome è richiesto.</span>
 								</div>
 							</div>
-							<div class="form-group" ng-init="last_name='<%= @user.last_name %>'">
+							<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][0][last_name]'].$dirty && leaseForm['lease[users_attributes][0][last_name]'].$invalid }" ng-init="last_name='<%= @user.last_name %>'">
 								<%= u.label :last_name, "Cognome", :class => "col-sm-3 control-label" %>	
 								<div class="col-sm-9">
 									<%= u.text_field :last_name, :class => "form-control", :placeholder => "Cognome", :"ng-model" => "last_name" %>
+									<span class="error-message" ng-show="leaseForm['lease[users_attributes][0][last_name]'].$dirty && leaseForm['lease[users_attributes][0][last_name]'].$invalid">Cognome è richiesto.</span>
 								</div>
 							</div>
 							<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][0][email]'].$dirty && leaseForm['lease[users_attributes][0][email]'].$invalid }" ng-init="email='<%= @user.email %>'">
@@ -61,14 +62,15 @@
 								<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][<%= u.index %>][first_name]'].$dirty && leaseForm['lease[users_attributes][<%= u.index %>][first_name]'].$invalid }" ng-init="first_name='<%= @user.first_name %>'">
 									<%= u.label :first_name, "Nome", :class => "col-sm-3 control-label" %>	
 									<div class="col-sm-9">
-										<%= u.text_field :first_name, :class => "form-control", :placeholder => "Nome", :"ng-model" => "first_name#{u.index}", :"ng-required" => true %>
+										<%= u.text_field :first_name, :class => "form-control", :placeholder => "Nome", :"ng-model" => "first_name#{u.index}" %>
 										<span class="error-message" ng-show="leaseForm['lease[users_attributes][<%= u.index %>][first_name]'].$dirty && leaseForm['lease[users_attributes][<%= u.index %>][first_name]'].$invalid">Nome è richiesto.</span>
 									</div>
 								</div>
-								<div class="form-group" ng-init="last_name='<%= @user.last_name %>'">
+								<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][<%= u.index %>][last_name]'].$dirty && leaseForm['lease[users_attributes][<%= u.index %>][last_name]'].$invalid }" ng-init="last_name='<%= @user.last_name %>'">
 									<%= u.label :last_name, "Cognome", :class => "col-sm-3 control-label" %>	
 									<div class="col-sm-9">
-										<%= u.text_field :last_name, :class => "form-control", :placeholder => "Cognome", :"ng-model" => "last_name#{u.index}" %>
+										<%= u.text_field :last_name, :class => "form-control", :placeholder => "Cognome", :"ng-model" => "last_name#{u.index}", :"ng-required" => true  %>
+										<span class="error-message" ng-show="leaseForm['lease[users_attributes][<%= u.index %>][last_name]'].$dirty && leaseForm['lease[users_attributes][<%= u.index %>][last_name]'].$invalid">Cognome è richiesto.</span>
 									</div>
 								</div>
 								<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][<%= u.index %>][email]'].$dirty && leaseForm['lease[users_attributes][<%= u.index %>][email]'].$invalid }" ng-init="email='<%= @user.email %>'">
