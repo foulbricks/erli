@@ -42,7 +42,7 @@ gem 'wicked_pdf'
 gem "mini_magick", "~> 3.7.0"
 gem "roo"
 gem "rubyzip"
-gem "pdf-reader"
+#gem "pdf-reader"
 
 gem 'capistrano', '~> 3.1.0'
 gem 'capistrano-bundler', '~> 1.1.2'
