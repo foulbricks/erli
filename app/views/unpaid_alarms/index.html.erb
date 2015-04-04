@@ -7,7 +7,9 @@
 		<% end %>
 		
 		<h3>Allarmi non Pagati</h3>
-		<p class="text-right"><%= link_to "Creare Allarme non Pagato", new_unpaid_alarm_path %></p>
+		<p class="text-right"><%= link_to "Creare Allarme non Pagato", new_unpaid_alarm_path %><br /><br /> 
+			<%= link_to "Impostare Allarme non Pagato", set_unpaid_alarms_unpaid_alarms_path, :class => "btn btn-danger" %>
+		</p>
 		<% if @alarms.length > 0 %>
 			<table class="table table-striped">
 				<thead>

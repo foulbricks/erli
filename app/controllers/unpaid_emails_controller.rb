@@ -59,6 +59,16 @@ class UnpaidEmailsController < ApplicationController
     redirect_to unpaid_emails_path
   end
   
+  def send_unpaid_emails
+    building = Building.find(cookies[:building])
+    unpaid_mavs = Mav.where("building_id = ? AND status = 'Da Pagare' " + 
+                             "AND expiration < ? AND document IS NOT NULL", 
+                             building.id, Date.today).all
+    UnpaidEmail.send_unpaid_emails(building, unpaid_mavs)
+    flash[:notice] = "Email non pagato inviate"
+    redirect_to unpaid_emails_path
+  end
+  
   private
   
   def unpaid_email_params

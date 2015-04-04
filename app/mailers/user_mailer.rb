@@ -29,8 +29,11 @@ class UserMailer < ActionMailer::Base
       :to     => mav.user.email,
       :from   => "ERLIimmobiliare@gmail.com",
       :subject => "MAV Scaduto " + mav.expiration_value_it,
-      :body => unpaid_email.body
-    )
+      :body => unpaid_email.body,
+      :content_type => "text/html"
+    ) # do |format|
+#       format.text { render text: unpaid_email.body }
+#     end
   end
   
   def welcome(user)

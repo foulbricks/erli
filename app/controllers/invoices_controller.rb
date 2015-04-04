@@ -71,7 +71,7 @@ class InvoicesController < ApplicationController
   
   def generate
     begin
-      date = Date.parse(params[:date])
+      date = params[:date].present? ? Date.parse(params[:date]) : Date.today
       Invoice.generate(cookies[:building], date)
 
     end

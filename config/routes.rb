@@ -103,8 +103,16 @@ Rails.application.routes.draw do
     end
   end
   
-  resources :unpaid_emails
-  resources :unpaid_alarms
+  resources :unpaid_emails do
+    collection do
+      get "send_unpaid_emails"
+    end
+  end
+  resources :unpaid_alarms do
+    collection do
+      get "set_unpaid_alarms"
+    end
+  end
   resources :unpaid_warnings do
     collection do
       get "default_warning"

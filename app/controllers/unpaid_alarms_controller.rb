@@ -44,6 +44,16 @@ class UnpaidAlarmsController < ApplicationController
     redirect_to unpaid_alarms_path
   end
   
+  def set_unpaid_alarms
+    building = Building.find(cookies[:building])
+    unpaid_mavs = Mav.where("building_id = ? AND status = 'Da Pagare' " + 
+                             "AND expiration < ? AND document IS NOT NULL", 
+                             building.id, Date.today).all
+    UnpaidAlarm.set_unpaid_alarms(building, unpaid_mavs)
+    flash[:notice] = "Allarme non pagato impostati"
+    redirect_to unpaid_alarms_path
+  end
+  
   private
   
   def unpaid_alarm_params

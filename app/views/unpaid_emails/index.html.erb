@@ -7,7 +7,8 @@
 		<% end %>
 		
 		<h3>Email non Pagati</h3>
-		<p class="text-right"><%= link_to "Creare Email non Pagato", new_unpaid_email_path %></p>
+		<p class="text-right"><%= link_to "Creare Email non Pagato", new_unpaid_email_path %><br /><br /> 
+			<%= link_to "Inviare Email non Pagato", send_unpaid_emails_unpaid_emails_path, :class => "btn btn-danger" %></p>
 		<% if @emails.length > 0 %>
 			<table class="table table-striped">
 				<thead>
