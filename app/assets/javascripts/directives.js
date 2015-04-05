@@ -131,6 +131,7 @@ directive("calendarMonth", [
 				function updateView(){
 					calendarEventsService.list(scope.eventFilter).success(function(results){
 						scope.view = calendarHelperService.getMonthView(scope.currentDay, scope.useIsoWeek, results);
+						scope.loaded = {};
 						if(scope.autoOpen && !firstRun){
 							scope.view.forEach(function(week, rowIndex){
 								if(day.inMonth && moment(scope.currentDay).startOf("day").isSame(day.date.startOf("day"))){

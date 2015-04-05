@@ -58,6 +58,11 @@
 	</div>
 </div>
 
+<div class="form-group" ng-init='label="<%= @event.label %>"'>
+	<%= f.label :label, "Etichetta", :class => "control-label" %>
+	<%= f.text_field :label, :class => "form-control", :placeholder => "Etichetta", :"ng-model" => "label" %>
+</div>
+
 <div class="form-group" style="margin-bottom:20px;">
 	<%= f.hidden_field :building_id, :value => cookies[:building] %>
 	<%= f.submit :class => "btn btn-sm btn-primary", :"ng-disabled" => "eventForm.$invalid"%>

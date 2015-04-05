@@ -150,7 +150,7 @@ class Invoice < ActiveRecord::Base
   
   def self.get_invoice_number(lease, invoice_date=Date.today)
     building_id = lease.apartment.building.id
-    i = Invoice.where("created_at >= ? AND created_at <= ? AND building_id = ?", 
+    i = Invoice.where("start_date >= ? AND start_date <= ? AND building_id = ?", 
                   invoice_date.at_beginning_of_year, invoice_date.end_of_year, building_id).order("number DESC").first
     return 1 unless i
     i.try(:number).try(:+, 1)

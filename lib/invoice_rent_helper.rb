@@ -75,9 +75,9 @@ module InvoiceRentHelper
 
         # On the last period, calculate what was charged on first period and substract from total amount
         # If lease doesn't end at the last day of the month
-        # If lease doesn't start on the first or lease starts on the first, but the end date is not at the end of the month
-        if to == lease.end_date && to != lease.end_date.end_of_month && (lease.partial_start_date? ||
-        (!lease.partial_start_date? && lease.end_date != lease.end_date.end_of_month))
+        # If lease doesn't start on the first or lease starts on the first, but the end date is less than or on the 15th
+        if to == lease.end_date && to != lease.end_date.end_of_month && 
+          (lease.partial_start_date? || (!lease.partial_start_date? && lease.end_date.mday <= 15))
           first_charge = calculated_amount(lease, ranges[0])
           expected_charge = lease.monthly_charge * lease.payment_frequency
           return expected_charge - first_charge

@@ -3,14 +3,23 @@ class EventsController < ApplicationController
   
   def index
     active = params[:active] || true
-    if params[:building_id]
-      @events = Event.where(:building_id => params[:building_id], :active => active).order("start ASC, created_at ASC").all
-    elsif params[:apartment_id]
-      @events = Event.where(:apartment_id => params[:apartment_id], :active => active).order("start ASC, created_at ASC").all
-    elsif params[:user_id]
-      @events = Event.where(:user_id => params[:user_id], :active => active).order("start ASC, created_at ASC").all
+    label = if params[:label].present?
+      {:label => params[:label] }
     else
-      @events = Event.where(:active => active).order("start ASC, created_at ASC").all
+      {}
+    end
+    
+    if params[:building_id]
+      @events = Event.where({:building_id => params[:building_id], :active => active}.merge(label)).
+                order("start ASC, created_at ASC").all
+    elsif params[:apartment_id]
+      @events = Event.where({:apartment_id => params[:apartment_id], :active => active}.merge(label)).
+                order("start ASC, created_at ASC").all
+    elsif params[:user_id]
+      @events = Event.where({:user_id => params[:user_id], :active => active}.merge(label)).
+                order("start ASC, created_at ASC").all
+    else
+      @events = Event.where({:active => active}.merge(label)).order("start ASC, created_at ASC").all
     end
     
     events = {}
@@ -92,7 +101,7 @@ class EventsController < ApplicationController
   
   def event_params
     params.require(:event).permit(:title, :description, :start, :finish, :color, :building_id, :apartment_id,
-                                  :user_id, :lease_id, :kind, :active)
+                                  :user_id, :lease_id, :kind, :active, :label)
   end
   
 end

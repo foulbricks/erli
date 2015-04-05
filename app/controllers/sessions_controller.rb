@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
   def create
     user = User.authenticate(params[:login][:email], params[:login][:password])
     
-    if user #&& user.active?
+    if user && user.active?
       session[:user_id] = user.id
       cookies[:building] = user.building.try(:id) if !user.admin?
       redirect_to root_url

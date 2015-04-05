@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150402210819) do
+ActiveRecord::Schema.define(version: 20150405041757) do
 
   create_table "ad_attachments", force: true do |t|
     t.integer  "ad_id"
@@ -135,6 +135,7 @@ ActiveRecord::Schema.define(version: 20150402210819) do
     t.text     "reset_password_text"
     t.string   "email"
     t.string   "iban"
+    t.string   "background"
   end
 
   create_table "contracts", force: true do |t|
@@ -159,6 +160,7 @@ ActiveRecord::Schema.define(version: 20150402210819) do
     t.string   "kind"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "label"
   end
 
   create_table "expense_attachments", force: true do |t|

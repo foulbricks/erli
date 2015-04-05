@@ -44,7 +44,11 @@ class LeasesController < ApplicationController
     respond_to do |format|
       if @lease.update(lease_params)
         if registration.blank? && @lease.registration_date.present?
-          @lease.users.each { |user| user.send_signup_notification! }
+          @lease.users.each do |user| 
+            if !user.active && user.activation_code.nil?
+              user.send_signup_notification!
+            end
+          end
         end
         flash[:notice] = "Contratto modificato con successo"
         format.json { render :json => { :success => true } }
@@ -134,6 +138,11 @@ class LeasesController < ApplicationController
   def confirm
     @lease = Lease.find(params[:id])
     @lease.update_column(:confirmed, true)
+    @lease.users.each do |user| 
+      if !user.active && user.activation_code.nil?
+        user.send_signup_notification!
+      end
+    end
     flash[:notice] = "Contratto confermato con successo"
     redirect_to leases_path
   end

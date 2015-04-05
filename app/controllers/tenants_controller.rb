@@ -17,7 +17,9 @@ class TenantsController < ApplicationController
     
     respond_to do |format|
       if @user.save
-        @user.send_signup_notification! if @user.lease.registration_date.present?
+        if @user.lease.registration_date.present? || @user.lease.confirmed?
+          @user.send_signup_notification!
+        end
         flash[:notice] = "Utente salvato con successo"
         format.json { render :json => {:success => true } }
         format.html { render :text => "success" }

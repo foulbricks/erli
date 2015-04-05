@@ -289,11 +289,18 @@ controller("eventFormController", [
 					description: $scope.description,
 					start: $scope.start,
 					finish: $scope.finish,
-					color: $scope.button.color
+					color: $scope.button.color,
+					label: $scope.label
 				}
 			}).success(function(response){
 				$scope.hideModal();
 				$rootScope.reloadCalendar(moment(response.success).toDate());
+				if($scope.label){
+					var text = $scope.label.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "");
+					if(!angular.element(".label-filter option[value='" + text + "']").size()){
+						angular.element(".label-filter").append("<option value='" + text + "'>" + text + "</option>");
+					}
+				}
 			});
 		}
 		
@@ -308,12 +315,19 @@ controller("eventFormController", [
 					description: $scope.description,
 					start: $scope.start,
 					finish: $scope.finish,
-					color: $scope.button.color
+					color: $scope.button.color,
+					label: $scope.label
 				}
 			}).success(function(response){
 				$scope.hideModal();
 				$templateCache.remove("/events/" + id + "/edit");
 				$rootScope.reloadCalendar();
+				if($scope.label){
+					var text = $scope.label.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "");
+					if(!angular.element(".label-filter option[value='" + text + "']").size()){
+						angular.element(".label-filter").append("<option value='" + text + "'>" + text + "</option>");
+					}
+				}
 			});
 		}
 		
@@ -352,6 +366,27 @@ controller("CalendarController", [
 		
 		$scope.apartments = []
 		$scope.tenants = []
+		
+		$scope.$watch("label", function(newVal, oldVal){
+			if($scope.label){
+				if($scope.filter){
+					$scope.filter = [$scope.filter.replace(/\&label.*$/, ""), "label=" + $scope.label].join("&");
+				}
+				else {
+					$scope.filter = "label=" + $scope.label;
+				}
+				$rootScope.reloadCalendar(new Date($scope.calendarDay));
+			}
+			else if(newVal != oldVal){
+				if($scope.filter){
+					$scope.filter = $scope.filter.split("&")[0]
+				}
+				else {
+					$scope.filter = null;
+				}
+				$rootScope.reloadCalendar(new Date($scope.calendarDay));
+			}
+		});
 
 		$scope.$watch("building", function(newVal, oldVal){
 			$scope.apartments = []
@@ -368,6 +403,11 @@ controller("CalendarController", [
 			}
 			else if(newVal != oldVal){
 				$scope.filter = null;
+				$rootScope.reloadCalendar();
+			}
+			
+			if($scope.label){
+				$scope.filter = [$scope.filter, "label=" + $scope.label].filter(function(e){return e}).join("&");
 				$rootScope.reloadCalendar();
 			}
 		});
@@ -393,6 +433,11 @@ controller("CalendarController", [
 				}
 				$rootScope.reloadCalendar(new Date($scope.calendarDay));
 			}
+			
+			if($scope.label){
+				$scope.filter = [$scope.filter, "label=" + $scope.label].filter(function(e){return e}).join("&");
+				$rootScope.reloadCalendar(new Date($scope.calendarDay));
+			}
 		});
 		
 		$scope.$watch("tenant", function(oldVal, newVal){
@@ -410,6 +455,11 @@ controller("CalendarController", [
 				else {
 					$scope.filter = null;
 				}
+				$rootScope.reloadCalendar(new Date($scope.calendarDay));
+			}
+			
+			if($scope.label){
+				$scope.filter = [$scope.filter, "label=" + $scope.label].filter(function(e){return e}).join("&");
 				$rootScope.reloadCalendar(new Date($scope.calendarDay));
 			}
 		});
