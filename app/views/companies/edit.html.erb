@@ -73,6 +73,13 @@
 					</div>
 				</div>
 				
+				<div class="form-group">
+					<%= f.label :codice_fiscale, "C.F.", :class => "col-sm-3 control-label" %>
+					<div class="col-sm-9">
+						<%= f.text_field :codice_fiscale, :class => "form-control", :placeholder => "C.F." %>
+					</div>
+				</div>
+				
 				<div class="form-group" ng-class="{'has-error':companyForm['company[phone]'].$dirty && companyForm['company[phone]'].$invalid }" ng-init="phone='<%= @company.phone %>'">
 					<%= f.label :phone, :class => "col-sm-3 control-label" %>
 					<div class="col-sm-9">

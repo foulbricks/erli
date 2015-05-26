@@ -46,6 +46,6 @@ class BalanceDatesController < ApplicationController
   private
   
   def date_params
-    params.require(:balance_date).permit(:value, :building_id)
+    params.require(:balance_date).permit(:day, :month, :building_id)
   end
 end

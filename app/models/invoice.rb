@@ -92,7 +92,7 @@ class Invoice < ActiveRecord::Base
   def self.generate(building_id, invoice_date=Date.today)  
     csv = MavCsv.where("generated = ?", Date.today).first
     csv = MavCsv.create!(:building_id => building_id, :generated => invoice_date) unless csv
-    setup = Setup.where(:building_id => building_id).first || Setup.new
+    company = Company.first || Company.new
   
     registered_leases(building_id, invoice_date).each do |lease|
       runner = InvoiceRunner.where("lease_id = ? AND created_at BETWEEN ? AND ?", lease.id, 
@@ -106,7 +106,7 @@ class Invoice < ActiveRecord::Base
                            :end_date => invoice_date.end_of_month, :mav_csv_id => csv.id)
       
         last_generated = last_runner.generated_date if last_runner
-        charge_rent(lease, invoice, invoice_date, setup, last_generated)
+        charge_rent(lease, invoice, invoice_date, company, last_generated)
     
         if (lease.start_date..lease.end_date).include?(invoice_date)
           charge_conguaglio_expenses(lease, invoice, last_generated, invoice_date)
@@ -142,8 +142,8 @@ class Invoice < ActiveRecord::Base
     with_iva = invoice.invoice_charges.select {|i| !i.iva_exempt? }
     total_iva = with_iva.map(&:amount).sum
     total_without_iva = without_iva.map(&:amount).sum
-    setup = Setup.where(:building_id => lease.apartment.building.id).first || Setup.new
-    iva = lease.contract.try(:iva_exempt?) || !setup.iva ? 0 : (total_iva * setup.iva/100.0)
+    company = Company.first || Company.new
+    iva = lease.contract.try(:iva_exempt?) || company.iva.nil? ? 0 : (total_iva * company.iva/100.0)
     bollo_total = bollo ? bollo.price : 0
     total_iva + total_without_iva + iva + bollo_total
   end

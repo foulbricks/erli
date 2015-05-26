@@ -9,19 +9,17 @@
 	</div>
 <% end %>
 
-<%= form_for @date, html: {:novalidate => "novalidate", name: "dateForm", class: "form-horizontal" } do |f| %>
-	<div class="form-group" ng-class="{'has-error':dateForm['balance_date[value]'].$dirty && dateForm['balance_date[value]'].$invalid }">
-		<%= f.label :value, "Data", :class => "col-sm-3 control-label" %>
-		<div class="col-sm-4">
-			<div class="input-group">
-				<%= f.text_field :value, :class => "form-control", :"bs-datepicker" => "dd/MM/yyyy", :"data-date-format" => "dd-MM-yyyy", :"data-autoclose" => "1", :placeholder => "Data conguaglio", :"ng-model" => "date", :"ng-required" => true, :"date-type" => "string" %>
-                <span class="input-group-btn">
-                  <label for="balance_date_value" class="btn btn-default"><i class="glyphicon glyphicon-calendar"></i></label>
-                </span>
-			</div>
-			<span class="error-message" ng-show="dateForm['balance_date[value]'].$dirty && dateForm['balance_date[value]'].$invalid">Data di bilanciare le spese è richiesta.</span>
-		</div>
-	</div>
+<%= form_for @date, html: {:novalidate => "novalidate", name: "dateForm", class: "form-horizontal" } do |f| %>	
+	<div class="form-group">
+		<%= f.label :day, "Giorno", :class => "col-sm-3 control-label" %>
+   		<div class="col-sm-2">
+   			<%= f.select :day, options_for_select((1..31), @date.day), {}, {:class => "form-control"} %> 
+   		</div>
+   		<%= f.label :month, "Mese", :class => "col-sm-3 control-label" %>
+   		<div class="col-sm-3">
+   			<%= f.select :month, options_for_select((1..12).map {|n| [I18n.t("date.month_names")[n].capitalize, n] }, @date.month), {}, {:class => "form-control"} %> 
+   		</div>
+   	</div>
 	
 	<div class="col-sm-9 col-sm-offset-3">
 		<%= f.hidden_field :building_id, :value => cookies[:building] %>

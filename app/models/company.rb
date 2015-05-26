@@ -1,5 +1,5 @@
 class Company < ActiveRecord::Base
-  validates :name, :address, :provincia, :localita, :cap, :partita_iva, :presence => true
+  validates :name, :address, :provincia, :localita, :cap, :partita_iva, :presence => true, :unless => "istat.present? or iva.present?"
   
   
   def welcome(building)

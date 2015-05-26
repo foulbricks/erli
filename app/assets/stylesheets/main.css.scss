@@ -19,6 +19,15 @@ hr {
 	border-top: 1px solid rgb(204, 204, 204);
 }
 
+.navbar-inverse .navbar-nav > li > a, .navbar-inverse .navbar-brand {
+	color: #ffffff;
+}
+
+tr.success a, tr.danger a, tr.info a {
+	color: #216795;
+	font-weight: bold !important;
+}
+
 .error-message {
 	display: block;
 	margin-top: 10px;

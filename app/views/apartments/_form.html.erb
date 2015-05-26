@@ -11,10 +11,10 @@
 
 <%= form_for @apartment, html: {:novalidate => "novalidate", name: "apartmentForm", class: "form-horizontal" } do |f| %>
 	<div class="form-group" ng-class="{'has-error':apartmentForm['apartment[name]'].$dirty && apartmentForm['apartment[name]'].$invalid }">
-		<%= f.label :name, "Nome", :class => "col-sm-3 control-label" %>
+		<%= f.label :name, "Interno", :class => "col-sm-3 control-label" %>
 		<div class="col-sm-9">
 			<%= f.text_field :name, :class => "form-control", :placeholder => "Name", :"ng-model" => "name", :"ng-required" => true %>
-			<span class="error-message" ng-show="apartmentForm['apartment[name]'].$dirty && apartmentForm['apartment[name]'].$invalid">Nome e richiesto.</span>
+			<span class="error-message" ng-show="apartmentForm['apartment[name]'].$dirty && apartmentForm['apartment[name]'].$invalid">Interno e' richiesto.</span>
 		</div>
 	</div>
 	
@@ -22,7 +22,7 @@
 		<%= f.label :floor, "Piano", :class => "col-sm-3 control-label" %>
 		<div class="col-sm-9">
 			<%= f.text_field :floor, :class => "form-control", :placeholder => "Piano", :"ng-model" => "floor", :"ng-required" => true %>
-			<span class="error-message" ng-show="apartmentForm['apartment[floor]'].$dirty && apartmentForm['apartment[floor]'].$invalid">Piano e richiesto.</span>
+			<span class="error-message" ng-show="apartmentForm['apartment[floor]'].$dirty && apartmentForm['apartment[floor]'].$invalid">Piano e' richiesto.</span>
 		</div>
 	</div>
 	
@@ -30,7 +30,7 @@
 		<%= f.label :rooms, "Numero di Camere", :class => "col-sm-3 control-label" %>
 		<div class="col-sm-9">
 			<%= f.text_field :rooms, :class => "form-control", :placeholder => "Numero di Camere", :"ng-model" => "rooms", :"ng-required" => true %>
-			<span class="error-message" ng-show="apartmentForm['apartment[rooms]'].$dirty && apartmentForm['apartment[rooms]'].$invalid">Numero di camere e richiesto.</span>
+			<span class="error-message" ng-show="apartmentForm['apartment[rooms]'].$dirty && apartmentForm['apartment[rooms]'].$invalid">Numero di camere e' richiesto.</span>
 		</div>
 	</div>
 	

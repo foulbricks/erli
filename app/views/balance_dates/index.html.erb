@@ -19,7 +19,7 @@
 				<tbody>
 					<% @dates.each do |date| %>
 						<tr>
-							<td><%= date.value.strftime("%d-%m-%Y") %></td>
+							<td><%= date.value_it_locale %></td>
 							<td><%= link_to "Modifica", edit_balance_date_path(date.id) %></td>
 							<td><%= link_to "Rimuovi", balance_date_path(date.id), :"data-confirm" => "Sei securo?", method: :delete %></td>
 						</tr>

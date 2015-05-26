@@ -9,8 +9,10 @@ class BolloRange < ActiveRecord::Base
   
   def check_it_doesnt_have_invoices
     if bollos.size > 0
-      errors.add(:base, "it has bollos")
-      return false
+      if bollos.inject(0) {|s, b| s += 1 if !b.invoice.nil?; s } > 0
+        errors.add(:base, "aveve fatture")
+        return false
+      end
     end
   end
 end

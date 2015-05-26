@@ -143,6 +143,8 @@ Rails.application.routes.draw do
   post "users/reset-password/:pw_code" => "users#reset_password"
   get "users/activate/:activation_code" => "users#activate"
   
+  get "/general-parameters", to: "companies#general_parameters", as: :general_parameters
+  
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

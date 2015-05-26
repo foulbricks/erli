@@ -18,7 +18,7 @@ class SetupController < ApplicationController
   def setup_params
     params
     .require(:setup)
-    .permit(:balance_expenses, :iva, :istat, :mav_expiration, :invoice_generation, :invoice_delivery, 
+    .permit(:balance_expenses, :mav_expiration, :invoice_generation, :invoice_delivery, 
            :unpaid_sentence, :erli_mav_email, :erli_mav_email_active, :erli_admin_email, :itemized_expenses)
   end
 end

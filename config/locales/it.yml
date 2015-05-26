@@ -47,6 +47,8 @@ it:
         unpaid_sentence: "Frase non pagato"
       balance_date:
         value: "Data"
+        month: "Mese"
+        day: "Giorno"
       user:
         first_name: "Nome"
         last_name: "Cognome"

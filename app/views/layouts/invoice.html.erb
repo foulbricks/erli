@@ -188,7 +188,7 @@
 				<div class="row">
 					<div class="col-xs-12 taxes">
 						<div class="row">
-							<% setup_iva = setup.iva || 0 %>
+							<% setup_iva = company.iva || 0 %>
 							<% rent_amount = rent ? rent.amount : 0 %>
 							<% total_iva = [rent_amount,expenses_with_iva_total,apartment_expenses_iva_total,custom_expenses_iva_total,bollo_total].sum %>
 							<p class="col-xs-9">Imponibile:</p>

@@ -6,11 +6,11 @@ module InvoiceRentHelper
   
   module ClassMethods
 
-    def charge_rent(lease, invoice, charge_date, setup=nil, last_generated=nil)
+    def charge_rent(lease, invoice, charge_date, company=nil, last_generated=nil)
       last_generated = charge_date - 1.month unless last_generated
       ranges = date_tables(lease.start_date, lease.end_date, lease.payment_frequency)
       period = charge_range(lease, ranges, charge_date, last_generated)
-      amount = charge_amount_with_istat(lease, charge_date, ranges, period, last_generated, setup) * lease.ratio
+      amount = charge_amount_with_istat(lease, charge_date, ranges, period, last_generated, company) * lease.ratio
 
       if amount != 0
         invoice.invoice_charges.build(:kind => "rent", :lease_id => lease.id, 
@@ -18,12 +18,12 @@ module InvoiceRentHelper
       end
     end
 
-    def charge_amount_with_istat(lease, charge_date, ranges, period, last_generated, setup)
+    def charge_amount_with_istat(lease, charge_date, ranges, period, last_generated, company)
       amount = charge_amount_no_istat(lease, charge_date, ranges, period, last_generated)
       istat_date = lease.start_date + 12.months
 
       if period && (period.first >= istat_date || period.include?(istat_date)) && lease.contract && lease.contract.istat > 0
-        setup_istat = setup.try(:istat) || 0
+        setup_istat = company.try(:istat) || 0
         contract_ratio = lease.contract.istat/100.0
         setup_ratio = setup_istat > 0 ? setup_istat/100.0 : 1
 

@@ -17,7 +17,7 @@ class BollosController < ApplicationController
         @bollo = Bollo.new(:identifier => number, :price => @range.price, :bollo_range_id => @range.id)
         @bollo.save
       end
-      flash[:success] = "Bollos salvati con successo"
+      flash[:success] = "Bolli salvati con successo"
       redirect_to bollo_ranges_path
     else
       render "new"
@@ -38,7 +38,7 @@ class BollosController < ApplicationController
         @bollo.save
       end
       
-      flash[:notice] = "Bollos modificate con successo"
+      flash[:notice] = "Bolli modificate con successo"
       redirect_to bollo_ranges_path
     else
       render "edit"
@@ -50,7 +50,7 @@ class BollosController < ApplicationController
     @range.bollos.where("invoice_id IS NULL").all.each {|b| b.destroy }
     @range.destroy
     
-    flash[:notice] = "Bollos elliminate con successo"
+    flash[:notice] = "Bolli elliminate con successo"
     redirect_to bollo_ranges_path
   end
   
