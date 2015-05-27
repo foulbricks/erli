@@ -42,6 +42,8 @@ class LeasesController < ApplicationController
     registration = @lease.registration_date
     
     respond_to do |format|
+      params[:lease] ||= {}
+      params[:lease][:confirmed] = false if @lease.confirmed?
       if @lease.update(lease_params)
         if registration.blank? && @lease.registration_date.present?
           @lease.users.each do |user| 
@@ -152,7 +154,7 @@ class LeasesController < ApplicationController
     params.require(:lease)
     .permit(:percentage, :contract_id, :apartment_id, :invoice_address, :start_date, :end_date, :amount,
             :payment_frequency, :deposit, :registration_date, :registration_number, :registration_agency,
-            :cap, :localita, :provincia, :fully_charged, :home_number,
+            :cap, :localita, :provincia, :fully_charged, :home_number, :confirmed,
             :users_attributes => [:id, :first_name, :last_name, :email, :codice_fiscale, :secondary, 
               :percentage, :partita_iva, :building_id],
             :lease_attachments_attributes => [:document, :lease_document],

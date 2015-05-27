@@ -26,7 +26,7 @@
 							</td>
 							<td><%= expense.name %></td>
 							<td><% if expense.balance_date %>
-									<%= expense.balance_date.value.strftime("%d-%m-%Y") %>
+									<%= expense.balance_date.value_it_locale %>
 								<% end %>
 							</td>
 							<td><%= link_to "Nuova spesa", "#", :placement => "bottom-right", :"tooltip-url" => new_building_building_expense_path(@building.id) + "?expense_id=#{expense.id}", :title => "Nuova spesa per #{@building.name}", :"erli-tooltip" => "popover" %></td>

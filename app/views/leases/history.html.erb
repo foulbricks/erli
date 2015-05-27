@@ -59,10 +59,10 @@
 										<p><strong>Percentuale:</strong> <%= number_to_percentage(lease.percentage) %></p>
 										<p><strong>Tipo di contratto:</strong> <%= lease.contract.try(:name) %></p>
 										<p><strong>Indirizzo di fatturazione:</strong><br /> <%= lease.address %></p>
-										<p><strong>Frequenza di pagamento:</strong> <%= lease.payment_frequency %> Mese</p>
+										<p><strong>Frequenza di pagamento:</strong> <%= lease.frequency_description %></p>
 									</div>
 									<div class="col-sm-4">
-										<p><strong>Canone di Locazione:</strong> <%= number_to_currency(lease.amount) %></p>
+										<p><strong>Canone di Locazione Annuale:</strong> <%= number_to_currency(lease.amount) %></p>
 										<p><strong>Cauzione:</strong> <%= number_to_currency(lease.deposit) %></p>
 										<% lease.asset_expenses.each do |e| %>
 											<% if e.expense %>

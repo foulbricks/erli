@@ -51,7 +51,7 @@
 														<td><%= number_to_currency(expense.amount) %></td>
 														<td><%= expense.updated_at.strftime("%d-%m-%Y")%></td>
 														<td><% if expense.expense.balance_date %>
-															<%= expense.expense.balance_date.value.strftime("%d-%m-%Y") %>
+															<%= expense.expense.balance_date.value_it_locale %>
 														<% end %></td>
 														<td><%= link_to "Aggiornare", "#", :placement => "left", :"tooltip-url" => edit_apartment_apartment_expense_path(apartment.id, expense.id), :title => "Aggiornare spesa per #{apartment.name}", :"erli-tooltip" => "popover" %>
 														<td><%= link_to "Rimuovi", apartment_apartment_expense_path(apartment.id, expense.id), :"data-confirm" => "Sei securo?", method: :delete %></td>

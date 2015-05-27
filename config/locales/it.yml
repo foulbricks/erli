@@ -56,7 +56,7 @@ it:
       lease:
         percentage: "Percentuale di Locazione"
         invoice_address: "Indirizzo di fatturazione"
-        amount: "Canone di Locazione"
+        amount: "Canone di Locazione Annuale"
         payment_frequency: "Frequenza di pagamento"
         start_date: "Data di inizio"
         end_date: "Data di fine"

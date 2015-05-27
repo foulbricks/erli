@@ -56,9 +56,9 @@
 												<p><strong>Indirizzo di fatturazione:</strong><br /> <%= lease.address %></p>
 											</div>
 											<div class="col-sm-4">
-												<p><strong>Canone di Locazione:</strong> <%= number_to_currency(lease.amount) %></p>
+												<p><strong>Canone di Locazione Annuale:</strong> <%= number_to_currency(lease.amount) %></p>
 												<p><strong>Cauzione:</strong> <%= number_to_currency(lease.deposit) %></p>
-												<p><strong>Frequenza di pagamento:</strong> <%= lease.payment_frequency %> Mese</p>
+												<p><strong>Frequenza di pagamento:</strong> <%= lease.frequency_description %></p>
 												<% if lease.registration_number.present? %>
 													<p><strong>Numero di registrazione:</strong> <%= lease.registration_number %>
 												<% end %>

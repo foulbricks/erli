@@ -18,7 +18,14 @@ module InvoiceExpenseHelper
         charge_end = invoice.end_date
 
         if lease_expense.expense && lease_expense.expense.add_to_invoice? && lease_expense.expense.balance_date
-          balance_date = lease_expense.expense.balance_date.value
+          bd = lease_expense.expense.balance_date
+          # if balance date and the invoice date are in January and the day of the invoice date is more than
+          # the balance date, then they fall on the same year
+          if bd.month == 1 && invoice_date.month == 1 && invoice_date.day >= bd.day
+            balance_date = Date.parse("#{invoice_date.year}-#{bd.month}-#{bd.day}")
+          else
+            balance_date = Date.parse("#{last_generated.year}-#{bd.month}-#{bd.day}")
+          end
           kind = lease_expense.expense.kind == "Edificio" ? "building_expense" : "apartment_expense"
           
           if(Date.same_month?(balance_date, invoice_date.prev_month) && balance_date > last_generated) || 

@@ -33,7 +33,7 @@ class AssetExpense < ActiveRecord::Base
               am = rt.percentage/100.0 * self.amount
               self.apartment_expenses.build(:asset_id => rt.apartment_id, :asset_type => "Apartment",
               :expense_id => self.expense.id, :amount => am, :start_date => self.start_date,
-              :end_date => self.end_date, :balance_date => self.expense.try(:balance_date).try(:value),
+              :end_date => self.end_date, :balance_date => self.expense.try(:balance_date).try(:value_from_expense, self),
               :apartment_expense_id => self.id)
             rescue
             end
@@ -55,7 +55,7 @@ class AssetExpense < ActiveRecord::Base
   def cache_balance_date
     if asset_type == "Apartment" and apartment_expense_id.nil?
       if b = self.expense.try(:balance_date)
-        self.balance_date = b.value
+        self.balance_date = b.value_from_expense(expense)
       end
     end
   end

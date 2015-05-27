@@ -10,6 +10,14 @@ class BalanceDate < ActiveRecord::Base
   
   def value
     Date.parse("#{Date.today.year}-#{month}-#{day}")
+    d < Date.today ? d.next_year : d
+  end
+  
+  def value_from_expense(expense)
+    if expense.end_date
+      d = Date.parse("#{expense.end_date}-#{month}-#{day}")
+      d < expense.end_date ? d.next_year : d
+    end
   end
   
   def value_it_locale

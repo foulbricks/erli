@@ -85,7 +85,7 @@
    	<div class="form-group">
    		<%= f.label :payment_frequency, :class => "col-sm-3 control-label" %>
    		<div class="col-sm-4">
-   			<%= f.select :payment_frequency, options_for_select([["1 Mese", "1"], ["3 Mesi", "3"]], @lease.payment_frequency), {}, {:class => "form-control"} %>
+   			<%= f.select :payment_frequency, options_for_select([["Mensile", "1"], ["Trimestrale", "3"]], @lease.payment_frequency), {}, {:class => "form-control"} %>
    		</div>
    	</div>
 	

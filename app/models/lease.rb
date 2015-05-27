@@ -37,6 +37,16 @@ class Lease < ActiveRecord::Base
     self.original_users_attributes = attrs
   end
   
+  def frequency_description
+    if payment_frequency == 1
+      "Mensile"
+    else payment_frequency == 3
+      "Trimestrale"
+    else
+      ""
+    end
+  end 
+  
   def address
     [invoice_address, cap, localita, provincia].join(" ")
   end
