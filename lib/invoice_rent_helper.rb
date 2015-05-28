@@ -126,12 +126,26 @@ module InvoiceRentHelper
     def date_tables(start_date, end_date, months)
       ranges = []
       from = start_date
-      while from < end_date
-        to = from + months.months
-        to = (to - 1.month).end_of_month
-        to = end_date if to >= end_date
-        ranges << (from..to)
-        from = (from + months.months).at_beginning_of_month
+      
+      if months == 1
+        while from < end_date
+          to = from + months.months
+          to = (to - 1.month).end_of_month
+          to = end_date if to >= end_date
+          ranges << (from..to)
+          from = (from + months.months).at_beginning_of_month
+        end
+      else # changing since trimester leases are only charged in specific months
+        trimester_months = [1, 4, 7, 10]
+        while from < end_date
+          current = from
+          from = from.next_month
+          from = from.next_month until trimester_months.include?(from.month)
+          to = (from - 1.month).end_of_month
+          to = end_date if to >= end_date
+          ranges << (current..to)
+          from = from.at_beginning_of_month
+        end
       end
       ranges
     end

@@ -40,7 +40,7 @@ class Lease < ActiveRecord::Base
   def frequency_description
     if payment_frequency == 1
       "Mensile"
-    else payment_frequency == 3
+    elsif payment_frequency == 3
       "Trimestrale"
     else
       ""
@@ -88,15 +88,11 @@ class Lease < ActiveRecord::Base
   end
   
   def monthly_charge
-    if lease_months < 1
-      amount
-    else
-      (amount/lease_months * 100).round / 100.0
-    end
+    (amount/12 * 100).round / 100.0
   end
   
   def daily_charge
-    (amount/(start_date..end_date).count * 100).round / 100.0
+    (amount/(Date.today.all_year.count) * 100).round / 100.0
   end
   
   def lease_months
