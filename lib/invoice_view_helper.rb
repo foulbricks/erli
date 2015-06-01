@@ -32,9 +32,16 @@ module InvoiceViewHelper
       setup = Setup.where(:building_id => building_id).first || Setup.new
       company = Company.first || Company.new
       
+      if setup && setup.invoice_delivery.present?
+        deliver_date = invoice_date.change(:day => setup.invoice_delivery)
+      else
+        deliver_date = invoice_date.created_at.end_of_month
+      end
+      deliver_date = deliver_date.next_month if deliver <= invoice_date
+      
       pdf_html = renderer.render :template => "layouts/invoice.html.erb", :layout => nil, encoding: 'utf8',
                                  :locals => {:company => company, :lease => lease, :invoice => invoice, 
-                                             :invoice_date => invoice_date, :setup => setup }
+                                             :invoice_date => invoice_date, :setup => setup, :deliver_date => deliver_date }
                                              
       WickedPdf.new.pdf_from_string(pdf_html, :page_size => "Letter")
     end

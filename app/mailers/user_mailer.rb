@@ -12,7 +12,7 @@ class UserMailer < ActionMailer::Base
     end  
     
     mail(
-      :to     => user.email,
+      :to     => user.escaped_email,
       :from   => "ERLIimmobiliare@gmail.com",
       :subject => "Reimpostazione Password Dell'Account",
       :template_path => "/mailers/user_mailer"
@@ -26,7 +26,7 @@ class UserMailer < ActionMailer::Base
     end
     
     mail(
-      :to     => mav.user.email,
+      :to     => mav.user.escaped_email,
       :from   => "ERLIimmobiliare@gmail.com",
       :subject => "MAV Scaduto " + mav.expiration_value_it,
       :body => unpaid_email.body,
@@ -48,7 +48,7 @@ class UserMailer < ActionMailer::Base
     end  
     
     mail(
-      :to     => user.email,
+      :to     => user.escaped_email,
       :from   => "ERLIimmobiliare@gmail.com",
       :subject => "Si prega di attivare il tuo account per #{@building.name}",
       :template_path => "/mailers/user_mailer"

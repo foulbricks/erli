@@ -94,6 +94,8 @@ class Invoice < ActiveRecord::Base
     csv = MavCsv.create!(:building_id => building_id, :generated => invoice_date) unless csv
     company = Company.first || Company.new
   
+    invoice_date = invoice_date.next_month.at_beginning_of_month if invoice_date.day > 20 
+  
     registered_leases(building_id, invoice_date).each do |lease|
       runner = InvoiceRunner.where("lease_id = ? AND created_at BETWEEN ? AND ?", lease.id, 
               invoice_date.at_beginning_of_month, invoice_date.end_of_month).first
@@ -150,8 +152,8 @@ class Invoice < ActiveRecord::Base
   
   def self.get_invoice_number(lease, invoice_date=Date.today)
     building_id = lease.apartment.building.id
-    i = Invoice.where("start_date >= ? AND start_date <= ? AND building_id = ?", 
-                  invoice_date.at_beginning_of_year, invoice_date.end_of_year, building_id).order("number DESC").first
+    i = Invoice.where("start_date >= ? AND start_date <= ?", 
+                  invoice_date.at_beginning_of_year, invoice_date.end_of_year).order("number DESC").first
     return 1 unless i
     i.try(:number).try(:+, 1)
   end

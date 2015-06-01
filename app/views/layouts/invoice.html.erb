@@ -25,7 +25,7 @@
 								<p><%= company.localita.upcase %></p>
 							</div>
 							<div class="col-xs-6">
-								<p class="text-right"><strong><%= invoice_date.strftime("%d/%m/%Y") %></strong></p>
+								<p class="text-right"><strong><%= deliver_date.strftime("%d/%m/%Y") %></strong></p>
 							</div>
 						</div>
 						<hr />
@@ -57,11 +57,7 @@
 					</div>
 					<div class="col-xs-6 tenant">
 						<p class="name">
-							<% if tenants.size <= 3 %>
-								<%= tenants.map { |t| "#{t.last_name.upcase} #{t.first_name.upcase}" }.join(" - ") %>
-							<% else %>
-								<%= tenants.map {|t| t.last_name.upcase }.join(" - ") %>
-							<% end %>
+							<%= tenants.map {|t| t.last_name.upcase }.join(" - ") %>
 						</p>
 						<hr />
 						<div class="col-xs-6" style="margin-left:-15px">
@@ -84,7 +80,7 @@
 					<div class="expense col-xs-12">
 						<% if rent = invoice.invoice_charges.select {|i| i.kind == "rent" }.first %>
 							<div class="row">
-								<p class="col-xs-9">CANONE DI LOCAZIONE PER LOCALE SITO IN <%= [building.address, building.home_number, building.cap, building.localita, building.provincia].join(" ") %><br />
+								<p class="col-xs-9">CANONE DI LOCAZIONE PER ALLOGGIO SITO IN <%= [building.address, building.home_number, building.cap, building.localita, building.provincia].join(" ") %><br />
 									<%= rent.name %>
 								</p>
 								<p class="col-xs-2 text-right"><%= number_to_currency(rent.amount) %></p>
@@ -199,9 +195,7 @@
 								<% iva = 0 %>
 								<p class="col-xs-9 text-right">IVA Fattura:</p>
 								<p class="col-xs-2 text-right amount">0,00</p>
-								<p class="col-xs-1 percentage"><%= number_to_percentage(setup_iva) %></p>
-								<p class="col-xs-11 text-right iva">Essente IVA art. 10<br />
-									n.8 D.P.R. 633772</p>
+								<p class="col-xs-11 text-right iva"><%= company.words_iva_exempt %></p>
 							<% else %>
 								<% iva = setup_iva/100.0 * total_iva %>
 								<p class="col-xs-9 text-right">IVA Fattura:</p>

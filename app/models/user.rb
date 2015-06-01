@@ -33,6 +33,10 @@ class User < ActiveRecord::Base
     [first_name, last_name].join(" ")
   end
   
+  def escaped_email
+    email.gsub(/\+.*$/, "")
+  end
+  
   def encrypt_password
     if passwd.present?
       self.salt = BCrypt::Engine.generate_salt

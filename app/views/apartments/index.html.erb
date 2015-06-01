@@ -6,8 +6,8 @@
 			<div class="alert alert-danger"><%= flash[:alert] %></div>
 		<% end %>
 		
-		<h3><%= Building.find(cookies[:building]).name %>: Unità Immobiliari</h3>
-		<p class="text-right"><%= link_to "Aggiungi Unità Immobiliare", new_apartment_path %></p>
+		<h3><%= Building.find(cookies[:building]).name %>: Appartamento</h3>
+		<p class="text-right"><%= link_to "Aggiungi Appartamento", new_apartment_path %></p>
 		<% if @apartments.length > 0 %>
 			<table class="table table-striped">
 				<thead>

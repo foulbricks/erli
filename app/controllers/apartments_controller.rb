@@ -18,7 +18,7 @@ class ApartmentsController < ApplicationController
     @apartment = Apartment.new(apartment_params)
     
     if @apartment.save
-      flash[:notice] = "Unita immobiliare salvata con successo"
+      flash[:notice] = "Appartamento salvato con successo"
       redirect_to apartments_path
     else
       render "new"
@@ -29,7 +29,7 @@ class ApartmentsController < ApplicationController
     @apartment = Apartment.find(params[:id])
     
     if @apartment.update(apartment_params)
-      flash[:notice] = "Unita immobiliare modificata con successo"
+      flash[:notice] = "Appartamento modificato con successo"
       redirect_to apartments_path
     else
       render "edit"
@@ -40,7 +40,7 @@ class ApartmentsController < ApplicationController
     @apartment = Apartment.find(params[:id])
     @apartment.destroy
     
-    flash[:notice] = "Unita immobiliare cancellato con successo"
+    flash[:notice] = "Appartamento cancellato con successo"
     redirect_to apartments_path
   end
   

@@ -1,8 +1,8 @@
 <% if logged_user.admin? %>
 	<li><%= link_to "Allarmi", root_path %></li>
 	<li><%= link_to "Contratti", leases_path %></li>
-	<li><%= link_to "Spese per Unità Immobiliare", apartment_expenses_path %></li>
-	<li><%= link_to "Spese Immobile", building_building_expenses_path(cookies[:building]) %></li>
+	<li><%= link_to "Spese per Appartamento", apartment_expenses_path %></li>
+	<li><%= link_to "Spese Edificio", building_building_expenses_path(cookies[:building]) %></li>
 	<li><%= link_to "Fatture", invoices_path %></li>
 	<li><%= link_to "CSV per MAVs", csvs_mavs_path %></li>
 	<li><%= link_to "MAVs", mavs_path %>

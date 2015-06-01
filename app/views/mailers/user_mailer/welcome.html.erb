@@ -31,7 +31,7 @@
 
                         <h2 style="margin-bottom: 20px;line-height: 1.25;font-size: 28px;">Ciao <%= @user.name %>,</h2>
 
-                        <p style="font-size: 16px;font-weight: normal;margin-bottom: 20px;"><%= @company.welcome(@building) %></p>
+                        <p style="font-size: 16px;font-weight: normal;margin-bottom: 20px;"><%= @company.welcome(@building, @user) %></p>
 
                         <table style="width: 100% !important;border-collapse: collapse;">
                             <tr>
