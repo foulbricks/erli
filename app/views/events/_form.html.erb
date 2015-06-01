@@ -1,4 +1,4 @@
-<div class="form-group" ng-hide="'<%= cookies[:building].present? || @event.building_id.present? || 'false' %>' != 'false' " ng-init="building='<%= @event.building_id || cookies[:building] %>'">
+<div class="form-group" ng-init="building='<%= @event.building_id || cookies[:building] %>'">
 	<%= f.label :building_id, "Edificio", :class => "control-label" %>
 	<%= f.select :building_id, options_from_collection_for_select(buildings, "id", "name", @event.building_id), {:prompt => "Seleziona"}, {:class => "form-control", :"ng-model" => "building"} %> 
 </div>
@@ -63,7 +63,58 @@
 	<%= f.text_field :label, :class => "form-control", :placeholder => "Etichetta", :"ng-model" => "label" %>
 </div>
 
+<div class="form-group" ng-init='repeat="<%= @event.repeat %>"'>
+	<%= f.label :repeat, "Ripetere", :class => "control-label" %>
+	<%= f.check_box :repeat, :"ng-model" => "repeat" %>
+</div>
+
+<div class="form-group" ng-init="frequency='<%= @event.frequency %>'" ng-if="repeat">
+	<%= f.label :frequency, "Frequenza", :class => "control-label" %>
+	<%= f.select :frequency, options_from_select([["Giornaliero","daily"],["Settimanale","weekly"],["Mensile","monthly"],["Annuale","yearly"]]), {}, {:class => "form-control", :"ng-model" => "frequency"} %> 
+</div>
+
+<div class="form-group" ng-init="frequency_number='<%= @event.frequency_number %>'" ng-if="repeat">
+	<%= f.label :frequency_number, "Ripetere Ogni", :class => "control-label" %>
+	<%= f.select :frequency_number, options_from_select(1..30), {}, {:class => "form-control", :"ng-model" => "frequency_number" } %> 
+</div>
+
+<div class="form-group" ng-init="weekdays='<%= @event.weekdays %>'" ng-if="frequency='weekly'">
+	<label class="control-label">Giorni:</label>
+	<label class="checkbox-inline">
+		<input type="checkbox" name="event[frequency_monday]" value="2" ng-model='monday' /> L
+	</label>
+	<label class="checkbox-inline">
+		<input type="checkbox" name="event[frequency_tuesday]" value="3" ng-model='tuesday'/> MA
+	</label>
+	<label class="checkbox-inline">
+		<input type="checkbox" name="event[frequency_wednesday]" value="4" ng-model='wednesday'/> MI
+	</label>
+	<label class="checkbox-inline">
+		<input type="checkbox" name="event[frequency_thursday]" value="5" ng-model='thursday' /> G
+	</label>
+	<label class="checkbox-inline">
+		<input type="checkbox" name="event[frequency_friday]" value="6" ng-model='friday' /> V
+	</label>
+	<label class="checkbox-inline">
+		<input type="checkbox" name="event[frequency_saturday]" value="7" ng-model='saturday' /> S
+	</label>
+	<label class="checkbox-inline">
+		<input type="checkbox" name="event[frequency_sunday]" value="1" ng-model='sunday' /> D
+	</label>
+</div>
+
+<% if !@event.new_record? %>
+	<div class="form-group" ng-if="repeat">
+		<label class="control-label">Modificare:</label>
+		<label class="radio-inline">
+		  <input type="radio" name="event[modify]" value="only"> Solo questo evento
+		</label>
+		<label class="radio-inline">
+		  <input type="radio" name="event[modify]" value="all"> Tutti gli eventi
+		</label>
+	</div>
+<% end %>
+
 <div class="form-group" style="margin-bottom:20px;">
-	<%= f.hidden_field :building_id, :value => cookies[:building] %>
 	<%= f.submit :class => "btn btn-sm btn-primary", :"ng-disabled" => "eventForm.$invalid"%>
 </div>
