@@ -1,120 +1,143 @@
 <div class="form-group" ng-init="building='<%= @event.building_id || cookies[:building] %>'">
-	<%= f.label :building_id, "Edificio", :class => "control-label" %>
-	<%= f.select :building_id, options_from_collection_for_select(buildings, "id", "name", @event.building_id), {:prompt => "Seleziona"}, {:class => "form-control", :"ng-model" => "building"} %> 
+	<%= f.label :building_id, "Edificio", :class => "control-label col-sm-3" %>
+	<div class="col-sm-9">
+		<%= f.select :building_id, options_from_collection_for_select(buildings, "id", "name", @event.building_id), {:prompt => "Seleziona"}, {:class => "form-control", :"ng-model" => "building"} %>
+	</div>
 </div>
 
 <div class="form-group" ng-show="apartments" ng-init="apartment=<%= @event.apartment_id || "\'\'" %>">
-	<label for="apartment_id" class="control-label">Appartamento</label>
-	<select name="event[apartment_id]" class="form-control" ng-model="apartment" ng-options="option.id as option.name for option in apartments"></select>
+	<label for="apartment_id" class="control-label col-sm-3">Appartamento</label>
+	<div class="col-sm-9">
+		<select name="event[apartment_id]" class="form-control" ng-model="apartment" ng-options="option.id as option.name for option in apartments"></select>
+	</div>
 </div>
 
 <div class="form-group" ng-show="tenants.length > 0" ng-init="tenant=<%= @event.user_id || "\'\'" %>">
-	<label for="user_id" class="control-label">Inquilino</label>
-	<select name="event[user_id]" class="form-control" ng-model="tenant" ng-options="option.id as option.name for option in tenants"></select>
+	<label for="user_id" class="control-label col-sm-3">Inquilino</label>
+	<div class="col-sm-9">
+		<select name="event[user_id]" class="form-control" ng-model="tenant" ng-options="option.id as option.name for option in tenants"></select>
+	</div>
 </div>
 
 <div class="form-group" ng-class="{'has-error':eventForm['event[title]'].$dirty && eventForm['event[title]'].$invalid }" ng-init='titolo="<%= @event.title %>"'>
 	
-	<%= f.label :title, "Titolo", :class => "control-label" %>
-	<%= f.text_field :title, :class => "form-control", :placeholder => "Titolo", :"ng-model" => "titolo", :"ng-required" => true %>
-	<span class="error-message" ng-show="eventForm['event[title]'].$dirty && eventForm['event[title]'].$invalid">Titolo è richiesto.</span>
+	<%= f.label :title, "Titolo", :class => "control-label col-sm-3" %>
+	<div class="col-sm-9">
+		<%= f.text_field :title, :class => "form-control", :placeholder => "Titolo", :"ng-model" => "titolo", :"ng-required" => true %>
+		<span class="error-message" ng-show="eventForm['event[title]'].$dirty && eventForm['event[title]'].$invalid">Titolo è richiesto.</span>
+	</div>
 </div>
 
 <div class="form-group" ng-init='description="<%= @event.description %>"'>
-	<%= f.label :description, "Descrizione", :class => "control-label" %>
-	<%= f.text_area :description, :class => "form-control", :placeholder => "Descrizione", :"ng-model" => "description" %>
+	<%= f.label :description, "Descrizione", :class => "control-label col-sm-3" %>
+	<div class="col-sm-9">
+		<%= f.text_area :description, :class => "form-control", :placeholder => "Descrizione", :"ng-model" => "description" %>
+	</div>
 </div>
 
 <div class="form-group" ng-class="{'has-error':eventForm['event[start]'].$dirty && eventForm['event[start]'].$invalid }" ng-init="start='<%= @event.start.strftime("%d/%m/%Y") if @event.start.present? %>'">
-	<%= f.label :start, "Inizio", :class => "control-label" %>
-	<div class="input-group">
-		<%= f.text_field :start, :class => "form-control", :placeholder => "Data di inizio", :"ng-model" => "start", :"ng-required" => true, :"bs-datepicker" => "dd/MM/yyyy", :"data-date-format" => "dd/MM/yyyy", :"data-autoclose" => "1", :"date-type" => "string" %>
-        <span class="input-group-btn">
-          <label for="event_start" class="btn btn-default"><i class="glyphicon glyphicon-calendar"></i></label>
-        </span>
+	<%= f.label :start, "Inizio", :class => "control-label col-sm-3" %>
+	<div class="col-sm-9">
+		<div class="input-group">
+			<%= f.text_field :start, :class => "form-control", :placeholder => "Data di inizio", :"ng-model" => "start", :"ng-required" => true, :"bs-datepicker" => "dd/MM/yyyy", :"data-date-format" => "dd/MM/yyyy", :"data-autoclose" => "1", :"date-type" => "string" %>
+	        <span class="input-group-btn">
+	          <label for="event_start" class="btn btn-default"><i class="glyphicon glyphicon-calendar"></i></label>
+	        </span>
+		</div>
+		<span class="error-message" ng-show="eventForm['event[start]'].$dirty && eventForm['event[start]'].$invalid">Data di inizio è richiesta.</span>
 	</div>
-	<span class="error-message" ng-show="eventForm['event[start]'].$dirty && eventForm['event[start]'].$invalid">Data di inizio è richiesta.</span>
 </div>
 
 <div class="form-group" ng-class="{'has-error':eventForm['event[finish]'].$dirty && eventForm['event[finish]'].$invalid }" ng-init="finish='<%= @event.finish.strftime("%d/%m/%Y") if @event.finish.present? %>'">
-	<%= f.label :finish, "Fine", :class => "control-label" %>
-	<div class="input-group">
-		<%= f.text_field :finish, :class => "form-control", :placeholder => "Data di fine", :"ng-model" => "finish", :"ng-required" => true, :"bs-datepicker" => "dd/MM/yyyy", :"data-date-format" => "dd/MM/yyyy", :"data-autoclose" => "1", :"date-type" => "string" %>
-        <span class="input-group-btn">
-          <label for="event_finish" class="btn btn-default"><i class="glyphicon glyphicon-calendar"></i></label>
-        </span>
-	</div>
-	<span class="error-message" ng-show="eventForm['event[finish]'].$dirty && eventForm['event[finish]'].$invalid">Data di fine è richiesta.</span>
-</div>
-
-<div class="form-group" ng-init="button.color='<%= @event.color || '#286090' %>'">
-	<label class="control-label">Color:</label>
-	<div class="btn-group" ng-model="button.color" bs-radio-group>
-	  <label class="btn btn-primary"><input type="radio" class="btn btn-primary" value="#286090"> </label>
-	  <!-- <label class="btn btn-primary" style="background-color:#000;"><input type="radio" class="btn btn-primary" value="#000000"> </label> -->
-	  <label class="btn btn-success"><input type="radio" class="btn btn-success" value="#5cb85c"> </label>
-	  <label class="btn btn-info"><input type="radio" class="btn btn-info" value="#5bc0de"> </label>
-	  <label class="btn btn-warning"><input type="radio" class="btn btn-warning" value="#f0ad4e"> </label>
+	<%= f.label :finish, "Fine", :class => "control-label col-sm-3" %>
+	<div class="col-sm-9">
+		<div class="input-group">
+			<%= f.text_field :finish, :class => "form-control", :placeholder => "Data di fine", :"ng-model" => "finish", :"ng-required" => true, :"bs-datepicker" => "dd/MM/yyyy", :"data-date-format" => "dd/MM/yyyy", :"data-autoclose" => "1", :"date-type" => "string" %>
+	        <span class="input-group-btn">
+	          <label for="event_finish" class="btn btn-default"><i class="glyphicon glyphicon-calendar"></i></label>
+	        </span>
+		</div>
+		<span class="error-message" ng-show="eventForm['event[finish]'].$dirty && eventForm['event[finish]'].$invalid">Data di fine è richiesta.</span>
 	</div>
 </div>
 
 <div class="form-group" ng-init='label="<%= @event.label %>"'>
-	<%= f.label :label, "Etichetta", :class => "control-label" %>
-	<%= f.text_field :label, :class => "form-control", :placeholder => "Etichetta", :"ng-model" => "label" %>
+	<%= f.label :label, "Categoria", :class => "control-label col-sm-3" %>
+	<div class="col-sm-9">
+		<%= f.text_field :label, :class => "form-control", :placeholder => "Categoria", :"ng-model" => "label" %>
+	</div>
 </div>
 
-<div class="form-group" ng-init='repeat="<%= @event.repeat %>"'>
-	<%= f.label :repeat, "Ripetere", :class => "control-label" %>
-	<%= f.check_box :repeat, :"ng-model" => "repeat" %>
+<div class="form-group">
+	<label class="control-label col-sm-3">Color</label>
+	<div class="col-sm-4" ng-init="button.color='<%= @event.color || '#286090' %>'">
+		<div class="btn-group" style="margin-top: 10px;" ng-model="button.color" bs-radio-group>
+		  <label class="btn btn-primary"><input type="radio" class="btn btn-primary" value="#286090"> </label>
+		  <!-- <label class="btn btn-primary" style="background-color:#000;"><input type="radio" class="btn btn-primary" value="#000000"> </label> -->
+		  <label class="btn btn-success"><input type="radio" class="btn btn-success" value="#5cb85c"> </label>
+		  <label class="btn btn-info"><input type="radio" class="btn btn-info" value="#5bc0de"> </label>
+		  <label class="btn btn-warning"><input type="radio" class="btn btn-warning" value="#f0ad4e"> </label>
+		</div>
+	</div>
+	
+	<%= f.label :repeat, "Ripetere", :class => "control-label col-sm-3" %>
+	<div class="col-sm-2" style="margin-top:5px;" ng-init='repeat=<%= @event.repeat %>'>
+		<%= f.check_box :repeat, :"ng-model" => "repeat" %>
+	</div>
 </div>
 
-<div class="form-group" ng-init="frequency='<%= @event.frequency %>'" ng-if="repeat">
-	<%= f.label :frequency, "Frequenza", :class => "control-label" %>
-	<%= f.select :frequency, options_from_select([["Giornaliero","daily"],["Settimanale","weekly"],["Mensile","monthly"],["Annuale","yearly"]]), {}, {:class => "form-control", :"ng-model" => "frequency"} %> 
+<div class="form-group" ng-init="frequency='<%= @event.frequency || "daily" %>'" ng-show="repeat">
+	<%= f.label :frequency, "Frequenza", :class => "control-label col-sm-3" %>
+	<div class="col-sm-4">
+		<%= f.select :frequency, options_for_select([["Giornaliero","daily"],["Settimanale","weekly"],["Mensile","monthly"],["Annuale","yearly"]]), {}, {:class => "form-control", :"ng-model" => "frequency"} %> 
+	</div>
+	<%= f.label :frequency_number, "Ogni", :class => "control-label col-sm-2" %>
+	<div class="col-sm-3" ng-init="frequency_number='<%= @event.frequency_number || 1%>'" >
+		<%= f.select :frequency_number, options_for_select(1..30), {}, {:class => "form-control", :"ng-model" => "frequency_number" } %> 
+	</div>
 </div>
 
-<div class="form-group" ng-init="frequency_number='<%= @event.frequency_number %>'" ng-if="repeat">
-	<%= f.label :frequency_number, "Ripetere Ogni", :class => "control-label" %>
-	<%= f.select :frequency_number, options_from_select(1..30), {}, {:class => "form-control", :"ng-model" => "frequency_number" } %> 
-</div>
-
-<div class="form-group" ng-init="weekdays='<%= @event.weekdays %>'" ng-if="frequency='weekly'">
-	<label class="control-label">Giorni:</label>
-	<label class="checkbox-inline">
-		<input type="checkbox" name="event[frequency_monday]" value="2" ng-model='monday' /> L
-	</label>
-	<label class="checkbox-inline">
-		<input type="checkbox" name="event[frequency_tuesday]" value="3" ng-model='tuesday'/> MA
-	</label>
-	<label class="checkbox-inline">
-		<input type="checkbox" name="event[frequency_wednesday]" value="4" ng-model='wednesday'/> MI
-	</label>
-	<label class="checkbox-inline">
-		<input type="checkbox" name="event[frequency_thursday]" value="5" ng-model='thursday' /> G
-	</label>
-	<label class="checkbox-inline">
-		<input type="checkbox" name="event[frequency_friday]" value="6" ng-model='friday' /> V
-	</label>
-	<label class="checkbox-inline">
-		<input type="checkbox" name="event[frequency_saturday]" value="7" ng-model='saturday' /> S
-	</label>
-	<label class="checkbox-inline">
-		<input type="checkbox" name="event[frequency_sunday]" value="1" ng-model='sunday' /> D
-	</label>
+<div class="form-group" ng-init="weekdays=<%= @event.frequency_weekdays.present? ? @event.frequency_weekdays.split(',') : [] %>" ng-show="frequency == 'weekly'">
+	<label class="control-label col-sm-2">Giorni {{ weekdays }}</label>
+	<div class="col-sm-10">
+		<label class="checkbox-inline">
+			<input type="checkbox" name="event[frequency_weekdays][]" value="2" ng-checked="weekdays.indexOf('2') > -1" ng-click="toggleSelection('2')" /> L
+		</label>
+		<label class="checkbox-inline">
+			<input type="checkbox" name="event[frequency_weekdays][]" value="3" ng-checked="weekdays.indexOf('3') > -1" ng-click="toggleSelection('3')"/> M
+		</label>
+		<label class="checkbox-inline">
+			<input type="checkbox" name="event[frequency_weekdays][]" value="4" ng-checked="weekdays.indexOf('4') > -1" ng-click="toggleSelection('4')"/> M
+		</label>
+		<label class="checkbox-inline">
+			<input type="checkbox" name="event[frequency_weekdays][]" value="5" ng-checked="weekdays.indexOf('5') > -1"  ng-click="toggleSelection('5')" /> G
+		</label>
+		<label class="checkbox-inline">
+			<input type="checkbox" name="event[frequency_weekdays][]" value="6" ng-checked="weekdays.indexOf('6') > -1" ng-click="toggleSelection('6')" /> V
+		</label>
+		<label class="checkbox-inline">
+			<input type="checkbox" name="event[frequency_weekdays][]" value="7" ng-checked="weekdays.indexOf('7') > -1" ng-click="toggleSelection('7')" /> S
+		</label>
+		<label class="checkbox-inline">
+			<input type="checkbox" name="event[frequency_weekdays][]" value="1" ng-checked="weekdays.indexOf('1') > -1" ng-click="toggleSelection('1')" /> D
+		</label>
+	</div>
 </div>
 
 <% if !@event.new_record? %>
 	<div class="form-group" ng-if="repeat">
-		<label class="control-label">Modificare:</label>
-		<label class="radio-inline">
-		  <input type="radio" name="event[modify]" value="only"> Solo questo evento
+		<label class="control-label col-sm-3">Modificare</label>
+		<label class="radio-inline col-sm-4">
+		  <input type="radio" name="modify" value="only"> Solo questo evento
 		</label>
-		<label class="radio-inline">
-		  <input type="radio" name="event[modify]" value="all"> Tutti gli eventi
+		<label class="radio-inline col-sm-4">
+		  <input type="radio" name="modify" value="all"> Tutti gli eventi
 		</label>
 	</div>
 <% end %>
 
 <div class="form-group" style="margin-bottom:20px;">
-	<%= f.submit :class => "btn btn-sm btn-primary", :"ng-disabled" => "eventForm.$invalid"%>
+	<div class="col-sm-9 col-sm-offset-3">
+		<%= f.submit :class => "btn btn-sm btn-primary", :"ng-disabled" => "eventForm.$invalid"%>
+	</div>
 </div>

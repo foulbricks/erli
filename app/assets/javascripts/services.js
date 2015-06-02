@@ -83,7 +83,7 @@ factory("calendarHelperService", [
 		}
 		
 		helper.getWeekNames = function(short){
-			return short ? moment.weekdaysShort() : moment.weekdays();
+			return short ? moment.weekdaysShort() : [moment.weekdays(1), moment.weekdays(2), moment.weekdays(3), moment.weekdays(4), moment.weekdays(5), moment.weekdays(6), moment.weekdays(0)];
 		}
 		
 		function isISOWeekBasedOnLocale() {

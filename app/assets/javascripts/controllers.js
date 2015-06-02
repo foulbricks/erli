@@ -256,6 +256,21 @@ controller("eventFormController", [
 
 		$scope.tenants = [];
 		
+		$scope.toggleSelection = function toggleSelection(number) {
+			var idx = $scope.weekdays.indexOf(number);
+
+			// is currently selected
+			if (idx > -1) {
+				$scope.weekdays.splice(idx, 1);
+			}
+
+			// is newly selected
+			else {
+				$scope.weekdays.push(number);
+			}
+			$scope.weekdays.sort();
+		};
+		
 		$scope.$watch("building", function(){
 			if($scope.building){
 				$http({
@@ -290,7 +305,11 @@ controller("eventFormController", [
 					start: $scope.start,
 					finish: $scope.finish,
 					color: $scope.button.color,
-					label: $scope.label
+					label: $scope.label,
+					repeat: $scope.repeat,
+					frequency: $scope.frequency,
+					frequency_number: $scope.frequency_number,
+					frequency_weekdays: $scope.weekdays.toString()
 				}
 			}).success(function(response){
 				$scope.hideModal();
@@ -316,7 +335,11 @@ controller("eventFormController", [
 					start: $scope.start,
 					finish: $scope.finish,
 					color: $scope.button.color,
-					label: $scope.label
+					label: $scope.label,
+					repeat: $scope.repeat,
+					frequency: $scope.frequency,
+					frequency_number: $scope.frequency_number,
+					frequency_weekdays: $scope.weekdays.toString()
 				}
 			}).success(function(response){
 				$scope.hideModal();

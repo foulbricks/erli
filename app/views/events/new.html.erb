@@ -1,10 +1,10 @@
-<div class="popover">
+<div class="popover popover-wide">
 	<div class="arrow"></div>
 	<div class="popover-title">
 		<h5>Nuovo Evento</h5>
 	</div>
 	<div class="popover-content" ng-controller="eventFormController" ng-init="bindHideModalFunction($hide)">
-		<%= form_for @event, html: {:novalidate => "novalidate", name: "eventForm", :"ng-submit" => "createEvent($event)"} do |f| %>
+		<%= form_for @event, html: {:novalidate => "novalidate", name: "eventForm", :"ng-submit" => "createEvent($event)", class: "form-horizontal" } do |f| %>
 		<%= render :partial => "form", :locals => {:f => f} %>
 		<% end %>
 	</div>

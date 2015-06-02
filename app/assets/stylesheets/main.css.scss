@@ -85,6 +85,10 @@ input.ng-dirty.ng-invalid{
 	strong { color: #216795;}
 }
 
+.popover-wide {
+	max-width: 400px;
+}
+
 .modal-backdrop.am-fade {
   opacity: .5;
   transition: opacity .15s linear;

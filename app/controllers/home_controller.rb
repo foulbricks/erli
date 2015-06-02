@@ -12,7 +12,7 @@ class HomeController < ApplicationController
       # if cookies[:building].present?
       #   @labels = Event.where("label IS NOT NULL or label <> '' AND building_id = ?", cookies[:building]).all.map {|e| e.label }
       # else
-        @labels = Event.where("label IS NOT NULL or label <> ''").all.map {|e| e.label }.uniq
+        @labels = Event.where("label IS NOT NULL or label <> ''").all.map {|e| e.label.split(/, ?/) }.flatten.uniq
       # end
     end
   end
