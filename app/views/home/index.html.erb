@@ -6,7 +6,7 @@
 <% if logged_user.admin? %>
 	<div class="row calendar-box" ng-controller="CalendarController">
 		<div class="row">
-			<div class="form-group col-xs-3" ng-hide="'<%= cookies[:building].present? || 'false' %>' != 'false' " ng-init="building='<%= cookies[:building] %>'">
+			<div class="form-group col-xs-3" ng-init="building='<%= cookies[:building] %>'">
 				<label for="building_id" class="control-label">Edificio</label>
 				<%= select_tag "building_id", options_from_collection_for_select(buildings, "id", "name"), {:prompt => "Seleziona", :class => "form-control", :"ng-model" => "building", :"ng-required" => true} %>
 			</div>
@@ -26,7 +26,7 @@
 			</div>
 			
 			<div class="form-group col-xs-2">
-				<label for="label" class="control-label">Etichetta</label>
+				<label for="label" class="control-label">Categorie</label>
 				<%= select_tag "label", options_for_select(@labels), {:prompt => "Seleziona", :class => "form-control label-filter", :"ng-model" => "label" } %>
 			</div>
 			

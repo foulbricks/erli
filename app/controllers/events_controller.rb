@@ -104,19 +104,19 @@ class EventsController < ApplicationController
   
   def destroy
     @event = Event.find(params[:id])
-    if @event.parent.present?
-      Event.where("parent = ?", @event.parent).all.each do |e|
+    if params[:type] == "all" && @event.parent.present?
+      Event.where("parent = ? AND active = ?", @event.parent, false).all.each do |e|
         e.destroy
       end
     else
-      event.destroy
+      @event.destroy
     end
     render :json => {:success => true }
   end
   
   def clear
     @event = Event.find(params[:id])
-    if @event.parent.present?
+    if params[:type] == "all" && @event.parent.present?
       Event.where("parent = ?", @event.parent).all.each do |e|
         e.update_column(:active, false)
       end
@@ -128,7 +128,7 @@ class EventsController < ApplicationController
   
   def reinstate
     @event = Event.find(params[:id])
-    if @event.parent.present?
+    if params[:type] == "all" && @event.parent.present?
       Event.where("parent = ?", @event.parent).all.each do |e|
         e.update_column(:active, true)
       end

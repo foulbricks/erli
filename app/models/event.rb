@@ -10,18 +10,29 @@ class Event < ActiveRecord::Base
     event.label = event.label.strip.downcase if event.label.present?
   end
   
+  def start_date
+    start.strftime("%d/%m/%Y")
+  end
+  
+  def finish_date
+    finish.strftime("%d/%m/%Y")
+  end
+  
   def self.create_events(event, event_params, time_frame)
     events = []
-    if event.start.is_a?(Date) and event.finish.is_a?(Date) and event.frequency_number.is_a?(Integer)
+    if event.start and event.finish and event.frequency_number.is_a?(Fixnum)
       days = event.frequency_weekdays.present? ? event.frequency_weekdays.split(",") : []
       from = event.start
-      while from < event.finish
+      while from <= event.finish
         if time_frame == "weeks" and days.any? and (!days.include?((from.wday + 1).to_s))
           from = from + 1.day
           next
         end
         e = Event.new(event_params)
-        e.start, e.finish = from
+        puts e.inspect
+        e.start = e.finish = from
+        e.series_start = event.start
+        e.series_finish = event.finish
         e.active = true
         e.parent = events[0].try(:id)
         e.save
@@ -39,13 +50,13 @@ class Event < ActiveRecord::Base
   
   def self.make_events(event, event_params)
     if event.frequency == "daily"
-      events = self.create_events(@event, event_params, "days")
+      events = self.create_events(event, event_params, "days")
     elsif event.frequency == "weekly"
-      events = self.create_events(@event, event_params, "weeks")
+      events = self.create_events(event, event_params, "weeks")
     elsif event.frequency == "monthly"
-      events = self.create_events(@event, event_params, "months")
+      events = self.create_events(event, event_params, "months")
     elsif event.frequency == "yearly"
-      events = self.create_events(@event, event_params, "years")
+      events = self.create_events(event, event_params, "years")
     end
     return events
   end

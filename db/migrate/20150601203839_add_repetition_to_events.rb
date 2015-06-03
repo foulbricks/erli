@@ -5,5 +5,7 @@ class AddRepetitionToEvents < ActiveRecord::Migration
     add_column :events, :frequency, :string
     add_column :events, :frequency_number, :integer
     add_column :events, :frequency_weekdays, :string
+    add_column :events, :series_start, :datetime
+    add_column :events, :series_finish, :datetime
   end
 end

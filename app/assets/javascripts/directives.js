@@ -231,9 +231,9 @@ directive("calendarDay", [
 					});
 				}
 				
-				scope.clearEvent = function($event, id){
+				scope.clearEvent = function($event, id, type){
 					$event.preventDefault();
-					$http.get("/events/" + id + "/clear").success(function(){
+					$http.get("/events/" + id + "/clear?type=" + type).success(function(){
 						updateView();
 					});
 				}
@@ -284,9 +284,9 @@ directive("calendarAgenda", [
 					});
 				}
 				
-				scope.clearEvent = function($event, id){
+				scope.clearEvent = function($event, id, type){
 					$event.preventDefault();
-					$http.get("/events/" + id + "/clear").success(function(){
+					$http.get("/events/" + id + "/clear?type=" + type).success(function(){
 						updateView();
 					});
 				}
@@ -336,16 +336,16 @@ directive("calendarTrash", [
 					});
 				}
 				
-				scope.reinstateEvent = function($event, id){
+				scope.reinstateEvent = function($event, id, type){
 					$event.preventDefault();
-					$http.get("/events/" + id + "/reinstate").success(function(){
+					$http.get("/events/" + id + "/reinstate?type=" + type).success(function(){
 						updateView();
 					});
 				}
 				
-				scope.destroyEvent = function($event, id){
+				scope.destroyEvent = function($event, id, type){
 					$event.preventDefault();
-					$http.delete("/events/" + id).success(function(){
+					$http.delete("/events/" + id + "?type=" + type).success(function(){
 						updateView();
 					});
 				}

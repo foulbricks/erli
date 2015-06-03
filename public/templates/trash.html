@@ -7,9 +7,13 @@
 		</div>
 	  	<div class="row cal-day-hour-part" style="color: {{ event.color }}">
 			<div class="col-xs-3"><b>{{ event.title }}</b></div>
-			<div class="col-xs-7">{{ event.description }}</div>
-			<div class="col-xs-1"><button type="button" class="btn btn-success btn-sm" ng-click="reinstateEvent($event, event.id)"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span></button></div>
-			<div class="col-xs-1"><button type="button" class="btn btn-danger btn-sm" ng-click="destroyEvent($event, event.id)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></div>
+			<div class="col-xs-6">{{ event.description }}</div>
+			<div class="col-xs-3 text-right">
+				<button type="button" class="btn btn-success btn-sm" ng-click="reinstateEvent($event, event.id, 'only')"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-success btn-sm" ng-click="reinstateEvent($event, event.id, 'all')" ng-hide="!event.repeat"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Tutti</button>
+				<button type="button" class="btn btn-danger btn-sm" ng-click="destroyEvent($event, event.id, 'only')"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+				<button type="button" class="btn btn-danger btn-sm" ng-click="destroyEvent($event, event.id, 'all')" ng-hide="!event.repeat"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Tutti</button>
+			</div>
 	  	</div>
 	</div>
 </div>

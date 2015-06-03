@@ -271,6 +271,21 @@ controller("eventFormController", [
 			$scope.weekdays.sort();
 		};
 		
+		$scope.$watch("frequency", function(newVal){
+			if(newVal == "daily"){
+				$scope.frequencyType = "Giorni";
+			}
+			else if(newVal == "weekly"){
+				$scope.frequencyType = "Settimane";
+			}
+			else if(newVal == "monthly"){
+				$scope.frequencyType = "Mesi";
+			}
+			else if(newVal == "yearly"){
+				$scope.frequencyType = "Anni";
+			}
+		});
+		
 		$scope.$watch("building", function(){
 			if($scope.building){
 				$http({
@@ -316,9 +331,11 @@ controller("eventFormController", [
 				$rootScope.reloadCalendar(moment(response.success).toDate());
 				if($scope.label){
 					var text = $scope.label.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "");
-					if(!angular.element(".label-filter option[value='" + text + "']").size()){
-						angular.element(".label-filter").append("<option value='" + text + "'>" + text + "</option>");
-					}
+					text.split(/\,\s*/).forEach(function(val) { 
+						if(!angular.element(".label-filter option[value='" + val + "']").size()){
+							angular.element(".label-filter").append("<option value='" + val + "'>" + val + "</option>");
+						}
+					});
 				}
 			});
 		}
@@ -340,16 +357,19 @@ controller("eventFormController", [
 					frequency: $scope.frequency,
 					frequency_number: $scope.frequency_number,
 					frequency_weekdays: $scope.weekdays.toString()
-				}
+				},
+				modify: $scope.modify
 			}).success(function(response){
 				$scope.hideModal();
 				$templateCache.remove("/events/" + id + "/edit");
 				$rootScope.reloadCalendar();
 				if($scope.label){
 					var text = $scope.label.toLowerCase().replace(/^\s+/, "").replace(/\s+$/, "");
-					if(!angular.element(".label-filter option[value='" + text + "']").size()){
-						angular.element(".label-filter").append("<option value='" + text + "'>" + text + "</option>");
-					}
+					text.split(/\,\s*/).forEach(function(val) { 
+						if(!angular.element(".label-filter option[value='" + val + "']").size()){
+							angular.element(".label-filter").append("<option value='" + val + "'>" + text + "</option>");
+						}
+					});
 				}
 			});
 		}
@@ -403,6 +423,9 @@ controller("CalendarController", [
 			else if(newVal != oldVal){
 				if($scope.filter){
 					$scope.filter = $scope.filter.split("&")[0]
+					if(/label/.test($scope.filter)){
+						$scope.filter = null;
+					}
 				}
 				else {
 					$scope.filter = null;
