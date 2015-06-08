@@ -48,7 +48,7 @@ class Lease < ActiveRecord::Base
   end 
   
   def address
-    [invoice_address, cap, localita, provincia].join(" ")
+    [invoice_address, home_number, cap, localita, provincia].join(" ")
   end
   
   def searchable_attributes

@@ -22,6 +22,12 @@
 			<span class="error-message" ng-show="userForm['user[email]'].$dirty && userForm['user[email]'].$invalid">Email non è valido.</span>
 		</div>
 	</div>
+	<div class="form-group">
+		<%= u.label :phone, "Telefono", :class => "col-sm-3 control-label" %>	
+		<div class="col-sm-9">
+			<%= u.text_field :phone, :class => "form-control", :placeholder => "Telefono" %>
+		</div>
+	</div>
 	
 	<% unless @user.secondary? %>
 		<div class="form-group" ng-class="{'has-error':userForm['user[codice_fiscale]'].$dirty && userForm['user[codice_fiscale]'].$invalid }" ng-init="codice='<%= @user.codice_fiscale %>'">
@@ -49,6 +55,14 @@
 		</div>
 		<% end %>
 	<% end %>
+	
+	<div class="form-group">
+		<%= u.label :notes, "Note", :class => "col-sm-3 control-label" %>	
+		<div class="col-sm-9">
+			<%= u.text_area :notes, :class => "form-control", :placeholder => "Note" %>
+		</div>
+	</div>
+	
 	<div class="form-group">
 		<div class="col-sm-9 col-sm-offset-3">
 			<%= u.hidden_field :building_id, :value => cookies[:building] %>

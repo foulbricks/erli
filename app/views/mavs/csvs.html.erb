@@ -7,19 +7,35 @@
 		<% end %>
 		
 		<h3>CSVs Per Mavs</h3>
+		<p class="text-right">
+			<%= link_to "Nuovo", generate_csv_mav_path, :class => "btn btn-info" %>
+		</p>
+		
 		<% if @files.length > 0 %>
 			<table class="table table-striped">
 				<thead>
 					<tr>
-						<th>Generato</th>
-						<th>Azioni</th>
+						<th>Nome</th>
+						<th>Stato</th>
+						<th colspan="3">Azioni</th>
 					</tr>
 				</thead>
 				<tbody>
 					<% @files.each do |file| %>
 						<tr>
-							<td><%= file.created_at.strftime("%d-%m-%Y") %></td>
-							<td><%= link_to "Scaricare", generate_csv_mav_path(file.id) %></td>
+							<td><%= file.name %></td>
+							<td><%= file.status %></td>
+							<td><% if file.uploaded? %>
+									<%= link_to "Cambiare a Appena Generato", set_status_csv_mav_path(file.id) %>
+								<% else %>
+									<%= link_to "Cambiare a Caricato", set_status_csv_mav_path(file.id) %>
+								<% end %>
+							</td>
+							<td><% if !file.uploaded? %>
+									<%= link_to "Rimuovi", destroy_csv_mav_path(file.id), :"data-confirm" => "Sei securo?", method: :delete %>						
+								<% end %>
+								</td>
+							<td><%= link_to "Scaricare", download_csv_mav_path(file.id) %></td>
 						</tr>
 					<% end %>
 					

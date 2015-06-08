@@ -1,10 +1,32 @@
 class MavCsv < ActiveRecord::Base
-  has_many :invoices
+  has_and_belongs_to_many :invoices
+  belongs_to :building
   
   validates :building_id, :presence => true
   
+  before_destroy do
+    Invoice.where("mav_csv_id = ?", id).all.each {|i| i.update_attribute(:mav_csv_id, nil) }
+    invoices.clear
+  end
+  
   def value_it_locale
     generated.strftime("%d-%m-%Y")
+  end
+  
+  def name
+    if active?
+      "#{building.name}_#{created_at.strftime('%d-%m-%Y_%H_%M_%S')}"
+    else
+      "INVALID_#{building.name}_#{created_at.strftime('%d-%m-%Y_%H_%M_%S')}"
+    end
+  end
+  
+  def status
+    if !uploaded?
+      "Appena Generato"
+    else
+      "Scaricato"
+    end
   end
   
   def generate_csv

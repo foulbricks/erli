@@ -41,10 +41,38 @@ class MavsController < ApplicationController
   end
   
   def generate_csv
+    @mav_csv = MavCsv.create(:building_id => cookies[:building], :generated => Date.today)
+    MavCsv.where("created_at < ? AND active = ?", @mav_csv.created_at, true).all.each {|csv| csv.update_attribute(:active, false) }
+    invoices = Invoice.where("approved = ?", true).all
+    @mav_csv.invoices << invoices
+    if @mav_csv.save
+      invoices.each {|i| i.update_attribute(:mav_csv_id, @mav_csv.id) }
+    end
+    redirect_to csvs_mavs_path, notice: "Mav Csv Generato con Successo"
+  end
+  
+  def destroy_csv
     @mav_csv = MavCsv.find(params[:id])
-    filename = @mav_csv.created_at.strftime("%d-%m-%Y")
+    if @mav_csv.active?
+      if newest = MavCsv.where("id <> ?", @mav_csv.id).order("created_at DESC").first
+        newest.update_attribute(:active, true)
+      end
+    end
+    @mav_csv.destroy
+    newest.invoices.each {|i| i.update_attribute(:mav_csv_id, newest.id) } if newest
+    redirect_to csvs_mavs_path, notice: "Mav Csv Cancellato con Successo"
+  end
+  
+  def set_status_csv
+    @mav_csv = MavCsv.find(params[:id])
+    @mav_csv.toggle!(:uploaded)
+    redirect_to csvs_mavs_path, notice: "Mav Csv Cambiato con Successo"
+  end
+  
+  def download_csv
+    @mav_csv = MavCsv.find(params[:id])
     send_data @mav_csv.generate_csv, :type => 'text/csv; charset=iso-8859-1; header=present', 
-                                     :disposition => "attachment; filename=#{filename}.csv"
+                                     :disposition => "attachment; filename=#{@mav_csv.name}.csv"
   end
   
   def download

@@ -49,7 +49,7 @@
 							<% unless invoice.approved? %>
 							<td><%= link_to "Approvare", approve_invoice_path(invoice.id) %></td>
 							<% else %>
-							<td>Approvato</td>
+							<td><%= invoice.status %></td>
 							<% end %>
 							<td><%= link_to("Modifica", edit_invoice_path(invoice.id)) unless invoice.approved? %></td>
 							<td><%= link_to "Scaricare", download_invoice_path(invoice.id) %></td>

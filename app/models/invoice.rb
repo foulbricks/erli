@@ -30,6 +30,22 @@ class Invoice < ActiveRecord::Base
     approved #or Date.today >= (start_date + 1.month)
   end
   
+  def status
+    if mav_csv_id.nil?
+      if approved?
+        "Approvato"
+      else
+        ""
+      end
+    else
+      if mav_csv && mav_csv.uploaded?
+        "Scaricato"
+      else
+        "Approvato"
+      end
+    end
+  end
+  
   def create_mavs
     setup = Setup.where("building_id = ?", self.building_id).first
     lease.users(:secondary => false).each do |user|
@@ -89,9 +105,7 @@ class Invoice < ActiveRecord::Base
   end
   
   
-  def self.generate(building_id, invoice_date=Date.today)  
-    csv = MavCsv.where("generated = ?", Date.today).first
-    csv = MavCsv.create!(:building_id => building_id, :generated => invoice_date) unless csv
+  def self.generate(building_id, invoice_date=Date.today)
     company = Company.first || Company.new
   
     invoice_date = invoice_date.next_month.at_beginning_of_month if invoice_date.day > 20 
@@ -105,7 +119,7 @@ class Invoice < ActiveRecord::Base
       if runner.nil?
         invoice = self.new(:building_id => building_id, :number => get_invoice_number(lease, invoice_date),
                            :lease_id => lease.id, :start_date => invoice_date.at_beginning_of_month,
-                           :end_date => invoice_date.end_of_month, :mav_csv_id => csv.id)
+                           :end_date => invoice_date.end_of_month)
       
         last_generated = last_runner.generated_date if last_runner
         charge_rent(lease, invoice, invoice_date, company, last_generated)
