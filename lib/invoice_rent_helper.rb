@@ -46,26 +46,10 @@ module InvoiceRentHelper
       if period
         from, to = period.first, period.last
 
-        # march 3 - march 20 
-        # charge date is april 4 and lease start is march 5 to april 20
-        if lease.payment_frequency == 1
-          if (ranges.size == 1 or (ranges.size == 2 && from == ranges[0].first && to == ranges[1].last))
-            return partial_charge(lease, ranges.first.first, ranges.last.first)
-          else
-            return calculated_amount(lease, period)
-          end
-        else # For leases that are charged with a frequency of more than 1 month
-          # Do not charge on a month that doesn't start on the charge date month
-          if charge_date.month.in?([1, 4, 7, 10])
-            if ranges.size == 1 or (from == ranges[0].first && to == ranges[1].last)
-              return lease.amount / 12.0
-            else
-              return calculated_amount_multiple_frequency(lease, period)
-            end
-          else
-            # If it starts on this period and there is only one range to charge, charge
-            return 0
-          end
+        if lease.payment_frequency == 1 || charge_date.month.in?([1, 4, 7, 10])
+          return calculated_amount(lease, period)
+        else
+          return 0
         end
       else
         return 0
@@ -74,32 +58,18 @@ module InvoiceRentHelper
 
     def calculated_amount(lease, period)
       amount = 0.0
-      from, to = period.first, period.last
-      while from < to
-        # if complete month or if lease starts this period
-        if (from.mday == 1 && (to + 1.day).mday == 1) || lease.end_date == lease.end_date.end_of_month
-          #( charge_date && Date.same_month?(from, lease.start_date) and Date.same_month?(charge_date, from))
+      from = period.first
+      while from < period.last
+        to = from.end_of_month
+        to = period.last if to >= period.last
+        
+        # if complete month
+        if from.mday == 1 && from.end_of_month == to
           amount += lease.monthly_charge
-        elsif from.mday > 1
-          if Date.same_month?(from, to) # if not complete month and both start and end dates are partial
-            amount += partial_charge(lease, from, to)
-          else
-            amount += partial_charge(lease, from, from.end_of_month) # if end is at end of month
-          end
         else
-          amount += partial_charge(lease, from, to) # start is 1 and end is partial
+          amount += partial_charge(lease, from, to)
         end
         from = (from + 1.month).at_beginning_of_month
-      end
-      (amount * 100).round / 100.0
-    end
-    
-    def calculated_amount_multiple_frequency(lease, period)
-      from, to = period.first, period.last
-      if from.mday == 1 && ((to + 1.day) == from + lease.payment_frequency.months)
-        amount = lease.monthly_charge * lease.payment_frequency
-      else
-        amount = lease.daily_charge * (from..to).count
       end
       (amount * 100).round / 100.0
     end
@@ -131,11 +101,6 @@ module InvoiceRentHelper
         end
       end
       ranges
-    end
-
-    # Gets a range that includes the date
-    def fetch_month_range(ranges, charge_date)
-      ranges.find {|r| r.include?(charge_date) }
     end
 
     # returns range(s) of period that should be charged today
@@ -184,15 +149,15 @@ module InvoiceRentHelper
           
           last_charge_multiple = charge_date - 3.months
           
-          if lease.start_date > last_charge_multiple
-            # THIS ONLY OCCURS IF THE LEASE START DATE IS WITHIN THE LAST PERIOD
-            # - check if a runner was created in that month. If it wasn't created, it means that that period was
-            #   not picked up and needs to be charged
-            # - if it does find a runner, check that the lease started after that generated date
-            runner = InvoiceRunner.where("lease_id = ? AND generated_date BETWEEN ? AND ?", lease.id, 
-                    last_charge_multiple.at_beginning_of_month, last_charge_multiple.end_of_month).first
-            if runner.nil? || lease.start_date > runner.generated_date
-              return (ranges[0].first..ranges[1].last)
+          if lease.start_date >= last_charge_multiple
+            # - check to see if this is the first time that the invoices are built for this apartment
+            #   in which case, the invoice has probably been already charged before the website was built
+            unless lease.start_date == last_charge_multiple && lease.apartment.leases.count == 1
+              # combine ranges if this is the first invoice
+              invoice = Invoice.where("lease_id = ?", lease.id).first
+              if !invoice
+                return (ranges[0].first..ranges[1].last)
+              end
             end
           end
           
@@ -205,6 +170,11 @@ module InvoiceRentHelper
     def partial_charge(lease, from, to)
       num_days = (from..to).count
       num_days * lease.daily_charge
+    end
+    
+    # Gets a range that includes the date
+    def fetch_month_range(ranges, charge_date)
+      ranges.find {|r| r.include?(charge_date) }
     end
 
     def month_description(period)

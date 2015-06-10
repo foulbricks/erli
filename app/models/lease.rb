@@ -88,7 +88,7 @@ class Lease < ActiveRecord::Base
   end
   
   def monthly_charge
-    (amount/12 * 100).round / 100.0
+    (amount/12.0 * 100).round / 100.0
   end
   
   def daily_charge
