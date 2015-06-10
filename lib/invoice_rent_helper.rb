@@ -10,16 +10,17 @@ module InvoiceRentHelper
       last_generated = charge_date - 1.month unless last_generated
       ranges = date_tables(lease.start_date, lease.end_date, lease.payment_frequency)
       period = charge_range(lease, ranges, charge_date, last_generated)
-      amount = charge_amount_with_istat(lease, charge_date, ranges, period, last_generated, company) * lease.ratio
+      amount = charge_amount_with_istat(lease, charge_date, ranges, period, company) * lease.ratio
 
       if amount != 0
         invoice.invoice_charges.build(:kind => "rent", :lease_id => lease.id, 
           :start_date => period.first, :end_date => period.last, :amount => amount, :name => month_description(period))
       end
+      return period
     end
 
-    def charge_amount_with_istat(lease, charge_date, ranges, period, last_generated, company)
-      amount = charge_amount_no_istat(lease, charge_date, ranges, period, last_generated)
+    def charge_amount_with_istat(lease, charge_date, ranges, period, company)
+      amount = charge_amount_no_istat(lease, charge_date, ranges, period)
       istat_date = lease.start_date + 12.months
 
       if period && (period.first >= istat_date || period.include?(istat_date)) && lease.contract && lease.contract.istat > 0
@@ -39,7 +40,7 @@ module InvoiceRentHelper
       end
     end
 
-    def charge_amount_no_istat(lease, charge_date, ranges, period, last_generated)
+    def charge_amount_no_istat(lease, charge_date, ranges, period)
       months = lease.payment_frequency.months
 
       if period
@@ -55,12 +56,11 @@ module InvoiceRentHelper
           end
         else # For leases that are charged with a frequency of more than 1 month
           # Do not charge on a month that doesn't start on the charge date month
-          if charge_date.months.in?([1, 4, 7, 10])
+          if charge_date.month.in?([1, 4, 7, 10])
             if ranges.size == 1 or (from == ranges[0].first && to == ranges[1].last)
               return lease.amount / 12.0
             else
-                return calculated_amount_multiple_frequency(lease, period)
-              end
+              return calculated_amount_multiple_frequency(lease, period)
             end
           else
             # If it starts on this period and there is only one range to charge, charge
@@ -134,8 +134,8 @@ module InvoiceRentHelper
     end
 
     # Gets a range that includes the date
-    def fetch_month_range(ranges, include_date)
-      ranges.find {|r| r.include?(include_date) }
+    def fetch_month_range(ranges, charge_date)
+      ranges.find {|r| r.include?(charge_date) }
     end
 
     # returns range(s) of period that should be charged today
@@ -143,32 +143,59 @@ module InvoiceRentHelper
       return nil if ranges.size < 1
 
       last_month = charge_date.prev_month
-      trimester_months = [1, 4, 7, 10]
 
       # if lease is less than a month and between generation dates, return the only range
-      if ranges.size == 1 && Date.same_month?(lease.start_date, last_month) && charge_date > lease.end_date && lease.start_date > last_generated
+      #   - check that the lease started last month 
+      #   - ended before the charge date and 
+      #   - lease started after the last time the invoice was generated (If last invoice was generated on 3rd 
+      #     and the lease started on the 1st, the last invoice generator should have picked this charge up )
+      if ranges.size == 1 && 
+         Date.same_month?(lease.start_date, last_month) && 
+         charge_date > lease.end_date &&
+         lease.start_date > last_generated
+         
         return ranges.first
-      elsif match = (fetch_month_range(ranges, charge_date.at_beginning_of_month) ||  
-        fetch_month_range(ranges, charge_date))
-
-        if ranges.size == 1
-          return match
-        end
-
-        # if lease started last month and after last_generated, combine ranges
-        if Date.same_month?(lease.start_date, last_month) && lease.start_date > last_generated && lease.payment_frequency == 1
-          return (ranges[0].first..ranges[1].last)
-        end
         
+      end
+            
+      # if there is a range that contains the 1st day of the month of the charge date 
+      # ( In case the lease end date is 10th, but the charge date is 12th, it would skip )
+      # or the charge date, continue
+      if match = (fetch_month_range(ranges, charge_date.at_beginning_of_month) || fetch_month_range(ranges, charge_date))
+        
+        return match if ranges.size == 1
+        
+        # NEXT 2 BLOCKS ARE TO COMBINE RANGES. THIS HAPPENS BECAUSE WHEN LEASES START AFTER THE LAST CHARGE DATE,
+        # THEY HAVEN'T BEEN CHARGED EVEN IF THE LEASE WAS ALREADY SET TO START IN THE SYSTEM
+        
+        # combine the ranges if lease started last month and after last_generated
+        # - Only happens when the lease is charged monthly (the period could be bigger for multiple month leases)
+        if lease.payment_frequency == 1 && 
+           Date.same_month?(lease.start_date, last_month) && 
+           lease.start_date > last_generated 
+        
+          return (ranges[0].first..ranges[1].last)
+      
+        end
+      
+        # combine ranges if lease started in a non trimester month
+        trimester_months = [1, 4, 7, 10]
         if lease.payment_frequency == 3 && charge_date.month.in?(trimester_months)
+          
           last_charge_multiple = charge_date - 3.months
+          
           if lease.start_date > last_charge_multiple
-            runner = InvoiceRunner.where("lease_id = ? AND created_at BETWEEN ? AND ?", lease.id, 
+            # THIS ONLY OCCURS IF THE LEASE START DATE IS WITHIN THE LAST PERIOD
+            # - check if a runner was created in that month. If it wasn't created, it means that that period was
+            #   not picked up and needs to be charged
+            # - if it does find a runner, check that the lease started after that generated date
+            runner = InvoiceRunner.where("lease_id = ? AND generated_date BETWEEN ? AND ?", lease.id, 
                     last_charge_multiple.at_beginning_of_month, last_charge_multiple.end_of_month).first
-            if runner.nil? || lease.start_date > runner.created_at.to_date
+            if runner.nil? || lease.start_date > runner.generated_date
               return (ranges[0].first..ranges[1].last)
             end
           end
+          
         end
 
         return match
@@ -198,14 +225,7 @@ module InvoiceRentHelper
   end
 end
 
-  
-    
-    
-    
-    
-    
-    
-    
+
     
     # This lease is for less than lease frequency - charge full price
     # This lease started last month and it hasn't been charged last month

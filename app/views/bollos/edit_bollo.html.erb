@@ -29,7 +29,7 @@
 			<div class="form-group" ng-class="{'has-error':newBolloForm['bollo[price]'].$dirty && newBolloForm['bollo[price]'].$invalid }">
 				<%= label_tag "bollo[price]", "Prezzo", :class => "col-sm-3 control-label" %>
 				<div class="col-sm-9">
-					<%= text_field_tag "bollo[price]", nil, :class => "form-control", :placeholder => "Prezzo", :"ng-model" => "price", :"ng-required" => true, :value => @bollo.price %>
+					<%= text_field_tag "bollo[price]", nil, :class => "form-control", :placeholder => "Prezzo", :"ng-model" => "price", :"ng-required" => true, :value => number_with_delimiter(@bollo.price) %>
 					<span class="error-message" ng-show="newBolloForm['bollo[price]'].$dirty && newBolloForm['bollo[price]'].$invalid">Prezzo è richiesto.</span>
 				</div>
 			</div>

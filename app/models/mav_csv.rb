@@ -1,3 +1,5 @@
+require "csv"
+
 class MavCsv < ActiveRecord::Base
   has_and_belongs_to_many :invoices
   belongs_to :building

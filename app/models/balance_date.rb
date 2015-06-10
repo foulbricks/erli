@@ -21,6 +21,7 @@ class BalanceDate < ActiveRecord::Base
   end
   
   def value_it_locale
+    return "" if day.nil?
     [day, I18n.t("date.month_names")[month].capitalize].join (" di ")
   end
 end

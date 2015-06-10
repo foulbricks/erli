@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150601203839) do
+ActiveRecord::Schema.define(version: 20150608173735) do
 
   create_table "ad_attachments", force: true do |t|
     t.integer  "ad_id"
@@ -244,6 +244,14 @@ ActiveRecord::Schema.define(version: 20150601203839) do
     t.date     "delivery_date"
   end
 
+  create_table "invoices_mav_csvs", id: false, force: true do |t|
+    t.integer "invoice_id"
+    t.integer "mav_csv_id"
+  end
+
+  add_index "invoices_mav_csvs", ["invoice_id"], name: "index_invoices_mav_csvs_on_invoice_id", using: :btree
+  add_index "invoices_mav_csvs", ["mav_csv_id"], name: "index_invoices_mav_csvs_on_mav_csv_id", using: :btree
+
   create_table "lease_attachments", force: true do |t|
     t.integer  "lease_id"
     t.string   "document"
@@ -282,6 +290,8 @@ ActiveRecord::Schema.define(version: 20150601203839) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "generated"
+    t.boolean  "uploaded",    default: false
+    t.boolean  "active",      default: true
   end
 
   create_table "mavs", force: true do |t|
@@ -379,6 +389,8 @@ ActiveRecord::Schema.define(version: 20150601203839) do
     t.decimal  "percentage",             precision: 15, scale: 2, default: 0.0
     t.integer  "tenant_id"
     t.datetime "pw_code_set_at"
+    t.string   "phone"
+    t.text     "notes"
   end
 
 end

@@ -10,10 +10,13 @@ module InvoiceExpenseHelper
   end
   
   module ClassMethods
-    def charge_conguaglio_expenses(lease, invoice, last_generated, invoice_date=Date.today)
-      last_generated = invoice_date.prev_month + 1.day unless last_generated
+    def charge_conguaglio_expenses(lease, invoice, invoice_date=Date.today)
+      runner = InvoiceRunner.where("lease_id = ?", lease.id).order("generated_date DESC").first
+      prev_charge_date = runner.generated_date if runner
+      prev_charge_date = invoice_date - lease.payment_frequency.months unless prev_charge_date
       
       lease.asset_expenses.each do |lease_expense|
+        amount = lease_expense.amount / 12.0 * lease.payment_frequency
         charge_start = invoice.start_date
         charge_end = invoice.end_date
 
@@ -24,12 +27,11 @@ module InvoiceExpenseHelper
           if bd.month == 1 && invoice_date.month == 1 && invoice_date.day >= bd.day
             balance_date = Date.parse("#{invoice_date.year}-#{bd.month}-#{bd.day}")
           else
-            balance_date = Date.parse("#{last_generated.year}-#{bd.month}-#{bd.day}")
+            balance_date = Date.parse("#{invoice_date.prev_month.year}-#{bd.month}-#{bd.day}")
           end
           kind = lease_expense.expense.kind == "Edificio" ? "building_expense" : "apartment_expense"
           
-          if(Date.same_month?(balance_date, invoice_date.prev_month) && balance_date > last_generated) || 
-            (Date.same_month?(balance_date, invoice_date) && balance_date <= invoice_date)
+          if balance_date > prev_charge_date && balance_date <= invoice_date
             
             conguaglio_expenses = lease.apartment.asset_expenses.where("balance_date = ? AND expense_id = ? AND " +
              "start_date <= ?::date AND end_date >= ?::date", balance_date, lease_expense.expense.id, lease.end_date, 
@@ -37,25 +39,25 @@ module InvoiceExpenseHelper
              
             if conguaglio_expenses.size > 0
               expense_calc = expense_total_charge(conguaglio_expenses, lease)
-              total =  expense_calc + lease_expense.amount - total_expense_charges(lease_expense, conguaglio_expenses)
+              total =  expense_calc + amount - total_expense_charges(lease_expense, conguaglio_expenses)
               invoice.invoice_charges.build(:kind => kind, :lease_id => lease.id,
                 :iva_exempt => lease_expense.expense.iva_exempt, :amount => total, :start_date => charge_start,
                 :end_date => charge_end, :asset_expense_id => lease_expense.id, :balanced => true)
             else
               invoice.invoice_charges.build(:kind => kind, :lease_id => lease.id, 
-                :iva_exempt => lease_expense.expense.iva_exempt, :amount => lease_expense.amount, :start_date => charge_start,
+                :iva_exempt => lease_expense.expense.iva_exempt, :amount => amount, :start_date => charge_start,
                 :end_date => charge_end, :asset_expense_id => lease_expense.id)
             end
           else
             invoice.invoice_charges.build(:kind => kind, :lease_id => lease.id, 
-              :iva_exempt => lease_expense.expense.iva_exempt, :amount => lease_expense.amount, :start_date => charge_start,
+              :iva_exempt => lease_expense.expense.iva_exempt, :amount => amount, :start_date => charge_start,
               :end_date => charge_end, :asset_expense_id => lease_expense.id)
           end
         end
       end
     end
 
-    def charge_apartment_expenses(lease, invoice, invoice_date=Date.today)
+    def charge_apartment_expenses(lease, invoice)
       apartment_expenses(lease).each do |e|
         if e.expense && e.expense.add_to_invoice?
           invoice.invoice_charges.build(:kind => "apartment_expense", :lease_id => lease.id, :iva_exempt => e.expense.iva_exempt,
@@ -102,7 +104,7 @@ module InvoiceExpenseHelper
         if from.mday == 1 and to.end_of_month == from.end_of_month
           total += lease_expense.amount
         else
-          total += ( (from..to).count/to.mday.to_f ) * lease_expense.amount
+          total += ( (from..to).count/to.mday.to_f ) * (lease_expense.amount / 12.0)
         end
         from = from.next_month.at_beginning_of_month
       end

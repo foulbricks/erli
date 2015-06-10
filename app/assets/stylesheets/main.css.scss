@@ -23,7 +23,7 @@ hr {
 	color: #ffffff;
 }
 
-tr.success a, tr.danger a, tr.info a {
+tr.success a, tr.danger a, tr.info a, .table-striped > tbody a {
 	color: #216795;
 	font-weight: bold !important;
 }

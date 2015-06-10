@@ -37,7 +37,7 @@ module InvoiceViewHelper
       else
         deliver_date = invoice_date.created_at.end_of_month
       end
-      deliver_date = deliver_date.next_month if deliver <= invoice_date
+      deliver_date = deliver_date.next_month if deliver_date <= invoice_date
       
       pdf_html = renderer.render :template => "layouts/invoice.html.erb", :layout => nil, encoding: 'utf8',
                                  :locals => {:company => company, :lease => lease, :invoice => invoice, 

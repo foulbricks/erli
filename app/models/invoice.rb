@@ -46,6 +46,15 @@ class Invoice < ActiveRecord::Base
     end
   end
   
+  def periodo
+    if Date.same_month?(start_date, end_date)
+      I18n.t("date.month_names")[start_date.month].titleize + ", " + start_date.year.to_s
+    else
+      I18n.t("date.month_names")[start_date.month].titleize + ", " + start_date.year.to_s + " - " +
+      I18n.t("date.month_names")[end_date.month].titleize + ", " + end_date.year.to_s
+    end
+  end
+  
   def create_mavs
     setup = Setup.where("building_id = ?", self.building_id).first
     lease.users(:secondary => false).each do |user|
@@ -107,38 +116,53 @@ class Invoice < ActiveRecord::Base
   
   def self.generate(building_id, invoice_date=Date.today)
     company = Company.first || Company.new
-  
-    invoice_date = invoice_date.next_month.at_beginning_of_month if invoice_date.day > 20 
+    
+    # If the invoice generation is on a day more than 20, set it to next month (was asked 25, but setting 20 to
+    # be on the safe side)
+    invoice_date = invoice_date.next_month.at_beginning_of_month if invoice_date.day > 20
+    
+    # Looping through all the registered leases. Invoice generation is done when a lease has been registered or
+    # when the lease has been set to confirmed (on contracts page)
   
     registered_leases(building_id, invoice_date).each do |lease|
-      runner = InvoiceRunner.where("lease_id = ? AND created_at BETWEEN ? AND ?", lease.id, 
+      
+      # Invoices for trimester leases are only generated on January, April, July and October [1, 4, 7, 10]
+      # An invoice will also be generated on the last month of lease, in case there are apartment expenses
+      # still lingering to be paid, so skip generation if it doesn't comply to these cases
+      next if lease.payment_frequency == 3 && !invoice_date.month.in?([1, 4, 7, 10]) && 
+              !Date.same_month?(invoice_date, lease.end_date + 1.month)
+      
+      # Adding a runner for every lease so the invoices are not generated twice in the same month by mistake. The invoice
+      # will need to be deleted in order to create a new one on the same month
+      # NOTE that InvoiceRunners skipped if on a trimester month or if a needed bollo is unaivailable
+      runner = InvoiceRunner.where("lease_id = ? AND generated_date BETWEEN ? AND ?", lease.id, 
               invoice_date.at_beginning_of_month, invoice_date.end_of_month).first
-      last_runner = InvoiceRunner.where("lease_id = ? AND created_at BETWEEN ? AND ?", lease.id, 
-              invoice_date.prev_month.at_beginning_of_month, invoice_date.prev_month.end_of_month).first
       
       if runner.nil?
-        invoice = self.new(:building_id => building_id, :number => get_invoice_number(lease, invoice_date),
-                           :lease_id => lease.id, :start_date => invoice_date.at_beginning_of_month,
-                           :end_date => invoice_date.end_of_month)
-      
+        invoice = self.new(:building_id => building_id, :number => get_invoice_number(lease, invoice_date), :lease_id => lease.id)
+                           
+        # last_generated is only used for monthly leases
+        last_runner = InvoiceRunner.where("lease_id = ? AND generated_date BETWEEN ? AND ?", lease.id, 
+               invoice_date.prev_month.at_beginning_of_month, invoice_date.prev_month.end_of_month).first
         last_generated = last_runner.generated_date if last_runner
-        charge_rent(lease, invoice, invoice_date, company, last_generated)
-    
-        if (lease.start_date..lease.end_date).include?(invoice_date)
-          charge_conguaglio_expenses(lease, invoice, last_generated, invoice_date)
-          charge_apartment_expenses(lease, invoice, invoice_date)
-        end
+        
+        period = charge_rent(lease, invoice, invoice_date, company, last_generated)
+        invoice.start_date = period ? period.first : invoice_date.at_beginning_of_month
+        invoice.end_date = period ? period.last : invoice_date.end_of_month
+        
+        charge_conguaglio_expenses(lease, invoice, invoice_date) if period
+        charge_apartment_expenses(lease, invoice)
     
         unless calculate_total(lease, invoice) == 0
           invoice.temporary_bollo = get_available_bollo(invoice)
+
+          next if invoice.lease.contract && invoice.lease.contract.iva_exempt? && invoice.temporary_bollo.nil?
+
           invoice.create_pdf
-  
-          if invoice.save
-            invoice.post_save
-          end
+          invoice.post_save if invoice.save
         end
         
-        unless (invoice.lease.contract && invoice.lease.contract.iva_exempt? && invoice.bollo.nil?) || invoice.new_record?
+        unless invoice.new_record?
           InvoiceRunner.create(:lease_id => lease.id, :invoice_id => invoice.id, :generated_date => invoice_date)
         end
         

@@ -35,7 +35,7 @@
 						<div class="form-group" ng-class="{'has-error':leaseForm['lease[users_attributes][0][codice_fiscale]'].$dirty && leaseForm['lease[users_attributes][0][codice_fiscale]'].$invalid }" ng-init="codice='<%= @user.codice_fiscale %>'">
 							<%= u.label :codice_fiscale, "C.F. o P./IVA", :class => "col-sm-3 control-label" %>	
 							<div class="col-sm-9">
-								<%= u.text_field :codice_fiscale, :class => "form-control", :placeholder => "Codice Fiscale", :"ng-model" => "codice", :"ng-required" => true %>
+								<%= u.text_field :codice_fiscale, :class => "form-control", :placeholder => "C.F. o P./IVA", :"ng-model" => "codice", :"ng-required" => true %>
 								<span class="error-message" ng-show="leaseForm['lease[users_attributes][0][codice_fiscale]'].$dirty && leaseForm['lease[users_attributes][0][codice_fiscale]'].$invalid">C.F. o P./IVA è richiesto.</span>
 							</div>
 						</div>
