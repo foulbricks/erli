@@ -16,7 +16,7 @@ module InvoiceExpenseHelper
       prev_charge_date = invoice_date - lease.payment_frequency.months unless prev_charge_date
       
       lease.asset_expenses.each do |lease_expense|
-        amount = lease_expense.amount / 12.0 * lease.payment_frequency
+        amount = calculate_expense_amount(lease_expense, invoice)
         charge_start = invoice.start_date
         charge_end = invoice.end_date
 
@@ -36,6 +36,8 @@ module InvoiceExpenseHelper
             conguaglio_expenses = lease.apartment.asset_expenses.where("balance_date = ? AND expense_id = ? AND " +
              "start_date <= ?::date AND end_date >= ?::date", balance_date, lease_expense.expense.id, lease.end_date, 
              lease.start_date).order("start_date ASC").all
+             
+             puts "LLLLLLLL", balance_date
              
             if conguaglio_expenses.size > 0
               expense_calc = expense_total_charge(conguaglio_expenses, lease)
@@ -102,13 +104,32 @@ module InvoiceExpenseHelper
       while from.end_of_month <= calculation_ends.end_of_month
         to = Date.same_month?(from, calculation_ends) ? calculation_ends : from.end_of_month
         if from.mday == 1 and to.end_of_month == from.end_of_month
-          total += lease_expense.amount
+          total += lease_expense.amount / 12.0
         else
-          total += ( (from..to).count/to.mday.to_f ) * (lease_expense.amount / 12.0)
+          total += ( (from..to).count/from.end_of_month.mday.to_f ) * (lease_expense.amount / 12.0)
         end
         from = from.next_month.at_beginning_of_month
       end
-      total
+      (total * 100).round / 100.0
+    end
+    
+    def calculate_expense_amount(lease_expense, invoice)
+      monthly_amount = lease_expense.amount / 12.0
+      total = 0.0
+      from = invoice.start_date
+      while from < invoice.end_date
+        to = from.end_of_month
+        to = invoice.end_date if to >= invoice.end_date
+
+        # if complete month
+        if from.mday == 1 && from.end_of_month == to
+          total += monthly_amount
+        else
+          total += ( (from..to).count/from.end_of_month.mday.to_f ) * (lease_expense.amount / 12.0)
+        end
+        from = from.next_month.at_beginning_of_month
+      end
+      (total * 100).round / 100.0
     end
     
     def apartment_expenses(lease)

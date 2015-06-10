@@ -57,7 +57,7 @@
 					</div>
 					<div class="col-xs-6 tenant">
 						<p class="name">
-							<%= tenants.map {|t| t.last_name.upcase }.join(" - ") %>
+							<%= tenants.map {|t| t.name.upcase }.join(" - ") %>
 						</p>
 						<hr />
 						<div class="col-xs-6" style="margin-left:-15px">
@@ -65,7 +65,7 @@
 							<%= lease.cap %> <%= lease.localita.upcase %></p>
 						</div>
 						<div class="col-xs-6">
-							<p><% if lease.home_number.present? %> N.<%= lease.home_number %><% end %> &nbsp;<br />
+							<p><% if lease.home_number.present? %> N. <%= lease.home_number %><% end %> &nbsp;<br />
 								Prov. <%= lease.provincia %></p>
 						</div>
 					</div>

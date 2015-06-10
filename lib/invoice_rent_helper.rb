@@ -155,7 +155,7 @@ module InvoiceRentHelper
             unless lease.start_date == last_charge_multiple && lease.apartment.leases.count == 1
               # combine ranges if this is the first invoice
               invoice = Invoice.where("lease_id = ?", lease.id).first
-              if !invoice
+              if !invoice || invoice.invoice_charges.where("kind = ?", "rent").first.nil?
                 return (ranges[0].first..ranges[1].last)
               end
             end

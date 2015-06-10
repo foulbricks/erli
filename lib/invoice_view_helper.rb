@@ -35,7 +35,7 @@ module InvoiceViewHelper
       if setup && setup.invoice_delivery.present?
         deliver_date = invoice_date.change(:day => setup.invoice_delivery)
       else
-        deliver_date = invoice_date.created_at.end_of_month
+        deliver_date = invoice_date.end_of_month
       end
       deliver_date = deliver_date.next_month if deliver_date <= invoice_date
       

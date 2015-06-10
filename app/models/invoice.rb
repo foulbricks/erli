@@ -107,8 +107,9 @@ class Invoice < ActiveRecord::Base
     self.delivery_date = deliver
   end
   
-  def create_pdf
-    temp = Invoice.tempfile(Invoice.render_pdf(self.lease, self, Date.today))
+  def create_pdf(invoice_date=nil)
+    invoice_date ||= Date.today
+    temp = Invoice.tempfile(Invoice.render_pdf(self.lease, self, invoice_date))
     self.document = File.open temp.path
     temp.unlink
   end
@@ -158,7 +159,7 @@ class Invoice < ActiveRecord::Base
 
           next if invoice.lease.contract && invoice.lease.contract.iva_exempt? && invoice.temporary_bollo.nil?
 
-          invoice.create_pdf
+          invoice.create_pdf(invoice_date)
           invoice.post_save if invoice.save
         end
         
