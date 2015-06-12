@@ -46,7 +46,7 @@
 							<td><%= invoice.lease.apartment.name %></td>
 							<td><%= number_to_currency(invoice.total) %></td>
 							<td><%= invoice.periodo %></td>
-							<% unless invoice.approved? %>
+							<% unless invoice.approved? || invoice.mavs_status == "error" %>
 							<td><%= link_to "Approvare", approve_invoice_path(invoice.id) %></td>
 							<% else %>
 							<td><%= invoice.status %></td>

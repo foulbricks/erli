@@ -20,15 +20,6 @@
 		<% end %>
 
 		<%= form_for @invoice, html: {:novalidate => "novalidate", name: "invoiceForm", class: "form-horizontal" } do |f| %>
-			<% if @csvs.present? %>
-			   	<div class="form-group">
-			   		<%= f.label :mav_csv_id, "Data CSV", :class => "col-sm-3 control-label" %>
-			   		<div class="col-sm-5">
-			   			<%= f.select :mav_csv_id, options_from_collection_for_select(@csvs, "id", "value_it_locale", @invoice.mav_csv_id), {:prompt => "Seleziona"}, {:class => "form-control"} %> 
-			   		</div>
-			   	</div>
-			<% end %>
-		
 		
 			<%= f.fields_for :invoice_charges do |i| %>
 				<% if i.object.name.present? %>

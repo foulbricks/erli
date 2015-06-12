@@ -7,18 +7,16 @@ class InvoicesController < ApplicationController
     if params[:apartment_id].present?
       apartment = Apartment.find(params[:apartment_id])
       ids = apartment.leases.map(&:id)
-      @invoices = Invoice.where("lease_id IN (?)", ids).
+      @invoices = Invoice.where("lease_id IN (?) AND mavs_status <> 'confirmed' AND mavs_status <> 'paid'", ids).
                     paginate(:per_page => 50, :page => params[:page]).order("start_date DESC, number DESC")
     else
-      @invoices = Invoice.where(building_id: cookies[:building]).
+      @invoices = Invoice.where("building_id = ? AND mavs_status <> 'confirmed' AND mavs_status <> 'paid'", cookies[:building]).
                         paginate(:per_page => 50, :page => params[:page]).order("start_date DESC, number DESC")
     end
   end
   
   def new
     @invoice = Invoice.new
-    @csvs = MavCsv.where("building_id = ? AND generated IS NOT NULL", cookies[:building]).
-                   order("generated DESC").all
     (1..10).each do 
       @invoice.invoice_charges.build(:kind => "custom_expense")
     end
@@ -33,16 +31,12 @@ class InvoicesController < ApplicationController
       flash[:notice] = "Fattura salvata con successo"
       redirect_to invoices_path
     else
-      @csvs = MavCsv.where("building_id = ? AND generated IS NOT NULL", cookies[:building]).
-                     order("generated DESC").all
       render "new"
     end
   end
   
   def edit
     @invoice = Invoice.find(params[:id])
-    @csvs = MavCsv.where("building_id = ? AND generated IS NOT NULL", cookies[:building]).
-                   order("generated DESC").all
   end
   
   def update
@@ -56,8 +50,6 @@ class InvoicesController < ApplicationController
       flash[:notice] = "Fattura modificata con successo"
       redirect_to invoices_path
     else
-      @csvs = MavCsv.where("building_id = ? AND generated IS NOT NULL", cookies[:building]).
-                     order("generated DESC").all
       render "edit"
     end
   end
@@ -67,6 +59,10 @@ class InvoicesController < ApplicationController
     invoice.destroy
     flash[:notice] = "Fattura cancellata con successo"
     redirect_to invoices_path
+  end
+  
+  def confirmed
+    @invoices = Invoice.where("building_id = ? AND mavs_status = 'confirmed'", cookies[:building]).all
   end
   
   def generate
@@ -97,7 +93,9 @@ class InvoicesController < ApplicationController
   
   def approve
     invoice = Invoice.find(params[:id])
-    invoice.toggle!(:approved)
+    invoice.approved = true
+    invoice.mavs_status = nil
+    invoice.save
     redirect_to invoices_path
   end
   

@@ -41,10 +41,9 @@ class MavsController < ApplicationController
   end
   
   def generate_csv
-    puts "HELLO"
     @mav_csv = MavCsv.create(:building_id => cookies[:building], :generated => Date.today)
     MavCsv.where("created_at < ? AND active = ?", @mav_csv.created_at, true).all.each {|csv| csv.update_attribute(:active, false) }
-    invoices = Invoice.where("approved = ?", true).all
+    invoices = Invoice.where("approved = ? AND mavs_status IS NULL", true).all
     @mav_csv.invoices << invoices
     if @mav_csv.save
       invoices.each {|i| i.update_attribute(:mav_csv_id, @mav_csv.id) }
@@ -128,7 +127,7 @@ class MavsController < ApplicationController
   end
   
   def get_query_array(params, unpaid=false)
-    query = [ [ "mavs.building_id = ?" ], cookies[:building] ]
+    query = [ [ "mavs.building_id = ? AND mavs.document IS NOT NULL" ], cookies[:building] ]
     if unpaid
       query[0].push "status ~ 'Da Pagare'"
       query[0].push "expiration < ?"

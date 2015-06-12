@@ -1,0 +1,68 @@
+<div class="row">
+	<div class="col-sm-12">
+		<% if flash[:notice] %>
+			<div class="alert alert-success"><%= flash[:notice] %></div>
+		<% elsif flash[:alert] %>
+			<div class="alert alert-danger"><%= flash[:alert] %></div>
+		<% end %>
+		
+		<h3>Fatture in Attesa di Essere Pagati</h3>
+		<% if @invoices.any? %>
+			<table class="table table-striped table-collapsed">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Numero</th>
+						<th>Appartamento</th>
+						<th>Totale</th>
+						<th>Periodo</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @invoices.each do |invoice| %>
+						<tr>
+							<td><a href="#" class="toggle-table"><small class="glyphicon glyphicon-plus" aria-hidden="true"></small></a></td>
+							<td><%= invoice.number %></td>
+							<td><%= invoice.lease.apartment.name %></td>
+							<td><%= number_to_currency(invoice.total) %></td>
+							<td><%= invoice.periodo %></td>
+						</tr>
+						<tr class="child-table">
+							<td colspan="6">
+								<table class="table table-condensed table-striped" style="margin-left:5px;margin-bottom:0px;">
+									<thead>
+										<tr>
+											<th>Nome</th>
+											<th>Apartamento</th>
+											<th>Totale</th>
+											<th>Data</th>
+											<th>Stato</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<% invoice.mavs.each do |mav| %>
+											<tr>
+												<td><%= mav.user.name %></td>
+												<td><%= mav.user.lease.apartment.name %></td>
+												<td><%= number_to_currency(mav.amount) %></td>
+												<td><%= mav.created_at.strftime("%d-%m-%Y") %></td>
+												<td><%= mav.status %></td>
+												<td class="download-link-<%= mav.id %>"><% if mav.document.present? %>
+													<%= link_to "Scaricare MAV", download_mav_path(mav.id) %>
+													<% end %>
+												</td>
+											</tr>
+										<% end %>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
+		<% else %>
+			<p>Attualmente non ci sono fatture in attesa di essere pagati</p>
+		<% end %>
+	</div>
+</div>

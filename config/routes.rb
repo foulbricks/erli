@@ -57,6 +57,7 @@ Rails.application.routes.draw do
     end
     collection do
       post "generate"
+      get "confirmed"
     end
   end
   

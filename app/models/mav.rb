@@ -37,6 +37,10 @@ class Mav < ActiveRecord::Base
           mav.last_paid_on = Date.today
           mav.amount_paid = row["IMPORTO"]
           mav.save
+          invoice = mav.invoice
+          if invoice.mavs.where("status = 'Pagato'").size == invoice.mavs.size
+            invoice.update_column(:mavs_status, "paid")
+          end
           count += 1
         end
       end
@@ -61,13 +65,13 @@ class Mav < ActiveRecord::Base
       
       Dir.glob(File.join(MAV_PROCESSING_PATH, "*.pdf")) do |file_path|
         name = File.basename(file_path).gsub(/\.pdf$/, "")
-        codice, mavid, due_date = name.split("_")
+        codice, mavid, due_date, amount = name.split("_")
         
-        if mavid && due_date && codice
+        if mavid && due_date && codice && amount
           user = User.find_by_codice_fiscale(codice)
           begin; expiration = Date.parse(due_date); rescue; end
-          
-          count = assign_mav_document(user, expiration, mavid, count, file_path) if user && expiration
+          amount = amount.to_f
+          count = assign_mav_document(user, expiration, mavid, amount, count, file_path) if user && expiration
         end
         File.delete(file_path)
       end
@@ -75,14 +79,33 @@ class Mav < ActiveRecord::Base
     count
   end
   
-  def self.assign_mav_document(user, expiration, mavid, count, file_path)
+  def self.assign_mav_document(user, expiration, mavid, amount, count, file_path)
     mav = Mav.where("user_id = ? AND expiration = ?", user.id, expiration).first
     if mav
       mav.mav_rid = mavid
+      mav.uploaded_amount = amount
       File.open(file_path, "rb") do |file|
         mav.document = file
       end
       mav.save
+      invoice = mav.invoice
+      if invoice.mavs.where("uploaded_amount IS NOT NULL").size == invoice.mavs.size
+        invoice.mavs.each do |mav|
+          if mav.uploaded_amount != mav.amount
+            invoice.update_column(:mavs_status, "error")
+            Event.create(:title => "Importo MAV non Corrisponde",
+                         :description => "Fattura Numero #{ invoice.number }. Mav per #{mav.user.name}",
+                         :building_id => invoice.building_id,
+                         :color => "#d9534f",
+                         :start => Date.today,
+                         :finish => Date.today,
+                         :kind => "importo mav",
+                         :active => true)
+            break
+          end
+        end
+        invoice.update_column(:mavs_status, "confirmed") if invoice.mavs_status != "error"
+      end
       count += 1
     end
     count
