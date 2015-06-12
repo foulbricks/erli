@@ -66,6 +66,6 @@ class TenantsController < ApplicationController
   
   def user_params
     params.require(:user).permit(:id, :first_name, :last_name, :email, :codice_fiscale, :secondary,
-                                 :percentage, :partita_iva, :building_id)
+                                 :percentage, :partita_iva, :building_id, :phone, :notes)
   end
 end

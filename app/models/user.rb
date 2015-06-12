@@ -33,8 +33,12 @@ class User < ActiveRecord::Base
     [first_name, last_name].join(" ")
   end
   
+  def name_reverse
+    [last_name, first_name].join(" ")
+  end
+  
   def escaped_email
-    email.gsub(/\+.*$/, "")
+    email.gsub(/\+.*\@/, "@")
   end
   
   def encrypt_password

@@ -7,9 +7,9 @@
 		<% end %>
 		
 		<h3>CSVs Per Mavs</h3>
-		<p class="text-right">
-			<%= link_to "Nuovo", generate_csv_mavs_path, :class => "btn btn-info" %>
-		</p>
+		<%= form_tag generate_csv_mavs_path, :method => "post", :class => "text-right" do %>
+			<button type="submit" class="btn btn-danger">Nuovo</button>
+		<% end %>
 		
 		<% if @files.length > 0 %>
 			<table class="table table-striped">
@@ -31,7 +31,7 @@
 									<%= link_to "Cambiare a Caricato", set_status_csv_mav_path(file.id) %>
 								<% end %>
 							</td>
-							<td><% if !file.uploaded? %>
+							<td><% if !file.uploaded? || !file.active? %>
 									<%= link_to "Rimuovi", destroy_csv_mav_path(file.id), :"data-confirm" => "Sei securo?", method: :delete %>						
 								<% end %>
 								</td>

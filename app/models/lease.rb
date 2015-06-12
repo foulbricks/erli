@@ -23,8 +23,8 @@ class Lease < ActiveRecord::Base
   validate :percentage_maximum
   
   after_save do |l|
-    tenant = l.users.select {|u| !u.secondary }.first
-    l.users.all.each {|u| u.update_column(:tenant_id, tenant.id) if u.secondary }
+    tenant = l.users.order("created_at DESC").select {|u| !u.secondary }.first
+    l.users.all.each {|u| u.update_column(:tenant_id, tenant.id) if u.secondary && !u.tenant_id }
   end
   
   alias :original_users_attributes= :users_attributes=

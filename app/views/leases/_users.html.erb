@@ -5,17 +5,23 @@
 				<h4 style="margin:4px;">Inquilini</h4>
 			</div>
 		</div>
-		<% lease.users.where(:secondary => false).all.each do |t| %>
+		<% lease.users.where(:secondary => false).order("created_at ASC").all.each do |t| %>
 			<div class="col-sm-12">
 				<div class="row" style="margin:10px;">
 					<hr style="margin-top:0" />
 					<div class="col-sm-4">
 						<p><strong>Nome:</strong> <%= t.name %></p>
 						<p><strong>Email:</strong> <%= t.email %></p>
+						<% if t.phone.present? %>
+							<p><strong>Phone:</strong> <%= t.phone %></p>
+						<% end %>
 					</div>
 					<div class="col-sm-4">
 						<p><strong>Percentuale:</strong> <%= t.percentage %></p>
 						<p><strong><%= t.partita_iva? ? "Partita IVA" : "Codice Fiscale:" %></strong> <%= t.codice_fiscale %></p>
+						<% if t.notes.present? %>
+							<p><strong>Notes:</strong> <%= t.notes %></p>
+						<% end %>
 					</div>
 					<div class="col-sm-4">
 						<p><strong><%= link_to "Modifica", "#", :"ng-click" => "openModal($event,'#{edit_lease_tenant_path(lease.id, t.id)}')" %></strong></p>
@@ -36,9 +42,15 @@
 					<div class="row" style="margin:10px;">
 						<div class="col-sm-4">
 							<p><strong>Nome:</strong> <%= f.name %></p>
+							<% if f.phone.present? %>
+								<p><strong>Phone:</strong> <%= f.phone %></p>
+							<% end %>
 						</div>
 						<div class="col-sm-4">
 							<p><strong>Email:</strong> <%= f.email %></p>
+							<% if f.notes.present? %>
+								<p><strong>Notes:</strong> <%= f.notes %></p>
+							<% end %>
 						</div>
 						<div class="col-sm-4">
 							<p><strong><%= link_to "Modifica", "#", :"ng-click" => "openModal($event,'#{edit_lease_tenant_path(lease.id, f.id)}')" %> | <%= link_to "Rimuovi", lease_tenant_path(lease.id, f.id), :"data-confirm" => "Sei securo?", method: :delete %> </strong></p>

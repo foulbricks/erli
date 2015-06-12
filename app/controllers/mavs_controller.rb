@@ -41,6 +41,7 @@ class MavsController < ApplicationController
   end
   
   def generate_csv
+    puts "HELLO"
     @mav_csv = MavCsv.create(:building_id => cookies[:building], :generated => Date.today)
     MavCsv.where("created_at < ? AND active = ?", @mav_csv.created_at, true).all.each {|csv| csv.update_attribute(:active, false) }
     invoices = Invoice.where("approved = ?", true).all

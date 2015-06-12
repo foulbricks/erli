@@ -57,7 +57,7 @@
 					</div>
 					<div class="col-xs-6 tenant">
 						<p class="name">
-							<%= tenants.map {|t| t.name.upcase }.join(" - ") %>
+							<%= tenants.map {|t| t.name_reverse.upcase }.join(" - ") %>
 						</p>
 						<hr />
 						<div class="col-xs-6" style="margin-left:-15px">

@@ -156,7 +156,7 @@ class LeasesController < ApplicationController
             :payment_frequency, :deposit, :registration_date, :registration_number, :registration_agency,
             :cap, :localita, :provincia, :fully_charged, :home_number, :confirmed,
             :users_attributes => [:id, :first_name, :last_name, :email, :codice_fiscale, :secondary, 
-              :percentage, :partita_iva, :building_id],
+              :percentage, :partita_iva, :building_id, :phone, :notes],
             :lease_attachments_attributes => [:document, :lease_document],
             :asset_expenses_attributes => [:id, :expense_id, :amount, :asset_id, :asset_type])
   end
