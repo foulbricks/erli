@@ -51,9 +51,9 @@
 							<% else %>
 							<td><%= invoice.status %></td>
 							<% end %>
-							<td><%= link_to("Modifica", edit_invoice_path(invoice.id)) unless invoice.approved? %></td>
+							<td><%= link_to("Modifica", edit_invoice_path(invoice.id)) unless invoice.approved? || invoice.mavs_status %></td>
 							<td><%= link_to "Scaricare", download_invoice_path(invoice.id) %></td>
-							<td><%= link_to("Rimuovi", invoice_path(invoice.id), :"data-confirm" => "Sei securo?", method: :delete) unless invoice.approved? %></td>
+							<td><%= link_to("Rimuovi", invoice_path(invoice.id), :"data-confirm" => "Sei securo?", method: :delete) unless invoice.approved? || invoice.mavs_status %></td>
 						</tr>
 					<% end %>
 					
