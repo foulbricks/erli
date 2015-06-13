@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150608173735) do
+ActiveRecord::Schema.define(version: 20150612170434) do
 
   create_table "ad_attachments", force: true do |t|
     t.integer  "ad_id"
@@ -242,6 +242,7 @@ ActiveRecord::Schema.define(version: 20150608173735) do
     t.boolean  "approved"
     t.integer  "mav_csv_id"
     t.date     "delivery_date"
+    t.string   "mavs_status"
   end
 
   create_table "invoices_mav_csvs", id: false, force: true do |t|
@@ -305,7 +306,8 @@ ActiveRecord::Schema.define(version: 20150608173735) do
     t.datetime "updated_at"
     t.string   "mav_rid"
     t.date     "expiration"
-    t.string   "status",       default: "Da Pagare"
+    t.string   "status",                                   default: "Da Pagare"
+    t.decimal  "uploaded_amount", precision: 15, scale: 2
   end
 
   create_table "repartition_tables", force: true do |t|

@@ -64,7 +64,7 @@
 						<tr>
 							<td><%= mav.user.name %></td>
 							<td><%= mav.user.lease.apartment.name %></td>
-							<td><%= mav.invoice.number %></td>
+							<td><%= link_to("Fattura " + mav.invoice.number.to_s, download_invoice_path(mav.invoice.id)) %></td>
 							<td><%= number_to_currency(mav.amount) %></td>
 							<td><%= mav.created_at.strftime("%d-%m-%Y") %></td>
 							<td><%= mav.status %></td>

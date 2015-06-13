@@ -65,7 +65,7 @@ class Mav < ActiveRecord::Base
       
       Dir.glob(File.join(MAV_PROCESSING_PATH, "*.pdf")) do |file_path|
         name = File.basename(file_path).gsub(/\.pdf$/, "")
-        codice, mavid, due_date, amount = name.split("_")
+        amount, codice, mavid, due_date = name.split("_")
         
         if mavid && due_date && codice && amount
           user = User.find_by_codice_fiscale(codice)
