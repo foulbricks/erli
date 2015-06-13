@@ -7,10 +7,10 @@ class InvoicesController < ApplicationController
     if params[:apartment_id].present?
       apartment = Apartment.find(params[:apartment_id])
       ids = apartment.leases.map(&:id)
-      @invoices = Invoice.where("lease_id IN (?) AND mavs_status <> 'confirmed' AND mavs_status <> 'paid'", ids).
+      @invoices = Invoice.where("lease_id IN (?) AND mavs_status IS DISTINCT FROM 'confirmed' AND mavs_status IS DISTINCT FROM 'paid'", ids).
                     paginate(:per_page => 50, :page => params[:page]).order("start_date DESC, number DESC")
     else
-      @invoices = Invoice.where("building_id = ? AND mavs_status <> 'confirmed' AND mavs_status <> 'paid'", cookies[:building]).
+      @invoices = Invoice.where("building_id = ? AND mavs_status IS DISTINCT FROM 'confirmed' AND mavs_status IS DISTINCT FROM 'paid'", cookies[:building]).
                         paginate(:per_page => 50, :page => params[:page]).order("start_date DESC, number DESC")
     end
   end
