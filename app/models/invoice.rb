@@ -31,6 +31,7 @@ class Invoice < ActiveRecord::Base
   end
   
   def status
+    return "Error" if mavs_status == "error"
     if mav_csv_id.nil?
       if approved?
         "Approvato"
