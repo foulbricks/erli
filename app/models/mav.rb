@@ -70,7 +70,7 @@ class Mav < ActiveRecord::Base
         if mavid && due_date && codice && amount
           user = User.find_by_codice_fiscale(codice)
           begin; expiration = Date.parse(due_date); rescue; end
-          amount = amount.to_f
+          amount = amount.gsub(",", ".").to_f
           count = assign_mav_document(user, expiration, mavid, amount, count, file_path) if user && expiration
         end
         File.delete(file_path)
