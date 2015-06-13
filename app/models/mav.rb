@@ -92,7 +92,9 @@ class Mav < ActiveRecord::Base
       if invoice.mavs.where("uploaded_amount IS NOT NULL").size == invoice.mavs.size
         invoice.mavs.each do |mav|
           if mav.uploaded_amount != mav.amount
-            invoice.update_column(:mavs_status, "error")
+            invoice.mavs_status = "error"
+            invoice.approved = false
+            invoice.save
             Event.create(:title => "Importo MAV non Corrisponde",
                          :description => "Fattura Numero #{ invoice.number }. Mav per #{mav.user.name}",
                          :building_id => invoice.building_id,
