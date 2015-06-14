@@ -54,6 +54,7 @@
 						<th>Apartamento</th>
 						<th>Numero di Fattura</th>
 						<th>Totale</th>
+						<th>Totale Scaricato</th>
 						<th>Data</th>
 						<th>Stato</th>
 						<th>Azioni</th>
@@ -61,11 +62,12 @@
 				</thead>
 				<tbody>
 					<% @mavs.each do |mav| %>
-						<tr>
+						<tr class="#{ 'danger' if mav.amount != mav.uploaded_amount }">
 							<td><%= mav.user.name %></td>
 							<td><%= mav.user.lease.apartment.name %></td>
 							<td><%= link_to("Fattura " + mav.invoice.number.to_s, download_invoice_path(mav.invoice.id)) %></td>
 							<td><%= number_to_currency(mav.amount) %></td>
+							<td><%= number_to_currency(mav.uploaded_amount.to_f) %></td>
 							<td><%= mav.created_at.strftime("%d-%m-%Y") %></td>
 							<td><%= mav.status %></td>
 							<td class="download-link-<%= mav.id %>"><% if mav.document.present? %>

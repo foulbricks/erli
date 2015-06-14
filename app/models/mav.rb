@@ -84,6 +84,7 @@ class Mav < ActiveRecord::Base
     if mav
       mav.mav_rid = mavid
       mav.uploaded_amount = amount
+      mav.mavs_status = nil
       File.open(file_path, "rb") do |file|
         mav.document = file
       end
