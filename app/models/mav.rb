@@ -90,7 +90,7 @@ class Mav < ActiveRecord::Base
       mav.save
       invoice = mav.invoice
       if invoice.mavs.where("uploaded_amount IS NOT NULL").size == invoice.mavs.size
-        count = 0
+        looped = 0
         invoice.mavs.each do |mav|
           if mav.uploaded_amount != mav.amount
             invoice.mavs_status = "error"
@@ -105,10 +105,10 @@ class Mav < ActiveRecord::Base
                          :kind => "importo mav",
                          :active => true)
             break
-            count += 1
           end
-          invoice.update_column(:mavs_status, "confirmed") if count == invoice.mavs.size
+          looped += 1
         end
+        invoice.update_column(:mavs_status, "confirmed") if looped == invoice.mavs.size
       end
       count += 1
     end

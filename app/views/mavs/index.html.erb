@@ -62,7 +62,7 @@
 				</thead>
 				<tbody>
 					<% @mavs.each do |mav| %>
-						<tr class="#{ 'danger' if mav.amount != mav.uploaded_amount }">
+						<tr class="<%= 'danger' if mav.amount != mav.uploaded_amount %>">
 							<td><%= mav.user.name %></td>
 							<td><%= mav.user.lease.apartment.name %></td>
 							<td><%= link_to("Fattura " + mav.invoice.number.to_s, download_invoice_path(mav.invoice.id)) %></td>
