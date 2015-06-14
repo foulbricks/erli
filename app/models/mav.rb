@@ -84,13 +84,13 @@ class Mav < ActiveRecord::Base
     if mav
       mav.mav_rid = mavid
       mav.uploaded_amount = amount
-      mav.mavs_status = nil
       File.open(file_path, "rb") do |file|
         mav.document = file
       end
       mav.save
       invoice = mav.invoice
       if invoice.mavs.where("uploaded_amount IS NOT NULL").size == invoice.mavs.size
+        count = 0
         invoice.mavs.each do |mav|
           if mav.uploaded_amount != mav.amount
             invoice.mavs_status = "error"
@@ -105,9 +105,10 @@ class Mav < ActiveRecord::Base
                          :kind => "importo mav",
                          :active => true)
             break
+            count += 1
           end
+          invoice.update_column(:mavs_status, "confirmed") if count == invoice.mavs.size
         end
-        invoice.update_column(:mavs_status, "confirmed") if invoice.mavs_status != "error"
       end
       count += 1
     end
