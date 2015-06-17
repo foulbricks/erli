@@ -26,7 +26,7 @@ module InvoiceRentHelper
       if period && (period.first >= istat_date || period.include?(istat_date)) && lease.contract && lease.contract.istat > 0
         setup_istat = company.try(:istat) || 0
         contract_ratio = lease.contract.istat/100.0
-        setup_ratio = setup_istat > 0 ? setup_istat/100.0 : 1
+        setup_ratio = setup_istat/100.0
 
         if period.first >= istat_date
           a = amount + (amount * contract_ratio * setup_ratio)
