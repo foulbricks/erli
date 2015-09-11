@@ -6,9 +6,9 @@ class Lease < ActiveRecord::Base
   has_many :lease_attachments, :dependent => :destroy
   has_many :asset_expenses, as: :asset, :dependent => :destroy
   has_many :cached_tenants, :dependent => :destroy
-  has_many :invoices
-  has_many :invoice_charges
-  has_many :events
+  has_many :invoices, :dependent => :destroy
+  has_many :invoice_charges, :dependent => :destroy
+  has_many :events, :dependent => :destroy
   
   accepts_nested_attributes_for :users, reject_if: proc { |attributes| attributes['last_name'].blank? || attributes['email'].blank? }
   accepts_nested_attributes_for :lease_attachments, reject_if: proc { |attributes| attributes['document'].blank? }
