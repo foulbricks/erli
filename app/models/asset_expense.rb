@@ -55,7 +55,7 @@ class AssetExpense < ActiveRecord::Base
   def cache_balance_date
     if asset_type == "Apartment" and apartment_expense_id.nil?
       if b = self.expense.try(:balance_date)
-        self.balance_date = b.value_from_expense(expense)
+        self.balance_date = b.value_from_expense(self)
       end
     end
   end
